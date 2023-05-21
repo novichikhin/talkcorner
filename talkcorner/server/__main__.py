@@ -1,5 +1,6 @@
 import logging
 from sys import platform
+from typing import Optional
 
 from talkcorner.server.api.setup import register_app
 from talkcorner.server import types
@@ -18,7 +19,7 @@ def run_application() -> None:
             return (multiprocessing.cpu_count() * 2) + 1
 
         class StandaloneApplication(BaseApplication):
-            def __init__(self, application: Any, options: Dict[str, Any] = None):
+            def __init__(self, application: Any, options: Optional[Dict[str, Any]] = None):
                 self.options = options or {}
                 self.application = application
                 super().__init__()

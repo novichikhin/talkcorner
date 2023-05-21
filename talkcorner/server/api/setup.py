@@ -2,7 +2,7 @@ from fastapi import FastAPI
 
 from talkcorner.server.api.api_v1.dependencies.database import DatabaseProviderMarker, DatabaseEngineMarker
 from talkcorner.server.api.api_v1.dependencies.settings import SettingsMarker
-from talkcorner.server.api.api_v1.setup import register_routers
+from talkcorner.server.api.api_v1.endpoints.setup import register_routers
 from talkcorner.server.core.event import create_on_startup_handler, create_on_shutdown_handler
 from talkcorner.server import types
 from talkcorner.server.database.factory import (

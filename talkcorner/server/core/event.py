@@ -19,6 +19,7 @@ def create_on_startup_handler(
         settings: types.Setting,
         **kwargs: Any
 ) -> Callable[..., Coroutine[Any, Any, None]]:
+
     async def on_startup() -> None:
         nats = await nats_create_connect(connection_uri=settings.NATS_URL)
         js = nats_create_jetstream(nats=nats)
@@ -34,6 +35,7 @@ def create_on_startup_handler(
 
 
 def create_on_shutdown_handler(app: FastAPI) -> Callable[..., Coroutine[Any, Any, None]]:
+
     async def on_shutdown() -> None:
         engine: AsyncEngine = app.dependency_overrides[DatabaseEngineMarker]()
         nc: nats.NATS = app.dependency_overrides[NatsMarker]()
