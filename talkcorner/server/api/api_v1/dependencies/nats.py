@@ -1,0 +1,2 @@
+class NatsMarker:
+    pass
