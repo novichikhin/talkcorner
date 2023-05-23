@@ -5,7 +5,7 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from talkcorner.server.database.models.main import Base
+from talkcorner.common.database.models.main import Base
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

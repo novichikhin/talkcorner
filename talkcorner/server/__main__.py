@@ -3,7 +3,7 @@ from sys import platform
 from typing import Optional
 
 from talkcorner.server.api.setup import register_app
-from talkcorner.server import types
+from talkcorner.common import types
 
 
 def run_application() -> None:

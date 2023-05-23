@@ -3,7 +3,8 @@ from typing import Optional
 
 import sqlalchemy.orm as so
 
-from talkcorner.server.database.models.main import Base
+from talkcorner.common import dto
+from talkcorner.common.database.models.main import Base
 
 
 class Forum(Base):
@@ -13,3 +14,11 @@ class Forum(Base):
     title: so.Mapped[str] = so.mapped_column(nullable=False)
     description: so.Mapped[Optional[str]] = so.mapped_column()
     created_at: so.Mapped[dt.datetime] = so.mapped_column(nullable=False, default=dt.datetime.utcnow)
+
+    def to_dto(self) -> dto.Forum:
+        return dto.Forum(
+            id=self.id,
+            title=self.title,
+            description=self.description,
+            created_at=self.created_at
+        )

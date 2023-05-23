@@ -1,6 +1,6 @@
 from fastapi import FastAPI, APIRouter
 
-from talkcorner.server import types
+from talkcorner.common import types
 
 
 def register_routers(app: FastAPI, settings: types.Setting) -> None:

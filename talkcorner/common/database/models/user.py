@@ -5,7 +5,8 @@ import sqlalchemy.orm as so
 
 import uuid6
 
-from talkcorner.server.database.models.main import Base
+from talkcorner.common import dto
+from talkcorner.common.database.models.main import Base
 
 
 class User(Base):
@@ -17,3 +18,13 @@ class User(Base):
     email: so.Mapped[str] = so.mapped_column(nullable=False, unique=True)
     email_verified: so.Mapped[bool] = so.mapped_column(nullable=False, default=False)
     created_at: so.Mapped[dt.datetime] = so.mapped_column(nullable=False, default=dt.datetime.utcnow)
+
+    def to_dto(self) -> dto.User:
+        return dto.User(
+            id=self.id,
+            username=self.username,
+            password=self.password,
+            email=self.email,
+            email_verified=self.email_verified,
+            created_at=self.created_at
+        )

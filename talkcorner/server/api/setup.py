@@ -4,8 +4,8 @@ from talkcorner.server.api.api_v1.dependencies.database import DatabaseProviderM
 from talkcorner.server.api.api_v1.dependencies.settings import SettingsMarker
 from talkcorner.server.api.api_v1.endpoints.setup import register_routers
 from talkcorner.server.core.event import create_on_startup_handler, create_on_shutdown_handler
-from talkcorner.server import types
-from talkcorner.server.database.factory import (
+from talkcorner.common import types
+from talkcorner.common.database.factory import (
     sa_create_engine,
     sa_create_session_factory,
     sa_create_provider

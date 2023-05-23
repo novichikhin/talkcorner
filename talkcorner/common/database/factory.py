@@ -3,7 +3,7 @@ from typing import AsyncGenerator, Callable, Any
 from sqlalchemy.ext.asyncio import AsyncSession, AsyncEngine, async_sessionmaker
 from sqlalchemy.ext.asyncio import create_async_engine
 
-from talkcorner.server.database.provider import DatabaseProvider
+from talkcorner.common.database.provider import DatabaseProvider
 
 
 def sa_create_engine(connection_uri: str, **engine_kwargs) -> AsyncEngine:

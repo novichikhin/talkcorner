@@ -5,8 +5,9 @@ import sqlalchemy as sa
 import sqlalchemy.orm as so
 import uuid6
 
-from talkcorner.server.database.models.main import Base
-from talkcorner.server.database.models.forum import Forum
+from talkcorner.common import dto
+from talkcorner.common.database.models.main import Base
+from talkcorner.common.database.models.forum import Forum
 
 
 class Topic(Base):
@@ -22,3 +23,13 @@ class Topic(Base):
     created_at: so.Mapped[dt.datetime] = so.mapped_column(nullable=False, default=dt.datetime.utcnow)
 
     forum: so.Mapped["Forum"] = so.relationship()
+
+    def to_dto(self, forum: dto.Forum) -> dto.Topic:
+        return dto.Topic(
+            id=self.id,
+            forum_id=self.forum_id,
+            title=self.title,
+            body=self.body,
+            created_at=self.created_at,
+            forum=forum
+        )

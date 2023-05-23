@@ -6,8 +6,8 @@ from sqlalchemy.ext.asyncio import AsyncEngine
 
 from talkcorner.server.api.api_v1.dependencies.database import DatabaseEngineMarker
 from talkcorner.server.api.api_v1.dependencies.nats import NatsMarker
-from talkcorner.server import types
-from talkcorner.server.queue.nats.factory import (
+from talkcorner.common import types
+from talkcorner.common.queue.nats.factory import (
     nats_create_connect,
     nats_create_jetstream,
     js_create_or_update_stream
