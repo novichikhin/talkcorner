@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from talkcorner.server.api.api_v1.dependencies.database import DatabaseProviderMarker, DatabaseEngineMarker
+from talkcorner.server.api.api_v1.dependencies.database import DatabaseHolderMarker, DatabaseEngineMarker
 from talkcorner.server.api.api_v1.dependencies.settings import SettingsMarker
 from talkcorner.server.api.api_v1.endpoints.setup import register_routers
 from talkcorner.server.core.event import create_on_startup_handler, create_on_shutdown_handler
@@ -8,7 +8,7 @@ from talkcorner.common import types
 from talkcorner.common.database.factory import (
     sa_create_engine,
     sa_create_session_factory,
-    sa_create_provider
+    sa_create_holder
 )
 
 
@@ -24,7 +24,7 @@ def register_app(settings: types.Setting) -> FastAPI:
         {
             SettingsMarker: lambda: settings,
             DatabaseEngineMarker: lambda: engine,
-            DatabaseProviderMarker: sa_create_provider(session_factory=session_factory)
+            DatabaseHolderMarker: sa_create_holder(session_factory=session_factory)
         }
     )
 

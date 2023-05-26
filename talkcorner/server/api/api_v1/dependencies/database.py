@@ -2,5 +2,5 @@ class DatabaseEngineMarker:
     pass
 
 
-class DatabaseProviderMarker:
+class DatabaseHolderMarker:
     pass
