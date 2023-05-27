@@ -10,3 +10,18 @@ from talkcorner.common.types.forum import (
     ForumCreate,
     ForumUpdate
 )
+from talkcorner.common.types.subforum import (
+    Subforum,
+    SubforumCreate,
+    SubforumUpdate
+)
+from talkcorner.common.types.topic.main import (
+    Topic,
+    TopicCreate,
+    TopicUpdate
+)
+from talkcorner.common.types.topic.message import (
+    TopicMessage,
+    TopicMessageCreate,
+    TopicMessageUpdate
+)
