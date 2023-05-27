@@ -1,4 +1,5 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
+from fastapi.exceptions import RequestValidationError
 
 from talkcorner.server.api.api_v1.dependencies.database import DatabaseHolderMarker, DatabaseEngineMarker
 from talkcorner.server.api.api_v1.dependencies.settings import SettingsMarker
@@ -10,10 +11,21 @@ from talkcorner.common.database.factory import (
     sa_create_session_factory,
     sa_create_holder
 )
+from talkcorner.server.core.exceptions.handler import (
+    http_exception_handler,
+    request_validation_error_handler,
+    exception_handler
+)
 
 
 def register_app(settings: types.Setting) -> FastAPI:
-    app = FastAPI()
+    app = FastAPI(
+        exception_handlers={
+            HTTPException: http_exception_handler,
+            RequestValidationError: request_validation_error_handler,
+            Exception: exception_handler
+        }
+    )
 
     engine = sa_create_engine(connection_uri=settings.DATABASE_URI)
     session_factory = sa_create_session_factory(engine=engine)

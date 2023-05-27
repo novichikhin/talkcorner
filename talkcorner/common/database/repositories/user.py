@@ -1,3 +1,5 @@
+import sqlalchemy as sa
+
 from typing import Optional
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -21,3 +23,12 @@ class UserRepository(Repository[models.User]):
         users = await self._read_all()
 
         return [user.to_dto() for user in users]
+
+    async def read_by_login(self, username: str) -> Optional[dto.User]:
+        result: sa.Result[tuple[models.User]] = await self._session.execute(
+            sa.select(models.User).where(models.User.username == username)
+        )
+
+        user: Optional[models.User] = result.scalar()
+
+        return user.to_dto() if user else None
