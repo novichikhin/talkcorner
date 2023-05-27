@@ -75,7 +75,7 @@ async def get_user(
             algorithms=[ALGORITHMS.HS256]
         )
 
-        user_id = payload.get("account_id")
+        user_id = payload.get("user_id")
 
         if not user_id:
             raise credentials_exception
