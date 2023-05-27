@@ -11,6 +11,7 @@ class User:
     username: str
     password: str
     email: str
+    email_token: uuid.UUID
     email_verified: bool
 
     created_at: dt.datetime

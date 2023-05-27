@@ -22,7 +22,9 @@ class Repository(ABC, Generic[Model]):
     async def _read_by_id(self, id: Id) -> Optional[Model]:
         return await self._session.get(self._model, id)
 
-    async def _read_all(self) -> Sequence[Model]:
-        result: sa.ScalarResult[Model] = await self._session.scalars(sa.select(self._model))
+    async def _read_all(self, offset: int, limit: int) -> Sequence[Model]:
+        result: sa.ScalarResult[Model] = await self._session.scalars(
+            sa.select(self._model).offset(offset).limit(limit)
+        )
 
         return result.all()

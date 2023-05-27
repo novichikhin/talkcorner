@@ -1,7 +1,9 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.exceptions import RequestValidationError
+from passlib.context import CryptContext
 
 from talkcorner.server.api.api_v1.dependencies.database import DatabaseHolderMarker, DatabaseEngineMarker
+from talkcorner.server.api.api_v1.dependencies.security import CryptContextMarker
 from talkcorner.server.api.api_v1.dependencies.settings import SettingsMarker
 from talkcorner.server.api.api_v1.endpoints.setup import register_routers
 from talkcorner.server.core.event import create_on_startup_handler, create_on_shutdown_handler
@@ -27,6 +29,8 @@ def register_app(settings: types.Setting) -> FastAPI:
         }
     )
 
+    crypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
     engine = sa_create_engine(connection_uri=settings.DATABASE_URI)
     session_factory = sa_create_session_factory(engine=engine)
 
@@ -36,7 +40,8 @@ def register_app(settings: types.Setting) -> FastAPI:
         {
             SettingsMarker: lambda: settings,
             DatabaseEngineMarker: lambda: engine,
-            DatabaseHolderMarker: sa_create_holder(session_factory=session_factory)
+            DatabaseHolderMarker: sa_create_holder(session_factory=session_factory),
+            CryptContextMarker: lambda: crypt_context
         }
     )
 

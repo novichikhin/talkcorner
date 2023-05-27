@@ -16,6 +16,7 @@ class User(UserValidators):
     id: uuid.UUID
 
     email: EmailStr
+    email_token: uuid.UUID
     email_verified: bool
 
     created_at: dt.datetime
@@ -27,6 +28,7 @@ class User(UserValidators):
             username=user.username,
             password=user.password,
             email=EmailStr(user.email),
+            email_token=user.email_token,
             email_verified=user.email_verified,
             created_at=user.created_at
         )
