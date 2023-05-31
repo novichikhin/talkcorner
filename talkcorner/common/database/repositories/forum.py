@@ -50,7 +50,7 @@ class ForumRepository(Repository[models.Forum]):
     async def delete(
             self,
             forum_id: int,
-            creator_id: int
+            creator_id: uuid.UUID
     ) -> Optional[dto.Forum]:
         stmt = sa.delete(models.Forum).where(
             models.Forum.id == forum_id,
