@@ -1,4 +1,5 @@
 import datetime as dt
+import uuid
 from typing import Optional
 
 from pydantic import BaseModel, Field
@@ -16,13 +17,16 @@ class Forum(ForumValidators):
 
     created_at: dt.datetime
 
+    creator_id: uuid.UUID
+
     @classmethod
     def from_dto(cls, forum: dto.Forum) -> "Forum":
         return Forum(
             id=forum.id,
             title=forum.title,
             description=forum.description,
-            created_at=forum.created_at
+            created_at=forum.created_at,
+            creator_id=forum.creator_id
         )
 
 

@@ -32,11 +32,10 @@ def get_token(authorization: str) -> str:
 
 
 def create_access_token(payload: dict[str, Any], settings: types.Setting) -> str:
+    payload["exp"] = dt.datetime.utcnow() + dt.timedelta(minutes=settings.AUTHORIZE_ACCESS_TOKEN_EXPIRE_MINUTES)
+
     return jwt.encode(
-        claims={
-            "exp": dt.datetime.utcnow() + dt.timedelta(minutes=settings.AUTHORIZE_ACCESS_TOKEN_EXPIRE_MINUTES),
-            **payload
-        },
+        claims=payload,
         key=settings.AUTHORIZE_SECRET_KEY,
         algorithm=ALGORITHMS.HS256
     )
