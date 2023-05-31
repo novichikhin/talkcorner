@@ -19,4 +19,4 @@ def register_routers(app: FastAPI, settings: types.Setting) -> None:
         tags=["forum"]
     )
 
-    app.include_router(router=router, prefix=settings.API_V1_STR)
+    app.include_router(router=router, prefix=settings.api_v1_str)

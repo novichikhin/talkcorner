@@ -31,7 +31,7 @@ def register_app(settings: types.Setting) -> FastAPI:
 
     crypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-    engine = sa_create_engine(connection_uri=settings.DATABASE_URI)
+    engine = sa_create_engine(connection_uri=settings.database_uri)
     session_factory = sa_create_session_factory(engine=engine)
 
     register_routers(app=app, settings=settings)

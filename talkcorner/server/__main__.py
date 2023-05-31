@@ -37,7 +37,7 @@ def run_application() -> None:
                 return self.application
 
         options = {
-            "bind": f"{settings.SERVER_HOST}:{settings.SERVER_PORT}",
+            "bind": f"{settings.server_host}:{settings.server_port}",
             "preload_app": True,
             "workers": number_of_workers(),
             "worker_class": "uvicorn.workers.UvicornWorker",
@@ -50,8 +50,8 @@ def run_application() -> None:
 
         config = uvicorn.Config(
             app,
-            host=settings.SERVER_HOST,
-            port=settings.SERVER_PORT,
+            host=settings.server_host,
+            port=settings.server_port,
             reload=True,
             log_level=logging.INFO
         )

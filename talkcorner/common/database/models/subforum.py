@@ -1,3 +1,5 @@
+from typing import Optional
+
 import sqlalchemy as sa
 import sqlalchemy.orm as so
 
@@ -19,8 +21,8 @@ class Subforum(Base):
 
     def to_dto(
             self,
-            parent_forum: dto.Forum,
-            child_forum: dto.Forum
+            parent_forum: Optional[dto.Forum] = None,
+            child_forum: Optional[dto.Forum] = None
     ) -> dto.Subforum:
         return dto.Subforum(
             id=self.id,

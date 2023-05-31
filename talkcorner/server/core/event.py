@@ -21,9 +21,9 @@ def create_on_startup_handler(
 ) -> Callable[..., Coroutine[Any, Any, None]]:
 
     async def on_startup() -> None:
-        nats = await nats_create_connect(connection_uri=settings.NATS_URL)
+        nats = await nats_create_connect(connection_uri=settings.nats_url)
         js = nats_create_jetstream(nats=nats)
-        await js_create_or_update_stream(js=js, stream_name=settings.NATS_STREAM_NAME)
+        await js_create_or_update_stream(js=js, stream_name=settings.nats_stream_name)
 
         app.dependency_overrides.update(
             {

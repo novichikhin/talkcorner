@@ -2,19 +2,19 @@ from pydantic import BaseSettings, Field
 
 
 class Setting(BaseSettings):
-    API_V1_STR: str = Field(default="/api/v1")
+    api_v1_str: str = Field(default="/api/v1")
 
-    SERVER_HOST: str = Field(default="127.0.0.1")
-    SERVER_PORT: int = Field(default=8080)
+    server_host: str = Field(default="127.0.0.1")
+    server_port: int = Field(default=8080)
 
-    DATABASE_URI: str = Field(default=...)
+    database_uri: str = Field(default=...)
 
-    NATS_URL: str = Field(default=...)
-    NATS_STREAM_NAME: str = Field(default=...)
+    nats_url: str = Field(default=...)
+    nats_stream_name: str = Field(default=...)
 
-    AUTHORIZE_SECRET_KEY: str = Field(default=...)
-    AUTHORIZE_ACCESS_TOKEN_EXPIRE_MINUTES: int = Field(default=...)
-    AUTHORIZE_REFRESH_TOKEN_EXPIRE_MINUTES: int = Field(default=...)
+    authorize_secret_key: str = Field(default=...)
+    authorize_access_token_expire_minutes: int = Field(default=...)
+    authorize_refresh_token_expire_minutes: int = Field(default=...)
 
     class Config:
         env_file = ".env"
