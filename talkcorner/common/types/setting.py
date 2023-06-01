@@ -1,7 +1,18 @@
+from typing import Optional
+
 from pydantic import BaseSettings, Field
+from pydantic.env_settings import env_file_sentinel, DotenvType
 
 
 class Setting(BaseSettings):
+
+    def __init__(
+            self,
+            _env_file: Optional[DotenvType] = env_file_sentinel,
+            **kwargs
+    ):
+        super().__init__(_env_file=_env_file, **kwargs)
+
     api_v1_str: str = Field(default="/api/v1")
 
     server_host: str = Field(default="127.0.0.1")

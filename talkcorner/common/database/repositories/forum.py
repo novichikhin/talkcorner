@@ -26,6 +26,29 @@ class ForumRepository(Repository[models.Forum]):
 
         return forum.to_dto() if forum else None
 
+    async def update(
+            self,
+            forum_id: int,
+            creator_id: uuid.UUID,
+            data: dict
+    ) -> Optional[dto.Forum]:
+        stmt = sa.update(models.Forum).where(
+            models.Forum.id == forum_id,
+            models.Forum.creator_id == creator_id
+        ).values(
+            **data
+        ).returning(models.Forum)
+
+        result = await self._session.execute(
+            sa.select(models.Forum).from_statement(stmt)
+        )
+
+        await self._session.commit()
+
+        forum: Optional[models.Forum] = result.scalar()
+
+        return forum.to_dto() if forum else None
+
     async def create(
             self,
             title: str,

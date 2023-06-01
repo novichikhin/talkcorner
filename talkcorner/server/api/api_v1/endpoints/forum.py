@@ -65,6 +65,31 @@ async def create(
     return types.Forum.from_dto(forum=forum)
 
 
+@router.put(
+    "/{id}",
+    response_model=types.Forum
+)
+async def update(
+        id: int,
+        forum_update: types.ForumUpdate,
+        holder: DatabaseHolder = Depends(DatabaseHolderMarker),
+        user: types.User = Depends(get_user)
+):
+    forum = await holder.forum.update(
+        forum_id=id,
+        creator_id=user.id,
+        data=forum_update.dict(exclude_unset=True)
+    )
+
+    if not forum:
+        raise HTTPException(
+            status_code=HTTP_404_NOT_FOUND,
+            detail="Forum not found or you cannot update this forum"
+        )
+
+    return types.Forum.from_dto(forum=forum)
+
+
 @router.delete(
     "/{id}",
     response_model=types.Forum
