@@ -128,6 +128,8 @@ async def test_create_user(
 
     user = await holder.user.read_by_id(user_id=uuid.UUID(json["id"]))
 
+    assert user
+
     assert user.username == json["username"]
     assert user.email == json["email"]
     assert str(user.email_token) == json["email_token"]
