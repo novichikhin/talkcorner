@@ -1,14 +1,9 @@
-from typing import Protocol
+from typing import Protocol, Optional
 
 from talkcorner.common import dto
 
 
 class CreateUser(Protocol):
 
-    async def __call__(
-            self,
-            username: str,
-            hashed_password: str,
-            email: str
-    ) -> dto.User:
+    async def __call__(self, password: Optional[str] = None) -> dto.User:
         pass

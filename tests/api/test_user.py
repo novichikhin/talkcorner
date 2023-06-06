@@ -5,7 +5,6 @@ from httpx import AsyncClient
 from passlib.context import CryptContext
 
 from talkcorner.common.database.holder import DatabaseHolder
-from talkcorner.server.core.security import get_password_hash
 from tests.fixtures.protocols.auth_token import CreateAuthToken
 from tests.fixtures.protocols.user import CreateUser
 
@@ -16,13 +15,7 @@ async def test_login_user(
         crypt_context: CryptContext,
         create_user: CreateUser
 ):
-    password = "qwerty12345"
-
-    user = await create_user(
-        username="Test User",
-        hashed_password=get_password_hash(crypt_context=crypt_context, password=password),
-        email="test@ya.ru"
-    )
+    user = await create_user(password=(password:="qwerty12345"))
 
     response = await client.post(
         "/api/v1/user/login",
@@ -42,19 +35,7 @@ async def test_get_users(
         create_user: CreateUser,
         create_auth_token: CreateAuthToken
 ):
-    password = "qwerty12345"
-
-    user_data = {
-        "username": "Test User",
-        "hashed_password": get_password_hash(crypt_context=crypt_context, password=password),
-        "email": "test@ya.ru"
-    }
-
-    user = await create_user(
-        username=user_data["username"],
-        hashed_password=user_data["hashed_password"],
-        email=user_data["email"]
-    )
+    user = await create_user()
 
     response = await client.get(
         "/api/v1/user/",
@@ -65,7 +46,7 @@ async def test_get_users(
 
     json = response.json()
 
-    assert len(json)
+    assert len(json) == 1
 
     assert str(user.id) == json[0]["id"]
     assert user.username == json[0]["username"]
@@ -78,19 +59,7 @@ async def test_get_user(
         create_user: CreateUser,
         create_auth_token: CreateAuthToken
 ):
-    password = "qwerty12345"
-
-    user_data = {
-        "username": "Test User",
-        "hashed_password": get_password_hash(crypt_context=crypt_context, password=password),
-        "email": "test@ya.ru"
-    }
-
-    user = await create_user(
-        username=user_data["username"],
-        hashed_password=user_data["hashed_password"],
-        email=user_data["email"]
-    )
+    user = await create_user()
 
     response = await client.get(
         f"/api/v1/user/{user.id}",
