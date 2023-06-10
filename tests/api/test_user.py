@@ -9,7 +9,6 @@ from tests.fixtures.protocols.auth_token import CreateAuthToken
 from tests.fixtures.protocols.user import CreateUser
 
 
-@pytest.mark.asyncio
 async def test_login_user(
         client: AsyncClient,
         crypt_context: CryptContext,
@@ -28,7 +27,6 @@ async def test_login_user(
     assert response.status_code == 200
 
 
-@pytest.mark.asyncio
 async def test_get_users(
         client: AsyncClient,
         crypt_context: CryptContext,
@@ -52,7 +50,6 @@ async def test_get_users(
     assert user.username == json[0]["username"]
 
 
-@pytest.mark.asyncio
 async def test_get_user(
         client: AsyncClient,
         crypt_context: CryptContext,
@@ -74,7 +71,6 @@ async def test_get_user(
     assert user.username == json["username"]
 
 
-@pytest.mark.asyncio
 async def test_create_user(
         client: AsyncClient,
         crypt_context: CryptContext,
