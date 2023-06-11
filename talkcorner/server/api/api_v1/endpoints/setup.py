@@ -1,7 +1,11 @@
 from fastapi import FastAPI, APIRouter
 
 from talkcorner.common import types
-from talkcorner.server.api.api_v1.endpoints import user, forum
+from talkcorner.server.api.api_v1.endpoints import (
+    user,
+    forum,
+    subforum
+)
 
 
 def register_routers(app: FastAPI, settings: types.Setting) -> None:
@@ -17,6 +21,12 @@ def register_routers(app: FastAPI, settings: types.Setting) -> None:
         forum.router,
         prefix="/forum",
         tags=["forum"]
+    )
+
+    router.include_router(
+        subforum.router,
+        prefix="/subforum",
+        tags=["subforum"]
     )
 
     app.include_router(router=router, prefix=settings.api_v1_str)

@@ -5,6 +5,7 @@ from typing import Optional
 from pydantic import BaseModel, Field, EmailStr
 
 from talkcorner.common import dto
+from talkcorner.common.types.common import Update
 
 
 class UserValidators(BaseModel):
@@ -42,5 +43,5 @@ class UserCreate(UserValidators):
     email: EmailStr
 
 
-class UserUpdate(UserValidators):
+class UserUpdate(UserValidators, Update):
     password: Optional[str] # type: ignore

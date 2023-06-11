@@ -4,6 +4,8 @@ import uuid
 from dataclasses import dataclass
 from typing import Optional
 
+from talkcorner.common.dto import User
+
 
 @dataclass
 class Forum:
@@ -15,3 +17,5 @@ class Forum:
     created_at: dt.datetime
 
     creator_id: uuid.UUID
+
+    creator: Optional["User"]

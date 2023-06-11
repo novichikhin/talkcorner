@@ -5,6 +5,7 @@ from typing import Optional
 from pydantic import BaseModel, Field
 
 from talkcorner.common import dto
+from talkcorner.common.types.common import Update
 
 
 class TopicMessageValidators(BaseModel):
@@ -32,5 +33,5 @@ class TopicMessageCreate(TopicMessageValidators):
     topic_id: uuid.UUID
 
 
-class TopicMessageUpdate(TopicMessageValidators):
+class TopicMessageUpdate(TopicMessageValidators, Update):
     body: Optional[str] # type: ignore

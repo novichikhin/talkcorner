@@ -23,11 +23,12 @@ class Forum(Base):
 
     creator: so.Mapped["User"] = so.relationship()
 
-    def to_dto(self) -> dto.Forum:
+    def to_dto(self, creator: Optional[dto.User] = None) -> dto.Forum:
         return dto.Forum(
             id=self.id,
             title=self.title,
             description=self.description,
             created_at=self.created_at,
-            creator_id=self.creator_id
+            creator_id=self.creator_id,
+            creator=creator
         )
