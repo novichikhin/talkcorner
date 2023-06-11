@@ -4,9 +4,10 @@ import sqlalchemy as sa
 
 from typing import Optional
 
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from talkcorner.common import dto
+from talkcorner.common import dto, exceptions
 from talkcorner.common.database import models
 from talkcorner.common.database.repositories.main import Repository
 
@@ -39,22 +40,23 @@ class ForumRepository(Repository[models.Forum]):
             **data
         ).returning(models.Forum)
 
-        result = await self._session.execute(
-            sa.select(models.Forum).from_statement(stmt)
-        )
-
-        await self._session.commit()
-
-        forum: Optional[models.Forum] = result.scalar()
-
-        return forum.to_dto() if forum else None
+        try:
+            result: sa.ScalarResult[models.Forum] = await self._session.scalars(
+                sa.select(models.Forum).from_statement(stmt)
+            )
+            await self._session.commit()
+        except IntegrityError:
+            await self._session.rollback()
+            raise exceptions.UnableUpdateForum
+        else:
+            return forum.to_dto() if (forum := result.first()) else None
 
     async def create(
             self,
             title: str,
             description: Optional[str],
             creator_id: uuid.UUID
-    ) -> Optional[dto.Forum]:
+    ) -> dto.Forum:
         stmt = sa.insert(models.Forum).values(
             title=title,
             description=description,
@@ -66,9 +68,7 @@ class ForumRepository(Repository[models.Forum]):
         )
         await self._session.commit()
 
-        forum: Optional[models.Forum] = result.first()
-
-        return forum.to_dto() if forum else None
+        return (forum := result.one()).to_dto()
 
     async def delete(
             self,
@@ -85,6 +85,4 @@ class ForumRepository(Repository[models.Forum]):
         )
         await self._session.commit()
 
-        forum: Optional[models.Forum] = result.first()
-
-        return forum.to_dto() if forum else None
+        return forum.to_dto() if (forum := result.first()) else None

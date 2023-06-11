@@ -97,5 +97,4 @@ async def test_create_user(
 
     assert user.username == json["username"]
     assert user.email == json["email"]
-    assert str(user.email_token) == json["email_token"]
     assert user.email_verified == json["email_verified"]

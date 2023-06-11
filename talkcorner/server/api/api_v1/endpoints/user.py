@@ -5,7 +5,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from passlib.context import CryptContext
 from starlette.status import HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
 
-from talkcorner.common import types
+from talkcorner.common import types, exceptions
 from talkcorner.common.database.holder import DatabaseHolder
 from talkcorner.server.api.api_v1.dependencies.database import DatabaseHolderMarker
 from talkcorner.server.api.api_v1.dependencies.security import CryptContextMarker
@@ -72,20 +72,30 @@ async def read(id: uuid.UUID, holder: DatabaseHolder = Depends(DatabaseHolderMar
 @router.post(
     "/",
     response_model=types.User,
-    response_model_exclude={"password"}
+    response_model_exclude={"password", "email_token"}
 )
 async def create(
         user_create: types.UserCreate,
         holder: DatabaseHolder = Depends(DatabaseHolderMarker),
         crypt_context: CryptContext = Depends(CryptContextMarker)
 ):
-    user = await holder.user.create(
-        username=user_create.username,
-        password=get_password_hash(crypt_context=crypt_context, password=user_create.password),
-        email=user_create.email
-    )
-
-    if not user:
+    try:
+        user = await holder.user.create(
+            username=user_create.username,
+            password=get_password_hash(crypt_context=crypt_context, password=user_create.password),
+            email=user_create.email
+        )
+    except exceptions.EmailAlreadyExists:
+        raise HTTPException(
+            status_code=HTTP_400_BAD_REQUEST,
+            detail="User email already exists"
+        )
+    except exceptions.UsernameAlreadyExists:
+        raise HTTPException(
+            status_code=HTTP_400_BAD_REQUEST,
+            detail="User username already exists"
+        )
+    except exceptions.UnableCreateUser:
         raise HTTPException(
             status_code=HTTP_400_BAD_REQUEST,
             detail="Unable to create user"

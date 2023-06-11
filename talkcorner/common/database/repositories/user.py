@@ -2,12 +2,13 @@ import uuid
 
 import sqlalchemy as sa
 
-from typing import Optional
+from typing import Optional, NoReturn
 
 from sqlalchemy.dialects.postgresql import insert
+from sqlalchemy.exc import DBAPIError, IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from talkcorner.common import dto
+from talkcorner.common import dto, exceptions
 from talkcorner.common.database import models
 from talkcorner.common.database.repositories.main import Repository
 
@@ -28,11 +29,11 @@ class UserRepository(Repository[models.User]):
         return [user.to_dto() for user in users]
 
     async def read_by_login(self, username: str) -> Optional[dto.User]:
-        result: sa.Result[tuple[models.User]] = await self._session.execute(
+        result: sa.ScalarResult[models.User] = await self._session.scalars(
             sa.select(models.User).where(models.User.username == username)
         )
 
-        user: Optional[models.User] = result.scalar()
+        user: Optional[models.User] = result.first()
 
         return user.to_dto() if user else None
 
@@ -41,18 +42,30 @@ class UserRepository(Repository[models.User]):
             username: str,
             password: str,
             email: str
-    ) -> Optional[dto.User]:
+    ) -> dto.User:
         stmt = insert(models.User).values(
             username=username,
             password=password,
             email=email
-        ).on_conflict_do_nothing().returning(models.User)
+        ).returning(models.User)
 
-        result: sa.Result[tuple[models.User]] = await self._session.execute(
-            sa.select(models.User).from_statement(stmt)
-        )
-        await self._session.commit()
+        try:
+            result: sa.ScalarResult[models.User] = await self._session.scalars(
+                sa.select(models.User).from_statement(stmt)
+            )
+            await self._session.commit()
+        except IntegrityError as err:
+            await self._session.rollback()
+            self._parse_create_error(err)
+        else:
+            return (user := result.one()).to_dto()
 
-        user: Optional[models.User] = result.scalar()
+    def _parse_create_error(self, err: DBAPIError) -> NoReturn:
+        constraint_name = err.__cause__.__cause__.constraint_name # type: ignore
 
-        return user.to_dto() if user else None
+        if constraint_name == "users_email_key":
+            raise exceptions.EmailAlreadyExists from err
+        elif constraint_name == "users_username_key":
+            raise exceptions.UsernameAlreadyExists from err
+        else:
+            raise exceptions.UnableCreateUser from err

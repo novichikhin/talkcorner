@@ -1,12 +1,13 @@
 import uuid
-from typing import Optional
+from typing import Optional, NoReturn
 
 import sqlalchemy as sa
 from sqlalchemy.dialects.postgresql import insert
+from sqlalchemy.exc import IntegrityError, DBAPIError
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from talkcorner.common import dto
+from talkcorner.common import dto, exceptions
 from talkcorner.common.database import models
 from talkcorner.common.database.repositories.main import Repository
 
@@ -39,38 +40,39 @@ class SubforumRepository(Repository[models.Subforum]):
             **data
         ).returning(models.Subforum)
 
-        result = await self._session.execute(
-            sa.select(models.Subforum).from_statement(stmt)
-        )
-
-        await self._session.commit()
-
-        subforum: Optional[models.Subforum] = result.scalar()
-
-        return subforum.to_dto() if subforum else None
+        try:
+            result: sa.ScalarResult[models.Subforum] = await self._session.scalars(
+                sa.select(models.Subforum).from_statement(stmt)
+            )
+            await self._session.commit()
+        except IntegrityError:
+            await self._session.rollback()
+            raise exceptions.UnableUpdateSubforum
+        else:
+            return subforum.to_dto() if (subforum := result.first()) else None
 
     async def create(
             self,
             parent_forum_id: int,
             child_forum_id: int,
             creator_id: uuid.UUID
-    ) -> Optional[dto.Subforum]:
+    ) -> dto.Subforum:
         stmt = insert(models.Subforum).values(
             parent_forum_id=parent_forum_id,
             child_forum_id=child_forum_id,
             creator_id=creator_id
-        ).on_conflict_do_nothing(
-            index_elements=[models.Subforum.parent_forum_id, models.Subforum.child_forum_id]
         ).returning(models.Subforum)
 
-        result = await self._session.execute(
-            sa.select(models.Subforum).from_statement(stmt)
-        )
-        await self._session.commit()
-
-        subforum: Optional[models.Subforum] = result.scalar()
-
-        return subforum.to_dto() if subforum else None
+        try:
+            result: sa.ScalarResult[models.Subforum] = await self._session.scalars(
+                sa.select(models.Subforum).from_statement(stmt)
+            )
+            await self._session.commit()
+        except IntegrityError as err:
+            await self._session.rollback()
+            self._parse_create_error(err)
+        else:
+            return (subforum := result.one()).to_dto()
 
     async def delete(
             self,
@@ -90,3 +92,11 @@ class SubforumRepository(Repository[models.Subforum]):
         subforum: Optional[models.Subforum] = result.first()
 
         return subforum.to_dto() if subforum else None
+
+    def _parse_create_error(self, err: DBAPIError) -> NoReturn:
+        constraint_name = err.__cause__.__cause__.constraint_name # type: ignore
+
+        if constraint_name == "subforums_parent_child_forums":
+            raise exceptions.ParentChildForumsAlreadyExists from err
+        else:
+            raise exceptions.UnableCreateSubforum from err

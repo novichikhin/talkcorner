@@ -119,8 +119,6 @@ async def test_update_forum(
         creator_id=user.id
     )
 
-    assert forum
-
     new_description = "New Description"
 
     response = await client.put(
@@ -137,11 +135,11 @@ async def test_update_forum(
 
     assert forum.id == json["id"]
 
-    forum = await holder.forum.read_by_id(forum_id=json["id"])
+    updated_forum = await holder.forum.read_by_id(forum_id=json["id"])
 
-    assert forum
+    assert updated_forum
 
-    assert forum.description == new_description
+    assert updated_forum.description == new_description
 
 
 async def test_delete_forum(
@@ -172,6 +170,6 @@ async def test_delete_forum(
 
     assert forum.id == json["id"]
 
-    forum = await holder.forum.read_by_id(forum_id=json["id"])
+    deleted_forum = await holder.forum.read_by_id(forum_id=json["id"])
 
-    assert not forum
+    assert not deleted_forum

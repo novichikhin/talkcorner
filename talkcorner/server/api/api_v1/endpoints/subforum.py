@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from starlette.status import HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
 
-from talkcorner.common import types
+from talkcorner.common import types, exceptions
 from talkcorner.common.database.holder import DatabaseHolder
 from talkcorner.server.api.api_v1.dependencies.database import DatabaseHolderMarker
 from talkcorner.server.core.auth import get_user
@@ -66,13 +66,18 @@ async def create(
             detail="Child forum not found or you cannot interact with this forum"
         )
 
-    subforum = await holder.subforum.create(
-        parent_forum_id=subforum_create.parent_forum_id,
-        child_forum_id=subforum_create.child_forum_id,
-        creator_id=user.id
-    )
-
-    if not subforum:
+    try:
+        subforum = await holder.subforum.create(
+            parent_forum_id=subforum_create.parent_forum_id,
+            child_forum_id=subforum_create.child_forum_id,
+            creator_id=user.id
+        )
+    except exceptions.ParentChildForumsAlreadyExists:
+        raise HTTPException(
+            status_code=HTTP_400_BAD_REQUEST,
+            detail="Parent and child forum already exists"
+        )
+    except exceptions.UnableCreateSubforum:
         raise HTTPException(
             status_code=HTTP_400_BAD_REQUEST,
             detail="Unable to create subforum"
@@ -109,11 +114,17 @@ async def update(
                 detail="Child forum not found or you cannot interact with this forum"
             )
 
-    subforum = await holder.subforum.update(
-        subforum_id=id,
-        creator_id=user.id,
-        data=subforum_update.dict(exclude_unset=True)
-    )
+    try:
+        subforum = await holder.subforum.update(
+            subforum_id=id,
+            creator_id=user.id,
+            data=subforum_update.dict(exclude_unset=True)
+        )
+    except exceptions.UnableUpdateSubforum:
+        raise HTTPException(
+            status_code=HTTP_400_BAD_REQUEST,
+            detail="Unable to update subforum"
+        )
 
     if not subforum:
         raise HTTPException(

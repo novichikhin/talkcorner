@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from starlette.status import HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
 
-from talkcorner.common import types
+from talkcorner.common import types, exceptions
 from talkcorner.common.database.holder import DatabaseHolder
 from talkcorner.server.api.api_v1.dependencies.database import DatabaseHolderMarker
 from talkcorner.server.core.auth import get_user
@@ -56,12 +56,6 @@ async def create(
         creator_id=user.id
     )
 
-    if not forum:
-        raise HTTPException(
-            status_code=HTTP_400_BAD_REQUEST,
-            detail="Unable to create forum"
-        )
-
     return types.Forum.from_dto(forum=forum)
 
 
@@ -75,15 +69,21 @@ async def update(
         holder: DatabaseHolder = Depends(DatabaseHolderMarker),
         user: types.User = Depends(get_user)
 ):
-    forum = await holder.forum.update(
-        forum_id=id,
-        creator_id=user.id,
-        data=forum_update.dict(exclude_unset=True)
-    )
+    try:
+        forum = await holder.forum.update(
+            forum_id=id,
+            creator_id=user.id,
+            data=forum_update.dict(exclude_unset=True)
+        )
+    except exceptions.UnableUpdateForum:
+        raise HTTPException(
+            status_code=HTTP_404_NOT_FOUND,
+            detail="Unable to update forum"
+        )
 
     if not forum:
         raise HTTPException(
-            status_code=HTTP_404_NOT_FOUND,
+            status_code=HTTP_400_BAD_REQUEST,
             detail="Forum not found or you cannot update this forum"
         )
 
