@@ -16,10 +16,10 @@ class Subforum(Base):
 
     id: so.Mapped[int] = so.mapped_column(primary_key=True, autoincrement=True)
 
-    parent_forum_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey("forums.id"), nullable=False)
-    child_forum_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey("forums.id"), nullable=False)
+    parent_forum_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey("forums.id", ondelete="CASCADE"), nullable=False)
+    child_forum_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey("forums.id", ondelete="CASCADE"), nullable=False)
 
-    creator_id: so.Mapped[uuid.UUID] = so.mapped_column(sa.ForeignKey("users.id"), nullable=False)
+    creator_id: so.Mapped[uuid.UUID] = so.mapped_column(sa.ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
 
     parent_forum: so.Mapped["Forum"] = so.relationship(foreign_keys="Subforum.parent_forum_id")
     child_forum: so.Mapped["Forum"] = so.relationship(foreign_keys="Subforum.child_forum_id")

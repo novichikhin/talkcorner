@@ -19,7 +19,7 @@ class Forum(Base):
     description: so.Mapped[Optional[str]] = so.mapped_column()
     created_at: so.Mapped[dt.datetime] = so.mapped_column(nullable=False, default=dt.datetime.utcnow)
 
-    creator_id: so.Mapped[uuid.UUID] = so.mapped_column(sa.ForeignKey("users.id"), nullable=False)
+    creator_id: so.Mapped[uuid.UUID] = so.mapped_column(sa.ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
 
     creator: so.Mapped["User"] = so.relationship()
 
