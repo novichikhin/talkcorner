@@ -21,8 +21,6 @@ async def test_get_forums(
         creator_id=user.id
     )
 
-    assert forum
-
     response = await client.get(
         "/api/v1/forum/",
         headers={"Authorization": f"Bearer {create_auth_token(user_id=user.id)}"}
@@ -54,8 +52,6 @@ async def test_get_forum(
         description=None,
         creator_id=user.id
     )
-
-    assert forum
 
     response = await client.get(
         f"/api/v1/forum/{forum.id}",
@@ -156,8 +152,6 @@ async def test_delete_forum(
         description=None,
         creator_id=user.id
     )
-
-    assert forum
 
     response = await client.delete(
         f"/api/v1/forum/{forum.id}",
