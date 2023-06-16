@@ -33,23 +33,17 @@ class ForumRepository(Repository[models.Forum]):
             creator_id: uuid.UUID,
             data: dict
     ) -> Optional[dto.Forum]:
-        stmt = sa.update(models.Forum).where(
-            models.Forum.id == forum_id,
-            models.Forum.creator_id == creator_id
-        ).values(
-            **data
-        ).returning(models.Forum)
-
         try:
-            result: sa.ScalarResult[models.Forum] = await self._session.scalars(
-                sa.select(models.Forum).from_statement(stmt)
+            forum: Optional[models.Forum] = await self._update(
+                models.Forum.id == forum_id,
+                models.Forum.creator_id == creator_id,
+                **data
             )
-            await self._session.commit()
         except IntegrityError:
             await self._session.rollback()
             raise exceptions.UnableUpdateForum
         else:
-            return forum.to_dto() if (forum := result.first()) else None
+            return forum.to_dto() if forum else None
 
     async def create(
             self,
@@ -75,14 +69,9 @@ class ForumRepository(Repository[models.Forum]):
             forum_id: int,
             creator_id: uuid.UUID
     ) -> Optional[dto.Forum]:
-        stmt = sa.delete(models.Forum).where(
+        forum: Optional[models.Forum] = await self._delete(
             models.Forum.id == forum_id,
             models.Forum.creator_id == creator_id
-        ).returning(models.Forum)
-
-        result: sa.ScalarResult[models.Forum] = await self._session.scalars(
-            sa.select(models.Forum).from_statement(stmt)
         )
-        await self._session.commit()
 
-        return forum.to_dto() if (forum := result.first()) else None
+        return forum.to_dto() if forum else None

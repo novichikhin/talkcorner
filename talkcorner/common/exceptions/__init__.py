@@ -9,3 +9,5 @@ from talkcorner.common.exceptions.subforum import (
     UnableCreateSubforum,
     ParentChildForumsAlreadyExists
 )
+from talkcorner.common.exceptions.topic.main import UnableUpdateTopic
+from talkcorner.common.exceptions.topic.message import UnableUpdateTopicMessage
