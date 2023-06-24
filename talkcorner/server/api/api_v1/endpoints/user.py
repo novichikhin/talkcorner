@@ -1,12 +1,19 @@
 import uuid
+from typing import Union
 
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from passlib.context import CryptContext
-from starlette.status import HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
+from starlette.status import (
+    HTTP_404_NOT_FOUND,
+    HTTP_400_BAD_REQUEST,
+    HTTP_409_CONFLICT,
+    HTTP_401_UNAUTHORIZED
+)
 
 from talkcorner.common import types, exceptions
 from talkcorner.common.database.holder import DatabaseHolder
+from talkcorner.common.types import errors
 from talkcorner.server.api.api_v1.dependencies.database import DatabaseHolderMarker
 from talkcorner.server.api.api_v1.dependencies.security import CryptContextMarker
 from talkcorner.server.api.api_v1.dependencies.settings import SettingsMarker
@@ -16,7 +23,16 @@ from talkcorner.server.core.security import get_password_hash
 router = APIRouter()
 
 
-@router.post("/login", response_model=types.Token)
+@router.post(
+    "/login",
+    response_model=types.Token,
+    responses={
+        HTTP_401_UNAUTHORIZED: {
+            "description": "Wrong username (email) or password error",
+            "model": errors.WrongUsernameOrPassword
+        }
+    }
+)
 async def login(
         form_data: OAuth2PasswordRequestForm = Depends(),
         holder: DatabaseHolder = Depends(DatabaseHolderMarker),
@@ -39,7 +55,11 @@ async def login(
     "/",
     response_model=list[types.User],
     dependencies=[Depends(get_user)],
-    response_model_exclude={"email", "email_token", "email_verified", "password"}
+    response_model_exclude={"email", "email_token", "email_verified", "password"},
+    responses={
+        HTTP_401_UNAUTHORIZED: {"description": "Could not validate credentials error", "model": errors.Credentials},
+        HTTP_404_NOT_FOUND: {"description": "User not found error", "model": errors.AuthenticationUserNotFound}
+    }
 )
 async def read_all(
         offset: int = 0,
@@ -55,7 +75,13 @@ async def read_all(
     "/{id}",
     response_model=types.User,
     dependencies=[Depends(get_user)],
-    response_model_exclude={"email", "email_token", "email_verified", "password"}
+    response_model_exclude={"email", "email_token", "email_verified", "password"},
+    responses={
+        HTTP_401_UNAUTHORIZED: {"description": "Could not validate credentials error", "model": errors.Credentials},
+        HTTP_404_NOT_FOUND: {
+            "model": Union[errors.AuthenticationUserNotFound, errors.UserNotFound]
+        }
+    }
 )
 async def read(id: uuid.UUID, holder: DatabaseHolder = Depends(DatabaseHolderMarker)):
     user = await holder.user.read_by_id(user_id=id)
@@ -72,7 +98,11 @@ async def read(id: uuid.UUID, holder: DatabaseHolder = Depends(DatabaseHolderMar
 @router.post(
     "/",
     response_model=types.User,
-    response_model_exclude={"password", "email_token"}
+    response_model_exclude={"password", "email_token"},
+    responses={
+        HTTP_409_CONFLICT: {"model": Union[errors.EmailAlreadyExists, errors.UsernameAlreadyExists]},
+        HTTP_400_BAD_REQUEST: {"description": "Unable to create user error", "model": errors.UnableCreateUser}
+    }
 )
 async def create(
         user_create: types.UserCreate,
@@ -87,15 +117,15 @@ async def create(
         )
     except exceptions.EmailAlreadyExists:
         raise HTTPException(
-            status_code=HTTP_400_BAD_REQUEST,
+            status_code=HTTP_409_CONFLICT,
             detail="User email already exists"
         )
     except exceptions.UsernameAlreadyExists:
         raise HTTPException(
-            status_code=HTTP_400_BAD_REQUEST,
+            status_code=HTTP_409_CONFLICT,
             detail="User username already exists"
         )
-    except exceptions.UnableCreateUser:
+    except exceptions.UnableInteraction:
         raise HTTPException(
             status_code=HTTP_400_BAD_REQUEST,
             detail="Unable to create user"

@@ -36,6 +36,6 @@ class TopicCreate(TopicValidators):
 
 
 class TopicUpdate(TopicValidators, Update):
-    forum_id: Optional[int]
+    forum_id: Optional[int] # type: ignore
     title: Optional[str] # type: ignore
     body: Optional[str] # type: ignore

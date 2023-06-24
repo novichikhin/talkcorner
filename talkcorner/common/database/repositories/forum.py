@@ -39,9 +39,9 @@ class ForumRepository(Repository[models.Forum]):
                 models.Forum.creator_id == creator_id,
                 **data
             )
-        except IntegrityError:
+        except IntegrityError as e:
             await self._session.rollback()
-            raise exceptions.UnableUpdateForum
+            raise exceptions.UnableInteraction from e
         else:
             return forum.to_dto() if forum else None
 

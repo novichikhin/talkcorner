@@ -91,7 +91,7 @@ async def get_user(
     if not user:
         raise HTTPException(
             status_code=HTTP_404_NOT_FOUND,
-            detail=f"User with id {user_id} not found",
+            detail="Authentication user not found",
             headers={"WWW-Authenticate": "Bearer"}
         )
 

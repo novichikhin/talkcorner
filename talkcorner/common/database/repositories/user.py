@@ -56,16 +56,16 @@ class UserRepository(Repository[models.User]):
             await self._session.commit()
         except IntegrityError as err:
             await self._session.rollback()
-            self._parse_create_error(err)
+            self._parse_error(err)
         else:
             return (user := result.one()).to_dto()
 
-    def _parse_create_error(self, err: DBAPIError) -> NoReturn:
+    def _parse_error(self, err: DBAPIError) -> NoReturn:
         constraint_name = err.__cause__.__cause__.constraint_name # type: ignore
 
         if constraint_name == "users_email_key":
             raise exceptions.EmailAlreadyExists from err
         elif constraint_name == "users_username_key":
             raise exceptions.UsernameAlreadyExists from err
-        else:
-            raise exceptions.UnableCreateUser from err
+
+        raise exceptions.UnableInteraction from err

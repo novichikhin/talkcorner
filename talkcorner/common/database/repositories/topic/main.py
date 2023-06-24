@@ -1,8 +1,8 @@
 import uuid
-from typing import Optional
+from typing import Optional, NoReturn
 
 import sqlalchemy as sa
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, DBAPIError
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -38,9 +38,9 @@ class TopicRepository(Repository[models.Topic]):
                 models.Topic.creator_id == creator_id,
                 **data
             )
-        except IntegrityError:
+        except IntegrityError as e:
             await self._session.rollback()
-            raise exceptions.UnableUpdateTopic
+            self._parse_error(err=e)
         else:
             return topic.to_dto() if topic else None
 
@@ -58,12 +58,16 @@ class TopicRepository(Repository[models.Topic]):
             creator_id=creator_id
         ).returning(models.Topic)
 
-        result: sa.ScalarResult[models.Topic] = await self._session.scalars(
-            sa.select(models.Topic).from_statement(stmt)
-        )
-        await self._session.commit()
-
-        return (topic := result.one()).to_dto()
+        try:
+            result: sa.ScalarResult[models.Topic] = await self._session.scalars(
+                sa.select(models.Topic).from_statement(stmt)
+            )
+            await self._session.commit()
+        except IntegrityError as e:
+            await self._session.rollback()
+            self._parse_error(err=e)
+        else:
+            return (topic := result.one()).to_dto()
 
     async def delete(
             self,
@@ -76,3 +80,11 @@ class TopicRepository(Repository[models.Topic]):
         )
 
         return topic.to_dto() if topic else None
+
+    def _parse_error(self, err: DBAPIError) -> NoReturn:
+        constraint_name = err.__cause__.__cause__.constraint_name  # type: ignore
+
+        if constraint_name == "topics_forum_id_fkey":
+            raise exceptions.ForumNotFound from err
+
+        raise exceptions.UnableInteraction from err

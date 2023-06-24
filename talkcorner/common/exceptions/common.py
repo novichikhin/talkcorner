@@ -1,5 +1,5 @@
 from talkcorner.common.exceptions.main import Talkcorner
 
 
-class ParentChildForumsAlreadyExists(Talkcorner):
+class UnableInteraction(Talkcorner):
     pass

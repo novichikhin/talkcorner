@@ -1,12 +1,24 @@
+from typing import Union
+
 from fastapi import APIRouter, Depends, HTTPException
-from starlette.status import HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
+from starlette.status import (
+    HTTP_404_NOT_FOUND,
+    HTTP_400_BAD_REQUEST,
+    HTTP_401_UNAUTHORIZED
+)
 
 from talkcorner.common import types, exceptions
 from talkcorner.common.database.holder import DatabaseHolder
+from talkcorner.common.types import errors
 from talkcorner.server.api.api_v1.dependencies.database import DatabaseHolderMarker
 from talkcorner.server.core.auth import get_user
 
-router = APIRouter()
+router = APIRouter(
+    responses={
+        HTTP_401_UNAUTHORIZED: {"description": "Could not validate credentials error", "model": errors.Credentials},
+        HTTP_404_NOT_FOUND: {"description": "User not found error", "model": errors.AuthenticationUserNotFound}
+    }
+)
 
 
 @router.get(
@@ -27,7 +39,10 @@ async def read_all(
 @router.get(
     "/{id}",
     response_model=types.Subforum,
-    dependencies=[Depends(get_user)]
+    dependencies=[Depends(get_user)],
+    responses={
+        HTTP_404_NOT_FOUND: {"model": Union[errors.AuthenticationUserNotFound, errors.SubforumNotFound]}
+    }
 )
 async def read(id: int, holder: DatabaseHolder = Depends(DatabaseHolderMarker)):
     subforum = await holder.subforum.read_by_id(subforum_id=id)
@@ -43,7 +58,17 @@ async def read(id: int, holder: DatabaseHolder = Depends(DatabaseHolderMarker)):
 
 @router.post(
     "/",
-    response_model=types.Subforum
+    response_model=types.Subforum,
+    responses={
+        HTTP_400_BAD_REQUEST: {
+            "model": Union[
+                errors.ParentForumNotFoundOrNotCreator,
+                errors.ChildForumNotFoundOrNotCreator,
+                errors.ParentChildForumsAlreadyExists,
+                errors.UnableCreateSubforum
+            ]
+        }
+    }
 )
 async def create(
         subforum_create: types.SubforumCreate,
@@ -55,7 +80,7 @@ async def create(
     if not parent_forum or parent_forum.creator_id != user.id:
         raise HTTPException(
             status_code=HTTP_400_BAD_REQUEST,
-            detail="Parent forum not found or you cannot interact with this forum"
+            detail="Parent forum not found or you are not the creator of this forum"
         )
 
     child_forum = await holder.forum.read_by_id(forum_id=subforum_create.child_forum_id)
@@ -63,7 +88,7 @@ async def create(
     if not child_forum or child_forum.creator_id != user.id:
         raise HTTPException(
             status_code=HTTP_400_BAD_REQUEST,
-            detail="Child forum not found or you cannot interact with this forum"
+            detail="Child forum not found or you are not the creator of this forum"
         )
 
     try:
@@ -77,7 +102,7 @@ async def create(
             status_code=HTTP_400_BAD_REQUEST,
             detail="Parent and child forum already exists"
         )
-    except exceptions.UnableCreateSubforum:
+    except exceptions.UnableInteraction:
         raise HTTPException(
             status_code=HTTP_400_BAD_REQUEST,
             detail="Unable to create subforum"
@@ -88,7 +113,20 @@ async def create(
 
 @router.put(
     "/{id}",
-    response_model=types.Subforum
+    response_model=types.Subforum,
+    responses={
+        HTTP_400_BAD_REQUEST: {
+            "model": Union[
+                errors.ParentForumNotFoundOrNotCreator,
+                errors.ChildForumNotFoundOrNotCreator,
+                errors.UnableUpdateSubforum
+            ]
+        },
+        HTTP_404_NOT_FOUND: {
+            "description": "Subforum not found or you are not the creator of this subforum error",
+            "model": errors.SubforumNotFoundOrNotCreator
+        }
+    }
 )
 async def update(
         id: int,
@@ -102,7 +140,7 @@ async def update(
         if not parent_forum or parent_forum.creator_id != user.id:
             raise HTTPException(
                 status_code=HTTP_400_BAD_REQUEST,
-                detail="Parent forum not found or you cannot interact with this forum"
+                detail="Parent forum not found or you are not the creator of this forum"
             )
 
     if subforum_update.child_forum_id:
@@ -111,7 +149,7 @@ async def update(
         if not child_forum or child_forum.creator_id != user.id:
             raise HTTPException(
                 status_code=HTTP_400_BAD_REQUEST,
-                detail="Child forum not found or you cannot interact with this forum"
+                detail="Child forum not found or you are not the creator of this forum"
             )
 
     try:
@@ -120,7 +158,7 @@ async def update(
             creator_id=user.id,
             data=subforum_update.dict(exclude_unset=True)
         )
-    except exceptions.UnableUpdateSubforum:
+    except exceptions.UnableInteraction:
         raise HTTPException(
             status_code=HTTP_400_BAD_REQUEST,
             detail="Unable to update subforum"
@@ -129,7 +167,7 @@ async def update(
     if not subforum:
         raise HTTPException(
             status_code=HTTP_404_NOT_FOUND,
-            detail="Subforum not found or you cannot update this subforum"
+            detail="Subforum not found or you are not the creator of this subforum"
         )
 
     return types.Subforum.from_dto(subforum=subforum)
@@ -137,7 +175,13 @@ async def update(
 
 @router.delete(
     "/{id}",
-    response_model=types.Subforum
+    response_model=types.Subforum,
+    responses={
+        HTTP_404_NOT_FOUND: {
+            "description": "Subforum not found or you are not the creator of this subforum error",
+            "model": errors.SubforumNotFoundOrNotCreator
+        }
+    }
 )
 async def delete(
         id: int,
@@ -149,7 +193,7 @@ async def delete(
     if not subforum:
         raise HTTPException(
             status_code=HTTP_404_NOT_FOUND,
-            detail="Subforum not found or you cannot delete this subforum"
+            detail="Subforum not found or you are not the creator of this subforum"
         )
 
     return types.Subforum.from_dto(subforum=subforum)

@@ -39,9 +39,9 @@ class SubforumRepository(Repository[models.Subforum]):
                 models.Subforum.creator_id == creator_id,
                 **data
             )
-        except IntegrityError:
+        except IntegrityError as e:
             await self._session.rollback()
-            raise exceptions.UnableUpdateSubforum
+            self._parse_error(err=e)
         else:
             return subforum.to_dto() if subforum else None
 
@@ -64,7 +64,7 @@ class SubforumRepository(Repository[models.Subforum]):
             await self._session.commit()
         except IntegrityError as err:
             await self._session.rollback()
-            self._parse_create_error(err)
+            self._parse_error(err)
         else:
             return (subforum := result.one()).to_dto()
 
@@ -80,10 +80,10 @@ class SubforumRepository(Repository[models.Subforum]):
 
         return subforum.to_dto() if subforum else None
 
-    def _parse_create_error(self, err: DBAPIError) -> NoReturn:
+    def _parse_error(self, err: DBAPIError) -> NoReturn:
         constraint_name = err.__cause__.__cause__.constraint_name # type: ignore
 
         if constraint_name == "subforums_parent_child_forums":
             raise exceptions.ParentChildForumsAlreadyExists from err
-        else:
-            raise exceptions.UnableCreateSubforum from err
+
+        raise exceptions.UnableInteraction from err

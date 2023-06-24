@@ -1,12 +1,20 @@
+from typing import Union
+
 from fastapi import APIRouter, Depends, HTTPException
-from starlette.status import HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
+from starlette.status import HTTP_404_NOT_FOUND, HTTP_401_UNAUTHORIZED
 
 from talkcorner.common import types, exceptions
 from talkcorner.common.database.holder import DatabaseHolder
+from talkcorner.common.types import errors
 from talkcorner.server.api.api_v1.dependencies.database import DatabaseHolderMarker
 from talkcorner.server.core.auth import get_user
 
-router = APIRouter()
+router = APIRouter(
+    responses={
+        HTTP_401_UNAUTHORIZED: {"description": "Could not validate credentials error", "model": errors.Credentials},
+        HTTP_404_NOT_FOUND: {"description": "User not found error", "model": errors.AuthenticationUserNotFound}
+    }
+)
 
 
 @router.get(
@@ -27,7 +35,10 @@ async def read_all(
 @router.get(
     "/{id}",
     response_model=types.Forum,
-    dependencies=[Depends(get_user)]
+    dependencies=[Depends(get_user)],
+    responses={
+        HTTP_404_NOT_FOUND: {"description": "Forum not found error", "model": errors.ForumNotFound}
+    }
 )
 async def read(id: int, holder: DatabaseHolder = Depends(DatabaseHolderMarker)):
     forum = await holder.forum.read_by_id(forum_id=id)
@@ -61,7 +72,16 @@ async def create(
 
 @router.put(
     "/{id}",
-    response_model=types.Forum
+    response_model=types.Forum,
+    responses={
+        HTTP_404_NOT_FOUND: {
+            "model": Union[
+                errors.AuthenticationUserNotFound,
+                errors.UnableUpdateForum,
+                errors.ForumNotFoundOrNotCreator
+            ]
+        }
+    }
 )
 async def update(
         id: int,
@@ -75,7 +95,7 @@ async def update(
             creator_id=user.id,
             data=forum_update.dict(exclude_unset=True)
         )
-    except exceptions.UnableUpdateForum:
+    except exceptions.UnableInteraction:
         raise HTTPException(
             status_code=HTTP_404_NOT_FOUND,
             detail="Unable to update forum"
@@ -83,8 +103,8 @@ async def update(
 
     if not forum:
         raise HTTPException(
-            status_code=HTTP_400_BAD_REQUEST,
-            detail="Forum not found or you cannot update this forum"
+            status_code=HTTP_404_NOT_FOUND,
+            detail="Forum not found or you are not the creator of this forum"
         )
 
     return types.Forum.from_dto(forum=forum)
@@ -92,7 +112,13 @@ async def update(
 
 @router.delete(
     "/{id}",
-    response_model=types.Forum
+    response_model=types.Forum,
+    responses={
+        HTTP_404_NOT_FOUND: {
+            "description": "Forum not found or you are not the creator of this forum error",
+            "model": errors.ForumNotFoundOrNotCreator
+        }
+    }
 )
 async def delete(
         id: int,
@@ -104,7 +130,7 @@ async def delete(
     if not forum:
         raise HTTPException(
             status_code=HTTP_404_NOT_FOUND,
-            detail="Forum not found or you cannot delete this forum"
+            detail="Forum not found or you are not the creator of this forum"
         )
 
     return types.Forum.from_dto(forum=forum)

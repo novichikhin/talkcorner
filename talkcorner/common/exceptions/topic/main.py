@@ -1,5 +1,5 @@
 from talkcorner.common.exceptions.main import Talkcorner
 
 
-class UnableUpdateTopic(Talkcorner):
+class ForumNotFound(Talkcorner):
     pass

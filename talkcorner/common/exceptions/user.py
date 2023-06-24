@@ -1,13 +1,9 @@
 from talkcorner.common.exceptions.main import Talkcorner
 
 
-class UnableCreateUser(Talkcorner):
+class UsernameAlreadyExists(Talkcorner):
     pass
 
 
-class UsernameAlreadyExists(UnableCreateUser):
-    pass
-
-
-class EmailAlreadyExists(UnableCreateUser):
+class EmailAlreadyExists(Talkcorner):
     pass

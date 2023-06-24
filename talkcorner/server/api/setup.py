@@ -1,7 +1,9 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.exceptions import RequestValidationError
 from passlib.context import CryptContext
+from starlette.status import HTTP_422_UNPROCESSABLE_ENTITY, HTTP_500_INTERNAL_SERVER_ERROR
 
+from talkcorner.common.types import errors
 from talkcorner.server.api.api_v1.dependencies.database import (
     DatabaseHolderMarker,
     DatabaseSessionMarker,
@@ -30,6 +32,13 @@ def register_app(settings: types.Setting) -> FastAPI:
             HTTPException: http_exception_handler,
             RequestValidationError: request_validation_error_handler,
             Exception: exception_handler
+        },
+        responses={
+            HTTP_422_UNPROCESSABLE_ENTITY: {"description": "Validation error", "model": errors.Validation},
+            HTTP_500_INTERNAL_SERVER_ERROR: {
+                "description": "Something went wrong error",
+                "model": errors.SomethingWentWrong
+            }
         }
     )
 
@@ -38,7 +47,7 @@ def register_app(settings: types.Setting) -> FastAPI:
     engine = sa_create_engine(connection_uri=settings.database_uri)
     session_factory = sa_create_session_factory(engine=engine)
 
-    register_routers(app=app, settings=settings)
+    app.include_router(router=register_routers(), prefix=settings.api_v1_str)
 
     app.dependency_overrides.update(
         {

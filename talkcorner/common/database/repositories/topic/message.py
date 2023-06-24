@@ -1,8 +1,8 @@
 import uuid
-from typing import Optional
+from typing import Optional, NoReturn
 
 import sqlalchemy as sa
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, DBAPIError
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -21,7 +21,7 @@ class TopicMessageRepository(Repository[models.TopicMessage]):
 
         return [topic_message.to_dto() for topic_message in topic_messages]
 
-    async def read_by_id(self, topic_message_id: int) -> Optional[dto.TopicMessage]:
+    async def read_by_id(self, topic_message_id: uuid.UUID) -> Optional[dto.TopicMessage]:
         topic_message = await self._read_by_id(id=topic_message_id)
 
         return topic_message.to_dto() if topic_message else None
@@ -38,9 +38,9 @@ class TopicMessageRepository(Repository[models.TopicMessage]):
                 models.TopicMessage.creator_id == creator_id,
                 **data
             )
-        except IntegrityError:
+        except IntegrityError as e:
             await self._session.rollback()
-            raise exceptions.UnableUpdateTopicMessage
+            self._parse_error(err=e)
         else:
             return topic_message.to_dto() if topic_message else None
 
@@ -56,12 +56,16 @@ class TopicMessageRepository(Repository[models.TopicMessage]):
             creator_id=creator_id
         ).returning(models.TopicMessage)
 
-        result: sa.ScalarResult[models.TopicMessage] = await self._session.scalars(
-            sa.select(models.TopicMessage).from_statement(stmt)
-        )
-        await self._session.commit()
-
-        return (topic_message := result.one()).to_dto()
+        try:
+            result: sa.ScalarResult[models.TopicMessage] = await self._session.scalars(
+                sa.select(models.TopicMessage).from_statement(stmt)
+            )
+            await self._session.commit()
+        except IntegrityError as e:
+            await self._session.rollback()
+            self._parse_error(err=e)
+        else:
+            return (topic_message := result.one()).to_dto()
 
     async def delete(
             self,
@@ -74,3 +78,11 @@ class TopicMessageRepository(Repository[models.TopicMessage]):
         )
 
         return topic_message.to_dto() if topic_message else None
+
+    def _parse_error(self, err: DBAPIError) -> NoReturn:
+        constraint_name = err.__cause__.__cause__.constraint_name # type: ignore
+
+        if constraint_name == "topic_messages_topic_id_fkey":
+            raise exceptions.TopicNotFound from err
+
+        raise exceptions.UnableInteraction from err
