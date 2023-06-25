@@ -2,20 +2,16 @@ import uuid
 from typing import Union
 
 from fastapi import APIRouter, Depends, HTTPException
-from starlette.status import HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED
+from starlette.status import HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
 
 from talkcorner.common import types, exceptions
 from talkcorner.common.database.holder import DatabaseHolder
 from talkcorner.common.types import errors
 from talkcorner.server.api.api_v1.dependencies.database import DatabaseHolderMarker
+from talkcorner.server.api.api_v1.responses.user import user_auth_responses
 from talkcorner.server.core.auth import get_user
 
-router = APIRouter(
-    responses={
-        HTTP_401_UNAUTHORIZED: {"description": "Could not validate credentials error", "model": errors.Credentials},
-        HTTP_404_NOT_FOUND: {"description": "User not found error", "model": errors.AuthenticationUserNotFound}
-    }
-)
+router = APIRouter(responses=user_auth_responses)
 
 
 @router.get(
@@ -38,7 +34,12 @@ async def read_all(
     response_model=types.Topic,
     dependencies=[Depends(get_user)],
     responses={
-        HTTP_404_NOT_FOUND: {"model": Union[errors.AuthenticationUserNotFound, errors.TopicNotFound]}
+        HTTP_404_NOT_FOUND: {
+            "model": Union[
+                errors.AuthenticationUserNotFound,
+                errors.TopicNotFound
+            ]
+        }
     }
 )
 async def read(id: uuid.UUID, holder: DatabaseHolder = Depends(DatabaseHolderMarker)):
@@ -57,8 +58,16 @@ async def read(id: uuid.UUID, holder: DatabaseHolder = Depends(DatabaseHolderMar
     "/",
     response_model=types.Topic,
     responses={
-        HTTP_404_NOT_FOUND: {"model": Union[errors.AuthenticationUserNotFound, errors.ForumNotFound]},
-        HTTP_400_BAD_REQUEST: {"description": "Unable to create topic error", "model": errors.UnableCreateTopic}
+        HTTP_404_NOT_FOUND: {
+            "model": Union[
+                errors.AuthenticationUserNotFound,
+                errors.ForumNotFound
+            ]
+        },
+        HTTP_400_BAD_REQUEST: {
+            "description": "Unable to create topic error",
+            "model": errors.UnableCreateTopic
+        }
     }
 )
 async def create(
@@ -98,7 +107,10 @@ async def create(
                 errors.TopicNotFoundOrNotCreator
             ]
         },
-        HTTP_400_BAD_REQUEST: {"description": "Unable to update topic error", "model": errors.UnableUpdateTopic}
+        HTTP_400_BAD_REQUEST: {
+            "description": "Unable to update topic error",
+            "model": errors.UnableUpdateTopic
+        }
     }
 )
 async def update(

@@ -1,6 +1,6 @@
 from talkcorner.common.types.errors.common import Error
 
-class Credentials(Error):
+class NotValidateCredentials(Error):
     detail: str = "Could not validate credentials"
 
 

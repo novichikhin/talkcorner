@@ -1,24 +1,16 @@
 from typing import Union
 
 from fastapi import APIRouter, Depends, HTTPException
-from starlette.status import (
-    HTTP_404_NOT_FOUND,
-    HTTP_400_BAD_REQUEST,
-    HTTP_401_UNAUTHORIZED
-)
+from starlette.status import HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
 
 from talkcorner.common import types, exceptions
 from talkcorner.common.database.holder import DatabaseHolder
 from talkcorner.common.types import errors
 from talkcorner.server.api.api_v1.dependencies.database import DatabaseHolderMarker
+from talkcorner.server.api.api_v1.responses.user import user_auth_responses
 from talkcorner.server.core.auth import get_user
 
-router = APIRouter(
-    responses={
-        HTTP_401_UNAUTHORIZED: {"description": "Could not validate credentials error", "model": errors.Credentials},
-        HTTP_404_NOT_FOUND: {"description": "User not found error", "model": errors.AuthenticationUserNotFound}
-    }
-)
+router = APIRouter(responses=user_auth_responses)
 
 
 @router.get(
@@ -41,7 +33,12 @@ async def read_all(
     response_model=types.Subforum,
     dependencies=[Depends(get_user)],
     responses={
-        HTTP_404_NOT_FOUND: {"model": Union[errors.AuthenticationUserNotFound, errors.SubforumNotFound]}
+        HTTP_404_NOT_FOUND: {
+            "model": Union[
+                errors.AuthenticationUserNotFound,
+                errors.SubforumNotFound
+            ]
+        }
     }
 )
 async def read(id: int, holder: DatabaseHolder = Depends(DatabaseHolderMarker)):
@@ -123,8 +120,10 @@ async def create(
             ]
         },
         HTTP_404_NOT_FOUND: {
-            "description": "Subforum not found or you are not the creator of this subforum error",
-            "model": errors.SubforumNotFoundOrNotCreator
+            "model": Union[
+                errors.AuthenticationUserNotFound,
+                errors.SubforumNotFoundOrNotCreator
+            ]
         }
     }
 )
@@ -178,8 +177,10 @@ async def update(
     response_model=types.Subforum,
     responses={
         HTTP_404_NOT_FOUND: {
-            "description": "Subforum not found or you are not the creator of this subforum error",
-            "model": errors.SubforumNotFoundOrNotCreator
+            "model": Union[
+                errors.AuthenticationUserNotFound,
+                errors.SubforumNotFoundOrNotCreator
+            ]
         }
     }
 )

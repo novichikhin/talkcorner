@@ -17,6 +17,7 @@ from talkcorner.common.types import errors
 from talkcorner.server.api.api_v1.dependencies.database import DatabaseHolderMarker
 from talkcorner.server.api.api_v1.dependencies.security import CryptContextMarker
 from talkcorner.server.api.api_v1.dependencies.settings import SettingsMarker
+from talkcorner.server.api.api_v1.responses.user import user_auth_responses
 from talkcorner.server.core.auth import authenticate_user, create_access_token, get_user
 from talkcorner.server.core.security import get_password_hash
 
@@ -56,10 +57,7 @@ async def login(
     response_model=list[types.User],
     dependencies=[Depends(get_user)],
     response_model_exclude={"email", "email_token", "email_verified", "password"},
-    responses={
-        HTTP_401_UNAUTHORIZED: {"description": "Could not validate credentials error", "model": errors.Credentials},
-        HTTP_404_NOT_FOUND: {"description": "User not found error", "model": errors.AuthenticationUserNotFound}
-    }
+    responses=user_auth_responses
 )
 async def read_all(
         offset: int = 0,
@@ -76,8 +74,7 @@ async def read_all(
     response_model=types.User,
     dependencies=[Depends(get_user)],
     response_model_exclude={"email", "email_token", "email_verified", "password"},
-    responses={
-        HTTP_401_UNAUTHORIZED: {"description": "Could not validate credentials error", "model": errors.Credentials},
+    responses=user_auth_responses | {
         HTTP_404_NOT_FOUND: {
             "model": Union[errors.AuthenticationUserNotFound, errors.UserNotFound]
         }

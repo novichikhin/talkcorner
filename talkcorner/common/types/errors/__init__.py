@@ -1,6 +1,6 @@
 from talkcorner.common.types.errors.common import Validation, SomethingWentWrong
 from talkcorner.common.types.errors.user import (
-    Credentials,
+    NotValidateCredentials,
     AuthenticationUserNotFound,
     UserNotFound,
     WrongUsernameOrPassword,
