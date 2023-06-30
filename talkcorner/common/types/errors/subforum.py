@@ -26,4 +26,4 @@ class UnableCreateSubforum(Error):
 
 
 class UnableUpdateSubforum(Error):
-    detail: str = "Unable to create subforum"
+    detail: str = "Unable to update subforum"
