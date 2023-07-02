@@ -34,10 +34,7 @@ async def read_all(
     dependencies=[Depends(get_user)],
     responses={
         HTTP_404_NOT_FOUND: {
-            "model": Union[
-                errors.AuthenticationUserNotFound,
-                errors.SubforumNotFound
-            ]
+            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | errors.SubforumNotFound
         }
     }
 )
@@ -120,10 +117,7 @@ async def create(
             ]
         },
         HTTP_404_NOT_FOUND: {
-            "model": Union[
-                errors.AuthenticationUserNotFound,
-                errors.SubforumNotFoundOrNotCreator
-            ]
+            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | errors.SubforumNotFoundOrNotCreator
         }
     }
 )
@@ -177,10 +171,7 @@ async def update(
     response_model=types.Subforum,
     responses={
         HTTP_404_NOT_FOUND: {
-            "model": Union[
-                errors.AuthenticationUserNotFound,
-                errors.SubforumNotFoundOrNotCreator
-            ]
+            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | errors.SubforumNotFoundOrNotCreator
         }
     }
 )

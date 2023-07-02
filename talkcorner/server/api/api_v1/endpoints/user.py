@@ -76,7 +76,7 @@ async def read_all(
     response_model_exclude={"email", "email_token", "email_verified", "password"},
     responses=user_auth_responses | {
         HTTP_404_NOT_FOUND: {
-            "model": Union[errors.AuthenticationUserNotFound, errors.UserNotFound]
+            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | errors.UserNotFound
         }
     }
 )

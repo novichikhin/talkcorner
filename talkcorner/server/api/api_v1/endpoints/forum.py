@@ -1,5 +1,3 @@
-from typing import Union
-
 from fastapi import APIRouter, Depends, HTTPException
 from starlette.status import HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
 
@@ -34,10 +32,7 @@ async def read_all(
     dependencies=[Depends(get_user)],
     responses={
         HTTP_404_NOT_FOUND: {
-            "model": Union[
-                errors.AuthenticationUserNotFound,
-                errors.ForumNotFound
-            ]
+            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | errors.ForumNotFound
         }
     }
 )
@@ -80,10 +75,7 @@ async def create(
             "model": errors.UnableUpdateForum
         },
         HTTP_404_NOT_FOUND: {
-            "model": Union[
-                errors.AuthenticationUserNotFound,
-                errors.ForumNotFoundOrNotCreator
-            ]
+            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | errors.ForumNotFoundOrNotCreator
         }
     }
 )
@@ -119,10 +111,7 @@ async def update(
     response_model=types.Forum,
     responses={
         HTTP_404_NOT_FOUND: {
-            "model": Union[
-                errors.AuthenticationUserNotFound,
-                errors.ForumNotFoundOrNotCreator
-            ]
+            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | errors.ForumNotFoundOrNotCreator
         }
     }
 )

@@ -35,10 +35,7 @@ async def read_all(
     dependencies=[Depends(get_user)],
     responses={
         HTTP_404_NOT_FOUND: {
-            "model": Union[
-                errors.AuthenticationUserNotFound,
-                errors.TopicNotFound
-            ]
+            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | errors.TopicNotFound
         }
     }
 )
@@ -59,10 +56,7 @@ async def read(id: uuid.UUID, holder: DatabaseHolder = Depends(DatabaseHolderMar
     response_model=types.Topic,
     responses={
         HTTP_404_NOT_FOUND: {
-            "model": Union[
-                errors.AuthenticationUserNotFound,
-                errors.ForumNotFound
-            ]
+            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | errors.ForumNotFound
         },
         HTTP_400_BAD_REQUEST: {
             "description": "Unable to create topic error",
@@ -101,8 +95,7 @@ async def create(
     response_model=types.Topic,
     responses={
         HTTP_404_NOT_FOUND: {
-            "model": Union[
-                errors.AuthenticationUserNotFound,
+            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | Union[
                 errors.ForumNotFound,
                 errors.TopicNotFoundOrNotCreator
             ]
@@ -150,10 +143,7 @@ async def update(
     response_model=types.Topic,
     responses={
         HTTP_404_NOT_FOUND: {
-            "model": Union[
-                errors.AuthenticationUserNotFound,
-                errors.TopicNotFoundOrNotCreator
-            ]
+            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | errors.TopicNotFoundOrNotCreator
         }
     }
 )

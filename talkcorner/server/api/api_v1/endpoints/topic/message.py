@@ -1,5 +1,4 @@
 import uuid
-from typing import Union
 
 from fastapi import APIRouter, Depends, HTTPException
 from starlette.status import HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
@@ -35,10 +34,7 @@ async def read_all(
     dependencies=[Depends(get_user)],
     responses={
         HTTP_404_NOT_FOUND: {
-            "model": Union[
-                errors.AuthenticationUserNotFound,
-                errors.TopicMessageNotFound
-            ]
+            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | errors.TopicMessageNotFound
         }
     }
 )
@@ -59,10 +55,7 @@ async def read(id: uuid.UUID, holder: DatabaseHolder = Depends(DatabaseHolderMar
     response_model=types.TopicMessage,
     responses={
         HTTP_404_NOT_FOUND: {
-            "model": Union[
-                errors.AuthenticationUserNotFound,
-                errors.TopicNotFound
-            ]
+            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | errors.TopicNotFound
         },
         HTTP_400_BAD_REQUEST: {
             "description": "Unable to create topic message error",
@@ -104,10 +97,7 @@ async def create(
             "model": errors.UnableUpdateTopicMessage
         },
         HTTP_404_NOT_FOUND: {
-            "model": Union[
-                errors.AuthenticationUserNotFound,
-                errors.TopicMessageNotFoundOrNotCreator
-            ]
+            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | errors.TopicMessageNotFoundOrNotCreator
         }
     }
 )
@@ -143,10 +133,7 @@ async def update(
     response_model=types.TopicMessage,
     responses={
         HTTP_404_NOT_FOUND: {
-            "model": Union[
-                errors.AuthenticationUserNotFound,
-                errors.TopicMessageNotFoundOrNotCreator
-            ]
+            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | errors.TopicMessageNotFoundOrNotCreator
         }
     }
 )
