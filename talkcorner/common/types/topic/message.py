@@ -19,13 +19,16 @@ class TopicMessage(TopicMessageValidators):
 
     created_at: dt.datetime
 
+    creator_id: uuid.UUID
+
     @classmethod
     def from_dto(cls, topic_message: dto.TopicMessage) -> "TopicMessage":
         return TopicMessage(
             id=topic_message.id,
             topic_id=topic_message.topic_id,
             body=topic_message.body,
-            created_at=topic_message.created_at
+            created_at=topic_message.created_at,
+            creator_id=topic_message.creator_id
         )
 
 

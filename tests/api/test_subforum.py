@@ -1,5 +1,4 @@
 from httpx import AsyncClient
-from passlib.context import CryptContext
 
 from talkcorner.common.database.holder import DatabaseHolder
 from tests.fixtures.protocols.auth_token import CreateAuthToken
@@ -8,7 +7,6 @@ from tests.fixtures.protocols.user import CreateUser
 
 async def test_get_subforums(
         client: AsyncClient,
-        crypt_context: CryptContext,
         holder: DatabaseHolder,
         create_user: CreateUser,
         create_auth_token: CreateAuthToken
@@ -50,9 +48,8 @@ async def test_get_subforums(
     assert str(subforum.creator_id) == json[0]["creator_id"]
 
 
-async def test_get_forum(
+async def test_get_subforum(
         client: AsyncClient,
-        crypt_context: CryptContext,
         holder: DatabaseHolder,
         create_user: CreateUser,
         create_auth_token: CreateAuthToken
@@ -92,9 +89,8 @@ async def test_get_forum(
     assert str(subforum.creator_id) == json["creator_id"]
 
 
-async def test_create_forum(
+async def test_create_subforum(
         client: AsyncClient,
-        crypt_context: CryptContext,
         holder: DatabaseHolder,
         create_user: CreateUser,
         create_auth_token: CreateAuthToken
@@ -137,9 +133,8 @@ async def test_create_forum(
     assert str(subforum.creator_id) == json["creator_id"]
 
 
-async def test_update_forum(
+async def test_update_subforum(
         client: AsyncClient,
-        crypt_context: CryptContext,
         holder: DatabaseHolder,
         create_user: CreateUser,
         create_auth_token: CreateAuthToken
@@ -191,9 +186,8 @@ async def test_update_forum(
     assert updated_subforum.child_forum_id == new_child_forum.id
 
 
-async def test_delete_forum(
+async def test_delete_subforum(
         client: AsyncClient,
-        crypt_context: CryptContext,
         holder: DatabaseHolder,
         create_user: CreateUser,
         create_auth_token: CreateAuthToken

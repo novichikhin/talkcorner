@@ -20,6 +20,8 @@ class Topic(TopicValidators):
 
     created_at: dt.datetime
 
+    creator_id: uuid.UUID
+
     @classmethod
     def from_dto(cls, topic: dto.Topic) -> "Topic":
         return Topic(
@@ -27,7 +29,8 @@ class Topic(TopicValidators):
             forum_id=topic.forum_id,
             title=topic.title,
             body=topic.body,
-            created_at=topic.created_at
+            created_at=topic.created_at,
+            creator_id=topic.creator_id
         )
 
 
