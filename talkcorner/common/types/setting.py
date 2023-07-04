@@ -23,7 +23,8 @@ class Setting(BaseSettings):
     nats_url: str = Field(default=...)
     nats_stream_name: str = Field(default=...)
 
-    authorize_secret_key: str = Field(default=...)
+    authorize_access_token_secret_key: str = Field(default=...)
+    authorize_refresh_token_secret_key: str = Field(default=...)
     authorize_access_token_expire_minutes: int = Field(default=...)
     authorize_refresh_token_expire_minutes: int = Field(default=...)
 

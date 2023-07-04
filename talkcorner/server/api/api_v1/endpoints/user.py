@@ -18,7 +18,13 @@ from talkcorner.server.api.api_v1.dependencies.database import DatabaseHolderMar
 from talkcorner.server.api.api_v1.dependencies.security import CryptContextMarker
 from talkcorner.server.api.api_v1.dependencies.settings import SettingsMarker
 from talkcorner.server.api.api_v1.responses.user import user_auth_responses
-from talkcorner.server.core.auth import authenticate_user, create_access_token, get_user
+from talkcorner.server.core.auth import (
+    authenticate_user,
+    create_access_token,
+    get_user,
+    create_refresh_token,
+    verify_refresh_token
+)
 from talkcorner.server.core.security import get_password_hash
 
 router = APIRouter()
@@ -26,7 +32,7 @@ router = APIRouter()
 
 @router.post(
     "/login",
-    response_model=types.Token,
+    response_model=types.Authentication,
     responses={
         HTTP_401_UNAUTHORIZED: {
             "description": "Wrong username (email) or password error",
@@ -47,9 +53,37 @@ async def login(
         crypt_context=crypt_context
     )
 
-    access_token = create_access_token(payload={"user_id": str(user.id)}, settings=settings)
+    payload = {
+        "user_id": str(user.id)
+    }
 
-    return types.Token(access_token=access_token, token_type="bearer")
+    access_token = create_access_token(payload=payload, settings=settings)
+    refresh_token = create_refresh_token(payload=payload, settings=settings)
+
+    return types.Authentication(
+        access_token=access_token,
+        refresh_token=refresh_token,
+        token_type="bearer"
+    )
+
+
+@router.post(
+    "/refresh",
+    response_model=types.AccessToken,
+    responses={
+        HTTP_401_UNAUTHORIZED: {
+            "description": "Could not validate credentials error",
+            "model": errors.NotValidateCredentials
+        }
+    }
+)
+async def refresh(
+        refresh_token: types.RefreshToken = Depends(verify_refresh_token),
+        settings: types.Setting = Depends(SettingsMarker)
+):
+    new_access_token = create_access_token(payload={"user_id": str(refresh_token.user_id)}, settings=settings)
+
+    return types.AccessToken(access_token=new_access_token, token_type="bearer")
 
 
 @router.get(

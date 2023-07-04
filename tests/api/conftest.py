@@ -19,7 +19,7 @@ from talkcorner.server.api.api_v1.dependencies.database import DatabaseSessionMa
 from talkcorner.server.api.setup import register_app
 from tests.fixtures.conftest import holder, crypt_context # noqa: F401
 from tests.fixtures.user import create_user # noqa: F401
-from tests.fixtures.auth_token import create_auth_token # noqa: F401
+from tests.fixtures.auth_token import create_auth_access_token, create_auth_refresh_token # noqa: F401
 
 
 @pytest.fixture(scope="session", autouse=True)

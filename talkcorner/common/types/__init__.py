@@ -25,4 +25,8 @@ from talkcorner.common.types.topic.message import (
     TopicMessageCreate,
     TopicMessageUpdate
 )
-from talkcorner.common.types.token import Token
+from talkcorner.common.types.auth import (
+    AccessToken,
+    RefreshToken,
+    Authentication
+)

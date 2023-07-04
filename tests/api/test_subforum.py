@@ -1,7 +1,7 @@
 from httpx import AsyncClient
 
 from talkcorner.common.database.holder import DatabaseHolder
-from tests.fixtures.protocols.auth_token import CreateAuthToken
+from tests.fixtures.protocols.auth_token import CreateAuthAccessToken
 from tests.fixtures.protocols.user import CreateUser
 
 
@@ -9,7 +9,7 @@ async def test_get_subforums(
         client: AsyncClient,
         holder: DatabaseHolder,
         create_user: CreateUser,
-        create_auth_token: CreateAuthToken
+        create_auth_access_token: CreateAuthAccessToken
 ):
     user = await create_user()
 
@@ -33,7 +33,7 @@ async def test_get_subforums(
 
     response = await client.get(
         "/api/v1/subforum/",
-        headers={"Authorization": f"Bearer {create_auth_token(user_id=user.id)}"}
+        headers={"Authorization": f"Bearer {create_auth_access_token(user_id=user.id)}"}
     )
 
     assert response.status_code == 200
@@ -52,7 +52,7 @@ async def test_get_subforum(
         client: AsyncClient,
         holder: DatabaseHolder,
         create_user: CreateUser,
-        create_auth_token: CreateAuthToken
+        create_auth_access_token: CreateAuthAccessToken
 ):
     user = await create_user()
 
@@ -76,7 +76,7 @@ async def test_get_subforum(
 
     response = await client.get(
         f"/api/v1/subforum/{subforum.id}",
-        headers={"Authorization": f"Bearer {create_auth_token(user_id=user.id)}"}
+        headers={"Authorization": f"Bearer {create_auth_access_token(user_id=user.id)}"}
     )
 
     assert response.status_code == 200
@@ -93,7 +93,7 @@ async def test_create_subforum(
         client: AsyncClient,
         holder: DatabaseHolder,
         create_user: CreateUser,
-        create_auth_token: CreateAuthToken
+        create_auth_access_token: CreateAuthAccessToken
 ):
     user = await create_user()
 
@@ -115,7 +115,7 @@ async def test_create_subforum(
             "parent_forum_id": parent_forum.id,
             "child_forum_id": child_forum.id
         },
-        headers={"Authorization": f"Bearer {create_auth_token(user_id=user.id)}"}
+        headers={"Authorization": f"Bearer {create_auth_access_token(user_id=user.id)}"}
     )
 
     assert response.status_code == 200
@@ -137,7 +137,7 @@ async def test_update_subforum(
         client: AsyncClient,
         holder: DatabaseHolder,
         create_user: CreateUser,
-        create_auth_token: CreateAuthToken
+        create_auth_access_token: CreateAuthAccessToken
 ):
     user = await create_user()
 
@@ -170,7 +170,7 @@ async def test_update_subforum(
         json={
             "child_forum_id": new_child_forum.id
         },
-        headers={"Authorization": f"Bearer {create_auth_token(user_id=user.id)}"}
+        headers={"Authorization": f"Bearer {create_auth_access_token(user_id=user.id)}"}
     )
 
     assert response.status_code == 200
@@ -190,7 +190,7 @@ async def test_delete_subforum(
         client: AsyncClient,
         holder: DatabaseHolder,
         create_user: CreateUser,
-        create_auth_token: CreateAuthToken
+        create_auth_access_token: CreateAuthAccessToken
 ):
     user = await create_user()
 
@@ -214,7 +214,7 @@ async def test_delete_subforum(
 
     response = await client.delete(
         f"/api/v1/subforum/{subforum.id}",
-        headers={"Authorization": f"Bearer {create_auth_token(user_id=user.id)}"}
+        headers={"Authorization": f"Bearer {create_auth_access_token(user_id=user.id)}"}
     )
 
     assert response.status_code == 200

@@ -3,7 +3,7 @@ import uuid
 from httpx import AsyncClient
 
 from talkcorner.common.database.holder import DatabaseHolder
-from tests.fixtures.protocols.auth_token import CreateAuthToken
+from tests.fixtures.protocols.auth_token import CreateAuthAccessToken
 from tests.fixtures.protocols.user import CreateUser
 
 
@@ -11,7 +11,7 @@ async def test_get_topic_messages(
         client: AsyncClient,
         holder: DatabaseHolder,
         create_user: CreateUser,
-        create_auth_token: CreateAuthToken
+        create_auth_access_token: CreateAuthAccessToken
 ):
     user = await create_user()
 
@@ -36,7 +36,7 @@ async def test_get_topic_messages(
 
     response = await client.get(
         "/api/v1/topic/message/",
-        headers={"Authorization": f"Bearer {create_auth_token(user_id=user.id)}"}
+        headers={"Authorization": f"Bearer {create_auth_access_token(user_id=user.id)}"}
     )
 
     assert response.status_code == 200
@@ -54,7 +54,7 @@ async def test_get_topic_message(
         client: AsyncClient,
         holder: DatabaseHolder,
         create_user: CreateUser,
-        create_auth_token: CreateAuthToken
+        create_auth_access_token: CreateAuthAccessToken
 ):
     user = await create_user()
 
@@ -79,7 +79,7 @@ async def test_get_topic_message(
 
     response = await client.get(
         f"/api/v1/topic/message/{topic_message.id}",
-        headers={"Authorization": f"Bearer {create_auth_token(user_id=user.id)}"}
+        headers={"Authorization": f"Bearer {create_auth_access_token(user_id=user.id)}"}
     )
 
     assert response.status_code == 200
@@ -95,7 +95,7 @@ async def test_create_topic_message(
         client: AsyncClient,
         holder: DatabaseHolder,
         create_user: CreateUser,
-        create_auth_token: CreateAuthToken
+        create_auth_access_token: CreateAuthAccessToken
 ):
     user = await create_user()
 
@@ -118,7 +118,7 @@ async def test_create_topic_message(
             "topic_id": str(topic.id),
             "body": "Test Body Topic Message"
         },
-        headers={"Authorization": f"Bearer {create_auth_token(user_id=user.id)}"}
+        headers={"Authorization": f"Bearer {create_auth_access_token(user_id=user.id)}"}
     )
 
     assert response.status_code == 200
@@ -140,7 +140,7 @@ async def test_update_topic_message(
         client: AsyncClient,
         holder: DatabaseHolder,
         create_user: CreateUser,
-        create_auth_token: CreateAuthToken
+        create_auth_access_token: CreateAuthAccessToken
 ):
     new_body = "New Test Body Topic Message"
 
@@ -170,7 +170,7 @@ async def test_update_topic_message(
         json={
             "body": new_body
         },
-        headers={"Authorization": f"Bearer {create_auth_token(user_id=user.id)}"}
+        headers={"Authorization": f"Bearer {create_auth_access_token(user_id=user.id)}"}
     )
 
     assert response.status_code == 200
@@ -190,7 +190,7 @@ async def test_delete_topic_message(
         client: AsyncClient,
         holder: DatabaseHolder,
         create_user: CreateUser,
-        create_auth_token: CreateAuthToken
+        create_auth_access_token: CreateAuthAccessToken
 ):
     user = await create_user()
 
@@ -215,7 +215,7 @@ async def test_delete_topic_message(
 
     response = await client.delete(
         f"/api/v1/topic/message/{topic_message.id}",
-        headers={"Authorization": f"Bearer {create_auth_token(user_id=user.id)}"}
+        headers={"Authorization": f"Bearer {create_auth_access_token(user_id=user.id)}"}
     )
 
     assert response.status_code == 200

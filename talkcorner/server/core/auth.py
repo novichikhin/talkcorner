@@ -36,9 +36,40 @@ def create_access_token(payload: dict[str, Any], settings: types.Setting) -> str
 
     return jwt.encode(
         claims=payload,
-        key=settings.authorize_secret_key,
+        key=settings.authorize_access_token_secret_key,
         algorithm=ALGORITHMS.HS256
     )
+
+
+def create_refresh_token(payload: dict[str, Any], settings: types.Setting) -> str:
+    payload["exp"] = dt.datetime.utcnow() + dt.timedelta(minutes=settings.authorize_refresh_token_expire_minutes)
+
+    return jwt.encode(
+        claims=payload,
+        key=settings.authorize_refresh_token_secret_key,
+        algorithm=ALGORITHMS.HS256
+    )
+
+
+async def verify_refresh_token(
+        authorization: str = Header(alias="Authorization"),
+        settings: types.Setting = Depends(SettingsMarker)
+) -> types.RefreshToken:
+    refresh_token = get_token(authorization=authorization)
+
+    try:
+        payload = jwt.decode(
+            token=refresh_token,
+            key=settings.authorize_refresh_token_secret_key,
+            algorithms=[ALGORITHMS.HS256]
+        )
+
+        if not (user_id := payload.get("user_id")):
+            raise credentials_exception
+    except JWTError:
+        raise credentials_exception
+
+    return types.RefreshToken(token=refresh_token, user_id=uuid.UUID(user_id))
 
 
 async def authenticate_user(
@@ -70,7 +101,7 @@ async def get_user(
     try:
         payload = jwt.decode(
             token=get_token(authorization=authorization),
-            key=settings.authorize_secret_key,
+            key=settings.authorize_access_token_secret_key,
             algorithms=[ALGORITHMS.HS256]
         )
 
