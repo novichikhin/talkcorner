@@ -13,6 +13,7 @@ from starlette.status import (
 
 from talkcorner.common import types, exceptions
 from talkcorner.common.database.holder import DatabaseHolder
+from talkcorner.common.services.auth import create_access_token, create_refresh_token
 from talkcorner.common.types import errors
 from talkcorner.server.api.api_v1.dependencies.database import DatabaseHolderMarker
 from talkcorner.server.api.api_v1.dependencies.security import CryptContextMarker
@@ -20,9 +21,7 @@ from talkcorner.server.api.api_v1.dependencies.settings import SettingsMarker
 from talkcorner.server.api.api_v1.responses.user import user_auth_responses
 from talkcorner.server.core.auth import (
     authenticate_user,
-    create_access_token,
     get_user,
-    create_refresh_token,
     verify_refresh_token
 )
 from talkcorner.server.core.security import get_password_hash
@@ -57,8 +56,17 @@ async def login(
         "user_id": str(user.id)
     }
 
-    access_token = create_access_token(payload=payload, settings=settings)
-    refresh_token = create_refresh_token(payload=payload, settings=settings)
+    access_token = create_access_token(
+        payload=payload,
+        secret_key=settings.authorize_access_token_secret_key,
+        expire_minutes=settings.authorize_access_token_expire_minutes
+    )
+
+    refresh_token = create_refresh_token(
+        payload=payload,
+        secret_key=settings.authorize_refresh_token_secret_key,
+        expire_minutes=settings.authorize_refresh_token_expire_minutes
+    )
 
     return types.Authentication(
         access_token=access_token,
@@ -81,7 +89,11 @@ async def refresh(
         refresh_token: types.RefreshToken = Depends(verify_refresh_token),
         settings: types.Setting = Depends(SettingsMarker)
 ):
-    new_access_token = create_access_token(payload={"user_id": str(refresh_token.user_id)}, settings=settings)
+    new_access_token = create_access_token(
+        payload={"user_id": str(refresh_token.user_id)},
+        secret_key=settings.authorize_access_token_secret_key,
+        expire_minutes=settings.authorize_access_token_expire_minutes
+    )
 
     return types.AccessToken(access_token=new_access_token, token_type="bearer")
 
