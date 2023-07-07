@@ -9,6 +9,7 @@ class CreateUser(Protocol):
             self,
             *,
             identifier: Optional[str] = None,
-            password: Optional[str] = None
+            password: Optional[str] = None,
+            email_verified: bool = True
     ) -> dto.User:
         pass

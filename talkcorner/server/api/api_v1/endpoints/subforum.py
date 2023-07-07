@@ -16,7 +16,7 @@ router = APIRouter(responses=user_auth_responses)
 @router.get(
     "/",
     response_model=list[types.Subforum],
-    dependencies=[Depends(get_user)]
+    dependencies=[Depends(get_user())]
 )
 async def read_all(
         offset: int = 0,
@@ -31,7 +31,7 @@ async def read_all(
 @router.get(
     "/{id}",
     response_model=types.Subforum,
-    dependencies=[Depends(get_user)],
+    dependencies=[Depends(get_user())],
     responses={
         HTTP_404_NOT_FOUND: {
             "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | errors.SubforumNotFound
@@ -67,7 +67,7 @@ async def read(id: int, holder: DatabaseHolder = Depends(DatabaseHolderMarker)):
 async def create(
         subforum_create: types.SubforumCreate,
         holder: DatabaseHolder = Depends(DatabaseHolderMarker),
-        user: types.User = Depends(get_user)
+        user: types.User = Depends(get_user())
 ):
     parent_forum = await holder.forum.read_by_id(forum_id=subforum_create.parent_forum_id)
 
@@ -125,7 +125,7 @@ async def update(
         id: int,
         subforum_update: types.SubforumUpdate,
         holder: DatabaseHolder = Depends(DatabaseHolderMarker),
-        user: types.User = Depends(get_user)
+        user: types.User = Depends(get_user())
 ):
     if subforum_update.parent_forum_id:
         parent_forum = await holder.forum.read_by_id(forum_id=subforum_update.parent_forum_id)
@@ -178,7 +178,7 @@ async def update(
 async def delete(
         id: int,
         holder: DatabaseHolder = Depends(DatabaseHolderMarker),
-        user: types.User = Depends(get_user)
+        user: types.User = Depends(get_user())
 ):
     subforum = await holder.subforum.delete(subforum_id=id, creator_id=user.id)
 

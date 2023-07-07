@@ -1,10 +1,11 @@
 import uuid
+from typing import Callable, Awaitable
 
 from fastapi import Depends, HTTPException, Header
 from jose import jwt, JWTError
 from jose.constants import ALGORITHMS
 from passlib.context import CryptContext
-from starlette.status import HTTP_401_UNAUTHORIZED, HTTP_404_NOT_FOUND
+from starlette.status import HTTP_401_UNAUTHORIZED, HTTP_404_NOT_FOUND, HTTP_403_FORBIDDEN
 
 from talkcorner.common import types
 from talkcorner.common.database.holder import DatabaseHolder
@@ -14,8 +15,7 @@ from talkcorner.server.core.security import verify_password
 
 credentials_exception = HTTPException(
     status_code=HTTP_401_UNAUTHORIZED,
-    detail="Could not validate credentials",
-    headers={"WWW-Authenticate": "Bearer"}
+    detail="Could not validate credentials"
 )
 
 
@@ -70,37 +70,48 @@ async def authenticate_user(
     return types.User.from_dto(user=user)
 
 
-async def get_user(
-        authorization: str = Header(alias="Authorization"),
-        holder: DatabaseHolder = Depends(DatabaseHolderMarker),
-        settings: types.Setting = Depends(SettingsMarker)
-) -> types.User:
-    try:
-        payload = jwt.decode(
-            token=get_token(authorization=authorization),
-            key=settings.authorize_access_token_secret_key,
-            algorithms=[ALGORITHMS.HS256]
-        )
+def get_user(
+        check_email_verified: bool = True
+) -> Callable[[str, DatabaseHolder, types.Setting], Awaitable[types.User]]:
 
-        user_id = payload.get("user_id")
-
-        if not user_id:
-            raise credentials_exception
-
+    async def wrapper(
+            authorization: str = Header(alias="Authorization"),
+            holder: DatabaseHolder = Depends(DatabaseHolderMarker),
+            settings: types.Setting = Depends(SettingsMarker)
+    ) -> types.User:
         try:
-            user_id = uuid.UUID(hex=user_id)
-        except ValueError:
+            payload = jwt.decode(
+                token=get_token(authorization=authorization),
+                key=settings.authorize_access_token_secret_key,
+                algorithms=[ALGORITHMS.HS256]
+            )
+
+            user_id = payload.get("user_id")
+
+            if not user_id:
+                raise credentials_exception
+
+            try:
+                user_id = uuid.UUID(hex=user_id)
+            except ValueError:
+                raise credentials_exception
+        except JWTError:
             raise credentials_exception
-    except JWTError:
-        raise credentials_exception
 
-    user = await holder.user.read_by_id(user_id=user_id)
+        user = await holder.user.read_by_id(user_id=user_id)
 
-    if not user:
-        raise HTTPException(
-            status_code=HTTP_404_NOT_FOUND,
-            detail="Authentication user not found",
-            headers={"WWW-Authenticate": "Bearer"}
-        )
+        if not user:
+            raise HTTPException(
+                status_code=HTTP_404_NOT_FOUND,
+                detail="Authentication user not found"
+            )
 
-    return types.User.from_dto(user=user)
+        if check_email_verified and not user.email_verified:
+            raise HTTPException(
+                status_code=HTTP_403_FORBIDDEN,
+                detail="Email is not activated"
+            )
+
+        return types.User.from_dto(user=user)
+
+    return wrapper

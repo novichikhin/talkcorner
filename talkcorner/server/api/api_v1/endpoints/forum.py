@@ -14,7 +14,7 @@ router = APIRouter(responses=user_auth_responses)
 @router.get(
     "/",
     response_model=list[types.Forum],
-    dependencies=[Depends(get_user)]
+    dependencies=[Depends(get_user())]
 )
 async def read_all(
         offset: int = 0,
@@ -29,7 +29,7 @@ async def read_all(
 @router.get(
     "/{id}",
     response_model=types.Forum,
-    dependencies=[Depends(get_user)],
+    dependencies=[Depends(get_user())],
     responses={
         HTTP_404_NOT_FOUND: {
             "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | errors.ForumNotFound
@@ -55,7 +55,7 @@ async def read(id: int, holder: DatabaseHolder = Depends(DatabaseHolderMarker)):
 async def create(
         forum_create: types.ForumCreate,
         holder: DatabaseHolder = Depends(DatabaseHolderMarker),
-        user: types.User = Depends(get_user)
+        user: types.User = Depends(get_user())
 ):
     forum = await holder.forum.create(
         title=forum_create.title,
@@ -83,7 +83,7 @@ async def update(
         id: int,
         forum_update: types.ForumUpdate,
         holder: DatabaseHolder = Depends(DatabaseHolderMarker),
-        user: types.User = Depends(get_user)
+        user: types.User = Depends(get_user())
 ):
     try:
         forum = await holder.forum.update(
@@ -118,7 +118,7 @@ async def update(
 async def delete(
         id: int,
         holder: DatabaseHolder = Depends(DatabaseHolderMarker),
-        user: types.User = Depends(get_user)
+        user: types.User = Depends(get_user())
 ):
     forum = await holder.forum.delete(forum_id=id, creator_id=user.id)
 

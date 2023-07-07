@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from sqlalchemy.ext.asyncio import AsyncEngine
 
 from talkcorner.server.api.api_v1.dependencies.database import DatabaseEngineMarker
-from talkcorner.server.api.api_v1.dependencies.nats import NatsMarker
+from talkcorner.server.api.api_v1.dependencies.nats import NatsMarker, NatsJetStreamMarker
 from talkcorner.common import types
 from talkcorner.common.queue.nats.factory import (
     nats_create_connect,
@@ -23,11 +23,13 @@ def create_on_startup_handler(
     async def on_startup() -> None:
         nats = await nats_create_connect(connection_uri=settings.nats_url)
         js = nats_create_jetstream(nats=nats)
+
         await js_create_or_update_stream(js=js, stream_name=settings.nats_stream_name)
 
         app.dependency_overrides.update(
             {
-                NatsMarker: lambda: nats
+                NatsMarker: lambda: nats,
+                NatsJetStreamMarker: lambda: js
             }
         )
 

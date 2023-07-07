@@ -4,6 +4,8 @@ from talkcorner.common.types.errors.user import (
     AuthenticationUserNotFound,
     UserNotFound,
     WrongUsernameOrPassword,
+    EmailAlreadyConfirmed,
+    EmailTokenIncorrect,
     EmailAlreadyExists,
     UsernameAlreadyExists,
     UnableCreateUser

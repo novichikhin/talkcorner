@@ -16,6 +16,14 @@ class WrongUsernameOrPassword(Error):
     detail: str = "Wrong username (email) or password"
 
 
+class EmailAlreadyConfirmed(Error):
+    detail: str = "Email already confirmed"
+
+
+class EmailTokenIncorrect(Error):
+    detail: str = "Email token is incorrect"
+
+
 class EmailAlreadyExists(Error):
     detail: str = "User email already exists"
 

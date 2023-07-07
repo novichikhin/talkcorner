@@ -37,16 +37,32 @@ class UserRepository(Repository[models.User]):
 
         return user.to_dto() if user else None
 
+    async def verify_email(self, user_id: uuid.UUID) -> Optional[dto.User]:
+        stmt = sa.update(models.User).where(
+            models.User.id == user_id
+        ).values(email_verified=True).returning(models.User)
+
+        result = await self._session.scalars(
+            sa.select(models.User).from_statement(stmt)
+        )
+        await self._session.commit()
+
+        user: Optional[models.User] = result.first()
+
+        return user.to_dto() if user else None
+
     async def create(
             self,
             username: str,
             password: str,
-            email: str
+            email: str,
+            email_verified: bool = False
     ) -> dto.User:
         stmt = insert(models.User).values(
             username=username,
             password=password,
-            email=email
+            email=email,
+            email_verified=email_verified
         ).returning(models.User)
 
         try:

@@ -17,7 +17,8 @@ def create_user(holder: DatabaseHolder, crypt_context: CryptContext) -> CreateUs
     async def create_user(
             *,
             identifier: Optional[str] = None,
-            password: Optional[str] = None
+            password: Optional[str] = None,
+            email_verified: bool = True
     ) -> dto.User:
         if not identifier:
             identifier = "".join(random.choice(string.ascii_uppercase) for _ in range(8))
@@ -25,11 +26,9 @@ def create_user(holder: DatabaseHolder, crypt_context: CryptContext) -> CreateUs
         user = await holder.user.create(
             username=identifier,
             password=get_password_hash(crypt_context=crypt_context, password=password or identifier),
-            email=f"{identifier}@ya.ru"
+            email=f"{identifier}@ya.ru",
+            email_verified=email_verified
         )
-
-        if not user:
-            raise RuntimeError("Unable to create user")
 
         return user
 

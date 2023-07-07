@@ -13,7 +13,7 @@ def nats_create_jetstream(nats: nats.NATS) -> JetStreamContext:
 
 async def js_create_or_update_stream(js: JetStreamContext, stream_name: str) -> None:
     subjects = [
-        "talkcorner.broadcast.*"
+        f"{stream_name}.broadcast.email.*"
     ]
     try:
         await js.update_stream(

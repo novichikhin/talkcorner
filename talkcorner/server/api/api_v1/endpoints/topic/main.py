@@ -17,7 +17,7 @@ router = APIRouter(responses=user_auth_responses)
 @router.get(
     "/",
     response_model=list[types.Topic],
-    dependencies=[Depends(get_user)]
+    dependencies=[Depends(get_user())]
 )
 async def read_all(
         offset: int = 0,
@@ -32,7 +32,7 @@ async def read_all(
 @router.get(
     "/{id}",
     response_model=types.Topic,
-    dependencies=[Depends(get_user)],
+    dependencies=[Depends(get_user())],
     responses={
         HTTP_404_NOT_FOUND: {
             "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | errors.TopicNotFound
@@ -67,7 +67,7 @@ async def read(id: uuid.UUID, holder: DatabaseHolder = Depends(DatabaseHolderMar
 async def create(
         topic_create: types.TopicCreate,
         holder: DatabaseHolder = Depends(DatabaseHolderMarker),
-        user: types.User = Depends(get_user)
+        user: types.User = Depends(get_user())
 ):
     try:
         topic = await holder.topic.create(
@@ -110,7 +110,7 @@ async def update(
         id: uuid.UUID,
         topic_update: types.TopicUpdate,
         holder: DatabaseHolder = Depends(DatabaseHolderMarker),
-        user: types.User = Depends(get_user)
+        user: types.User = Depends(get_user())
 ):
     try:
         topic = await holder.topic.update(
@@ -150,7 +150,7 @@ async def update(
 async def delete(
         id: uuid.UUID,
         holder: DatabaseHolder = Depends(DatabaseHolderMarker),
-        user: types.User = Depends(get_user)
+        user: types.User = Depends(get_user())
 ):
     topic = await holder.topic.delete(topic_id=id, creator_id=user.id)
 

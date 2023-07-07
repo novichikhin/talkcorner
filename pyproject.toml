@@ -28,6 +28,8 @@ python-multipart = "^0.0.6"
 bcrypt = "^4.0.1"
 testcontainers = "^3.7.1"
 httpx = "^0.24.1"
+msgpack = "^1.0.5"
+aiosmtplib = "^2.0.2"
 
 
 [build-system]

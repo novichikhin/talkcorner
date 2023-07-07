@@ -1,14 +1,17 @@
+import json
 import uuid
 from typing import Union
 
+import msgpack
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
+from nats.js import JetStreamContext
 from passlib.context import CryptContext
 from starlette.status import (
     HTTP_404_NOT_FOUND,
     HTTP_400_BAD_REQUEST,
     HTTP_409_CONFLICT,
-    HTTP_401_UNAUTHORIZED
+    HTTP_401_UNAUTHORIZED, HTTP_403_FORBIDDEN
 )
 
 from talkcorner.common import types, exceptions
@@ -16,6 +19,7 @@ from talkcorner.common.database.holder import DatabaseHolder
 from talkcorner.common.services.auth import create_access_token, create_refresh_token
 from talkcorner.common.types import errors
 from talkcorner.server.api.api_v1.dependencies.database import DatabaseHolderMarker
+from talkcorner.server.api.api_v1.dependencies.nats import NatsJetStreamMarker
 from talkcorner.server.api.api_v1.dependencies.security import CryptContextMarker
 from talkcorner.server.api.api_v1.dependencies.settings import SettingsMarker
 from talkcorner.server.api.api_v1.responses.user import user_auth_responses
@@ -101,7 +105,7 @@ async def refresh(
 @router.get(
     "/",
     response_model=list[types.User],
-    dependencies=[Depends(get_user)],
+    dependencies=[Depends(get_user())],
     response_model_exclude={"email", "email_token", "email_verified", "password"},
     responses=user_auth_responses
 )
@@ -118,7 +122,7 @@ async def read_all(
 @router.get(
     "/{id}",
     response_model=types.User,
-    dependencies=[Depends(get_user)],
+    dependencies=[Depends(get_user())],
     response_model_exclude={"email", "email_token", "email_verified", "password"},
     responses=user_auth_responses | {
         HTTP_404_NOT_FOUND: {
@@ -138,6 +142,49 @@ async def read(id: uuid.UUID, holder: DatabaseHolder = Depends(DatabaseHolderMar
     return types.User.from_dto(user=user)
 
 
+@router.get(
+    "/email/verify/{id}",
+    response_model=types.User,
+    response_model_exclude={"password", "email_token"},
+    responses=user_auth_responses | {
+        HTTP_403_FORBIDDEN: {
+            "model": Union[
+                errors.EmailAlreadyConfirmed,
+                errors.EmailTokenIncorrect
+            ]
+        }
+    }
+)
+async def email_verify(
+        id: uuid.UUID,
+        holder: DatabaseHolder = Depends(DatabaseHolderMarker),
+        user: types.User = Depends(
+            get_user(check_email_verified=False)
+        )
+):
+    if user.email_verified:
+        raise HTTPException(
+            status_code=HTTP_403_FORBIDDEN,
+            detail="Email already confirmed"
+        )
+
+    if user.email_token != id:
+        raise HTTPException(
+            status_code=HTTP_403_FORBIDDEN,
+            detail="Email token is incorrect"
+        )
+
+    verified_user = await holder.user.verify_email(user_id=user.id)
+
+    if not verified_user:
+        raise HTTPException(
+            status_code=HTTP_404_NOT_FOUND,
+            detail="Authentication user not found"
+        )
+
+    return types.User.from_dto(user=verified_user)
+
+
 @router.post(
     "/",
     response_model=types.User,
@@ -150,7 +197,9 @@ async def read(id: uuid.UUID, holder: DatabaseHolder = Depends(DatabaseHolderMar
 async def create(
         user_create: types.UserCreate,
         holder: DatabaseHolder = Depends(DatabaseHolderMarker),
-        crypt_context: CryptContext = Depends(CryptContextMarker)
+        crypt_context: CryptContext = Depends(CryptContextMarker),
+        js: JetStreamContext = Depends(NatsJetStreamMarker),
+        settings: types.Setting = Depends(SettingsMarker)
 ):
     try:
         user = await holder.user.create(
@@ -173,5 +222,17 @@ async def create(
             status_code=HTTP_400_BAD_REQUEST,
             detail="Unable to create user"
         )
+
+    email_broadcaster = types.EmailBroadcast(
+        to_address=user_create.email,
+        subject="Confirm email",
+        html=f"To activate the user account, follow the link {settings.email_verify_url}/{user.email_token}"
+    )
+
+    await js.publish(
+        subject=f"{settings.nats_stream_name}.broadcast.email.{str(user.id)}",
+        payload=msgpack.packb(dict(json.loads(email_broadcaster.json()))),
+        stream=settings.nats_stream_name
+    )
 
     return types.User.from_dto(user=user)

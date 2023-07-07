@@ -30,3 +30,4 @@ from talkcorner.common.types.auth import (
     RefreshToken,
     Authentication
 )
+from talkcorner.common.types.broadcast.email import EmailBroadcast

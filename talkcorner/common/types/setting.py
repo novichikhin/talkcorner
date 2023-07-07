@@ -1,6 +1,6 @@
 from typing import Optional
 
-from pydantic import BaseSettings, Field
+from pydantic import BaseSettings, Field, EmailStr
 from pydantic.env_settings import env_file_sentinel, DotenvType
 
 
@@ -27,6 +27,12 @@ class Setting(BaseSettings):
     authorize_refresh_token_secret_key: str = Field(default=...)
     authorize_access_token_expire_minutes: int = Field(default=...)
     authorize_refresh_token_expire_minutes: int = Field(default=...)
+
+    email_host: str = Field(default=...)
+    email_port: int = Field(default=...)
+    email_from_address: EmailStr = Field(default=...)
+    email_password: str = Field(default=...)
+    email_verify_url: str = Field(default=...)
 
     class Config:
         env_file = ".env"

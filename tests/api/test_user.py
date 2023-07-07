@@ -61,6 +61,30 @@ async def test_refresh_token(
     assert response.status_code == 200
 
 
+async def test_email_verify(
+        client: AsyncClient,
+        create_user: CreateUser,
+        create_auth_access_token: CreateAuthAccessToken,
+        holder: DatabaseHolder
+):
+    user = await create_user(email_verified=False)
+
+    response = await client.get(
+        f"/api/v1/user/email/verify/{str(user.email_token)}",
+        headers={"Authorization": f"Bearer {create_auth_access_token(user_id=user.id)}"}
+    )
+
+    assert response.status_code == 200
+
+    json = response.json()
+
+    verified_user = await holder.user.read_by_id(user_id=user.id)
+
+    assert verified_user
+
+    assert verified_user.email_verified == json["email_verified"]
+
+
 async def test_get_users(
         client: AsyncClient,
         create_user: CreateUser,
