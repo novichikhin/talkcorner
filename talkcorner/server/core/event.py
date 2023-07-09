@@ -1,6 +1,5 @@
-from typing import Callable, Coroutine, Any
+from contextlib import asynccontextmanager
 
-import nats
 from fastapi import FastAPI
 from sqlalchemy.ext.asyncio import AsyncEngine
 
@@ -12,37 +11,28 @@ from talkcorner.common.queue.nats.factory import (
     nats_create_jetstream,
     js_create_or_update_stream
 )
+from talkcorner.server.api.api_v1.dependencies.settings import SettingsMarker
 
 
-def create_on_startup_handler(
-        app: FastAPI,
-        settings: types.Setting,
-        **kwargs: Any
-) -> Callable[..., Coroutine[Any, Any, None]]:
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    settings: types.Setting = app.dependency_overrides[SettingsMarker]()
 
-    async def on_startup() -> None:
-        nats = await nats_create_connect(connection_uri=settings.nats_url)
-        js = nats_create_jetstream(nats=nats)
+    nats = await nats_create_connect(connection_uri=settings.nats_url)
+    js = nats_create_jetstream(nats=nats)
 
-        await js_create_or_update_stream(js=js, stream_name=settings.nats_stream_name)
+    await js_create_or_update_stream(js=js, stream_name=settings.nats_stream_name)
 
-        app.dependency_overrides.update(
-            {
-                NatsMarker: lambda: nats,
-                NatsJetStreamMarker: lambda: js
-            }
-        )
+    app.dependency_overrides.update(
+        {
+            NatsMarker: lambda: nats,
+            NatsJetStreamMarker: lambda: js
+        }
+    )
 
-    return on_startup
+    yield
 
+    engine: AsyncEngine = app.dependency_overrides[DatabaseEngineMarker]()
 
-def create_on_shutdown_handler(app: FastAPI) -> Callable[..., Coroutine[Any, Any, None]]:
-
-    async def on_shutdown() -> None:
-        engine: AsyncEngine = app.dependency_overrides[DatabaseEngineMarker]()
-        nc: nats.NATS = app.dependency_overrides[NatsMarker]()
-
-        await engine.dispose()
-        await nc.close()
-
-    return on_shutdown
+    await engine.dispose()
+    await nats.close()

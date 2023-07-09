@@ -1,0 +1,48 @@
+version: '3'
+
+services:
+  server:
+    build:
+      context: ./
+      dockerfile: docker/server/Dockerfile
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+      - nats
+
+  broadcaster-email:
+    build:
+      context: ./
+      dockerfile: docker/email-broadcaster/Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      - server
+      - nats
+
+  postgres:
+    image: postgres:14
+    volumes:
+      - ./postgres/data:/var/lib/postgresql/data/:z
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_HOST=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+
+  nats:
+    image: nats
+    volumes:
+      - ./nats/data:/etc/nats
+    restart: always
+    ports:
+      - "4222:4222"
+      - "6222:6222"
+      - "8222:8222"
+    command: ["-js", "--user", "nats", "--pass", "nats"]

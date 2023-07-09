@@ -7,7 +7,11 @@ from nats.aio.msg import Msg
 from nats.errors import TimeoutError
 
 from talkcorner.common import types
-from talkcorner.common.queue.nats.factory import nats_create_connect, nats_create_jetstream
+from talkcorner.common.queue.nats.factory import (
+    nats_create_connect,
+    nats_create_jetstream,
+    js_create_or_update_stream
+)
 from talkcorner.common.services.broadcaster.email import EmailBroadcaster
 
 
@@ -32,6 +36,8 @@ async def main():
 
     nc = await nats_create_connect(connection_uri=settings.nats_url)
     js = nats_create_jetstream(nats=nc)
+
+    await js_create_or_update_stream(js=js, stream_name=settings.nats_stream_name)
 
     subscribe = await js.pull_subscribe(
         subject=f"{settings.nats_stream_name}.broadcast.email.*",
