@@ -7,7 +7,7 @@
    id="svg557"
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg" content="%3Cmxfile%20host%3D%22app.diagrams.net%22%20modified%3D%222023-07-10T17%3A23%3A47.089Z%22%20agent%3D%22Mozilla%2F5.0%20(Windows%20NT%2010.0%3B%20Win64%3B%20x64)%20AppleWebKit%2F537.36%20(KHTML%2C%20like%20Gecko)%20Chrome%2F114.0.0.0%20Safari%2F537.36%22%20etag%3D%22u2DshA_8wn3EHIH3ik4_%22%20version%3D%2221.6.1%22%20type%3D%22device%22%3E%20%20%20%3Cdiagram%20name%3D%22%D0%A1%D1%82%D1%80%D0%B0%D0%BD%D0%B8%D1%86%D0%B0%201%22%20id%3D%22OUTGT3oxDU2LB99CVwfX%22%3E%20%20%20%20%20%3CmxGraphModel%20dx%3D%22819%22%20dy%3D%22455%22%20grid%3D%221%22%20gridSize%3D%2210%22%20guides%3D%221%22%20tooltips%3D%221%22%20connect%3D%221%22%20arrows%3D%221%22%20fold%3D%221%22%20page%3D%220%22%20pageScale%3D%221%22%20pageWidth%3D%22827%22%20pageHeight%3D%221169%22%20math%3D%220%22%20shadow%3D%220%22%3E%20%20%20%20%20%20%20%3Croot%3E%20%20%20%20%20%20%20%20%20%3CmxCell%20id%3D%220%22%20%2F%3E%20%20%20%20%20%20%20%20%20%3CmxCell%20id%3D%221%22%20parent%3D%220%22%20%2F%3E%20%20%20%20%20%20%20%20%20%3CmxCell%20id%3D%22cB5IOTAWgXirzFRbW4Fy-5%22%20value%3D%22FastAPI%20endpoint%20for%20create%20user%20with%26amp%3Bnbsp%3Bbusiness%20logic%26amp%3Bnbsp%3B%22%20style%3D%22rounded%3D0%3BwhiteSpace%3Dwrap%3Bhtml%3D1%3BfillColor%3D%23dae8fc%3BstrokeColor%3D%236c8ebf%3B%22%20parent%3D%221%22%20vertex%3D%221%22%3E%20%20%20%20%20%20%20%20%20%20%20%3CmxGeometry%20x%3D%22310%22%20y%3D%22380%22%20width%3D%22120%22%20height%3D%2250%22%20as%3D%22geometry%22%20%2F%3E%20%20%20%20%20%20%20%20%20%3C%2FmxCell%3E%20%20%20%20%20%20%20%20%20%3CmxCell%20id%3D%22BUKun72IPZGw3HyGiH4M-2%22%20style%3D%22edgeStyle%3DorthogonalEdgeStyle%3Brounded%3D0%3BorthogonalLoop%3D1%3BjettySize%3Dauto%3Bhtml%3D1%3BentryX%3D0%3BentryY%3D0.5%3BentryDx%3D0%3BentryDy%3D0%3BstrokeColor%3D%23D79B00%3B%22%20parent%3D%221%22%20source%3D%22BUKun72IPZGw3HyGiH4M-1%22%20target%3D%22cB5IOTAWgXirzFRbW4Fy-5%22%20edge%3D%221%22%3E%20%20%20%20%20%20%20%20%20%20%20%3CmxGeometry%20relative%3D%221%22%20as%3D%22geometry%22%20%2F%3E%20%20%20%20%20%20%20%20%20%3C%2FmxCell%3E%20%20%20%20%20%20%20%20%20%3CmxCell%20id%3D%22BUKun72IPZGw3HyGiH4M-4%22%20value%3D%22POST%20%2Fapi%2Fv1%2Fuser%22%20style%3D%22edgeLabel%3Bhtml%3D1%3Balign%3Dcenter%3BverticalAlign%3Dmiddle%3Bresizable%3D0%3Bpoints%3D%5B%5D%3BlabelBackgroundColor%3Dnone%3BfontColor%3D%23D79B00%3B%22%20parent%3D%22BUKun72IPZGw3HyGiH4M-2%22%20vertex%3D%221%22%20connectable%3D%220%22%3E%20%20%20%20%20%20%20%20%20%20%20%3CmxGeometry%20x%3D%22-0.1801%22%20relative%3D%221%22%20as%3D%22geometry%22%3E%20%20%20%20%20%20%20%20%20%20%20%20%20%3CmxPoint%20x%3D%225%22%20y%3D%22-8%22%20as%3D%22offset%22%20%2F%3E%20%20%20%20%20%20%20%20%20%20%20%3C%2FmxGeometry%3E%20%20%20%20%20%20%20%20%20%3C%2FmxCell%3E%20%20%20%20%20%20%20%20%20%3CmxCell%20id%3D%22BUKun72IPZGw3HyGiH4M-1%22%20value%3D%22Client%22%20style%3D%22shape%3DumlActor%3BverticalLabelPosition%3Dbottom%3BverticalAlign%3Dtop%3Bhtml%3D1%3BoutlineConnect%3D0%3BfillColor%3D%23d5e8d4%3BstrokeColor%3D%2382b366%3BfontColor%3D%2382B366%3B%22%20parent%3D%221%22%20vertex%3D%221%22%3E%20%20%20%20%20%20%20%20%20%20%20%3CmxGeometry%20x%3D%22170%22%20y%3D%22375%22%20width%3D%2230%22%20height%3D%2260%22%20as%3D%22geometry%22%20%2F%3E%20%20%20%20%20%20%20%20%20%3C%2FmxCell%3E%20%20%20%20%20%20%20%20%20%3CmxCell%20id%3D%22BUKun72IPZGw3HyGiH4M-5%22%20value%3D%22NATS%20JetStream%20consumer%20for%20send%20an%20email%22%20style%3D%22rounded%3D0%3BwhiteSpace%3Dwrap%3Bhtml%3D1%3BfillColor%3D%23f8cecc%3BstrokeColor%3D%23b85450%3B%22%20parent%3D%221%22%20vertex%3D%221%22%3E%20%20%20%20%20%20%20%20%20%20%20%3CmxGeometry%20x%3D%22640%22%20y%3D%22385%22%20width%3D%22120%22%20height%3D%2250%22%20as%3D%22geometry%22%20%2F%3E%20%20%20%20%20%20%20%20%20%3C%2FmxCell%3E%20%20%20%20%20%20%20%20%20%3CmxCell%20id%3D%22BUKun72IPZGw3HyGiH4M-6%22%20style%3D%22edgeStyle%3DorthogonalEdgeStyle%3Brounded%3D0%3BorthogonalLoop%3D1%3BjettySize%3Dauto%3Bhtml%3D1%3BentryX%3D0%3BentryY%3D0.5%3BentryDx%3D0%3BentryDy%3D0%3BstrokeColor%3D%239673A6%3B%22%20parent%3D%221%22%20target%3D%22BUKun72IPZGw3HyGiH4M-5%22%20edge%3D%221%22%3E%20%20%20%20%20%20%20%20%20%20%20%3CmxGeometry%20relative%3D%221%22%20as%3D%22geometry%22%3E%20%20%20%20%20%20%20%20%20%20%20%20%20%3CmxPoint%20x%3D%22430%22%20y%3D%22408.66%22%20as%3D%22sourcePoint%22%20%2F%3E%20%20%20%20%20%20%20%20%20%20%20%20%20%3CmxPoint%20x%3D%22540%22%20y%3D%22408.66%22%20as%3D%22targetPoint%22%20%2F%3E%20%20%20%20%20%20%20%20%20%20%20%3C%2FmxGeometry%3E%20%20%20%20%20%20%20%20%20%3C%2FmxCell%3E%20%20%20%20%20%20%20%20%20%3CmxCell%20id%3D%22BUKun72IPZGw3HyGiH4M-8%22%20value%3D%22Publsih%20to%20NATS%20JetStream%20for%20send%20an%20email%26amp%3Bnbsp%3Bto%20confirm%20user%20account%22%20style%3D%22text%3Bhtml%3D1%3BstrokeColor%3Dnone%3BfillColor%3Dnone%3Balign%3Dcenter%3BverticalAlign%3Dmiddle%3BwhiteSpace%3Dwrap%3Brounded%3D0%3BfontColor%3D%239673A6%3B%22%20parent%3D%221%22%20vertex%3D%221%22%3E%20%20%20%20%20%20%20%20%20%20%20%3CmxGeometry%20x%3D%22438%22%20y%3D%22375%22%20width%3D%22200%22%20height%3D%2230%22%20as%3D%22geometry%22%20%2F%3E%20%20%20%20%20%20%20%20%20%3C%2FmxCell%3E%20%20%20%20%20%20%20%3C%2Froot%3E%20%20%20%20%20%3C%2FmxGraphModel%3E%20%20%20%3C%2Fdiagram%3E%20%3C%2Fmxfile%3E%20">
+   xmlns:svg="http://www.w3.org/2000/svg" content="%3Cmxfile%20host%3D%22app.diagrams.net%22%20modified%3D%222023-07-10T17%3A27%3A08.791Z%22%20agent%3D%22Mozilla%2F5.0%20(Windows%20NT%2010.0%3B%20Win64%3B%20x64)%20AppleWebKit%2F537.36%20(KHTML%2C%20like%20Gecko)%20Chrome%2F114.0.0.0%20Safari%2F537.36%22%20etag%3D%22lLXmZk4CigWXQmr1FSCf%22%20version%3D%2221.6.1%22%20type%3D%22device%22%3E%20%20%20%3Cdiagram%20name%3D%22%D0%A1%D1%82%D1%80%D0%B0%D0%BD%D0%B8%D1%86%D0%B0%201%22%20id%3D%22OUTGT3oxDU2LB99CVwfX%22%3E%20%20%20%20%20%3CmxGraphModel%20dx%3D%22683%22%20dy%3D%22379%22%20grid%3D%221%22%20gridSize%3D%2210%22%20guides%3D%221%22%20tooltips%3D%221%22%20connect%3D%221%22%20arrows%3D%221%22%20fold%3D%221%22%20page%3D%220%22%20pageScale%3D%221%22%20pageWidth%3D%22827%22%20pageHeight%3D%221169%22%20math%3D%220%22%20shadow%3D%220%22%3E%20%20%20%20%20%20%20%3Croot%3E%20%20%20%20%20%20%20%20%20%3CmxCell%20id%3D%220%22%20%2F%3E%20%20%20%20%20%20%20%20%20%3CmxCell%20id%3D%221%22%20parent%3D%220%22%20%2F%3E%20%20%20%20%20%20%20%20%20%3CmxCell%20id%3D%22cB5IOTAWgXirzFRbW4Fy-5%22%20value%3D%22FastAPI%20endpoint%20for%20create%20user%20with%26amp%3Bnbsp%3Bbusiness%20logic%26amp%3Bnbsp%3B%22%20style%3D%22rounded%3D0%3BwhiteSpace%3Dwrap%3Bhtml%3D1%3BfillColor%3D%23dae8fc%3BstrokeColor%3D%236c8ebf%3B%22%20parent%3D%221%22%20vertex%3D%221%22%3E%20%20%20%20%20%20%20%20%20%20%20%3CmxGeometry%20x%3D%22310%22%20y%3D%22380%22%20width%3D%22120%22%20height%3D%2250%22%20as%3D%22geometry%22%20%2F%3E%20%20%20%20%20%20%20%20%20%3C%2FmxCell%3E%20%20%20%20%20%20%20%20%20%3CmxCell%20id%3D%22BUKun72IPZGw3HyGiH4M-2%22%20style%3D%22edgeStyle%3DorthogonalEdgeStyle%3Brounded%3D0%3BorthogonalLoop%3D1%3BjettySize%3Dauto%3Bhtml%3D1%3BentryX%3D0%3BentryY%3D0.5%3BentryDx%3D0%3BentryDy%3D0%3BstrokeColor%3D%236C8EBF%3B%22%20parent%3D%221%22%20source%3D%22BUKun72IPZGw3HyGiH4M-1%22%20target%3D%22cB5IOTAWgXirzFRbW4Fy-5%22%20edge%3D%221%22%3E%20%20%20%20%20%20%20%20%20%20%20%3CmxGeometry%20relative%3D%221%22%20as%3D%22geometry%22%20%2F%3E%20%20%20%20%20%20%20%20%20%3C%2FmxCell%3E%20%20%20%20%20%20%20%20%20%3CmxCell%20id%3D%22BUKun72IPZGw3HyGiH4M-4%22%20value%3D%22POST%20%2Fapi%2Fv1%2Fuser%22%20style%3D%22edgeLabel%3Bhtml%3D1%3Balign%3Dcenter%3BverticalAlign%3Dmiddle%3Bresizable%3D0%3Bpoints%3D%5B%5D%3BlabelBackgroundColor%3Dnone%3BfontColor%3D%236C8EBF%3B%22%20parent%3D%22BUKun72IPZGw3HyGiH4M-2%22%20vertex%3D%221%22%20connectable%3D%220%22%3E%20%20%20%20%20%20%20%20%20%20%20%3CmxGeometry%20x%3D%22-0.1801%22%20relative%3D%221%22%20as%3D%22geometry%22%3E%20%20%20%20%20%20%20%20%20%20%20%20%20%3CmxPoint%20x%3D%225%22%20y%3D%22-8%22%20as%3D%22offset%22%20%2F%3E%20%20%20%20%20%20%20%20%20%20%20%3C%2FmxGeometry%3E%20%20%20%20%20%20%20%20%20%3C%2FmxCell%3E%20%20%20%20%20%20%20%20%20%3CmxCell%20id%3D%22BUKun72IPZGw3HyGiH4M-1%22%20value%3D%22Client%22%20style%3D%22shape%3DumlActor%3BverticalLabelPosition%3Dbottom%3BverticalAlign%3Dtop%3Bhtml%3D1%3BoutlineConnect%3D0%3BfillColor%3D%23d5e8d4%3BstrokeColor%3D%2382b366%3BfontColor%3D%2382B366%3B%22%20parent%3D%221%22%20vertex%3D%221%22%3E%20%20%20%20%20%20%20%20%20%20%20%3CmxGeometry%20x%3D%22170%22%20y%3D%22375%22%20width%3D%2230%22%20height%3D%2260%22%20as%3D%22geometry%22%20%2F%3E%20%20%20%20%20%20%20%20%20%3C%2FmxCell%3E%20%20%20%20%20%20%20%20%20%3CmxCell%20id%3D%22BUKun72IPZGw3HyGiH4M-5%22%20value%3D%22NATS%20JetStream%20consumer%20for%20send%20an%20email%22%20style%3D%22rounded%3D0%3BwhiteSpace%3Dwrap%3Bhtml%3D1%3BfillColor%3D%23f8cecc%3BstrokeColor%3D%23b85450%3B%22%20parent%3D%221%22%20vertex%3D%221%22%3E%20%20%20%20%20%20%20%20%20%20%20%3CmxGeometry%20x%3D%22640%22%20y%3D%22385%22%20width%3D%22120%22%20height%3D%2250%22%20as%3D%22geometry%22%20%2F%3E%20%20%20%20%20%20%20%20%20%3C%2FmxCell%3E%20%20%20%20%20%20%20%20%20%3CmxCell%20id%3D%22BUKun72IPZGw3HyGiH4M-6%22%20style%3D%22edgeStyle%3DorthogonalEdgeStyle%3Brounded%3D0%3BorthogonalLoop%3D1%3BjettySize%3Dauto%3Bhtml%3D1%3BentryX%3D0%3BentryY%3D0.5%3BentryDx%3D0%3BentryDy%3D0%3BstrokeColor%3D%23B85450%3B%22%20parent%3D%221%22%20target%3D%22BUKun72IPZGw3HyGiH4M-5%22%20edge%3D%221%22%3E%20%20%20%20%20%20%20%20%20%20%20%3CmxGeometry%20relative%3D%221%22%20as%3D%22geometry%22%3E%20%20%20%20%20%20%20%20%20%20%20%20%20%3CmxPoint%20x%3D%22430%22%20y%3D%22408.66%22%20as%3D%22sourcePoint%22%20%2F%3E%20%20%20%20%20%20%20%20%20%20%20%20%20%3CmxPoint%20x%3D%22540%22%20y%3D%22408.66%22%20as%3D%22targetPoint%22%20%2F%3E%20%20%20%20%20%20%20%20%20%20%20%3C%2FmxGeometry%3E%20%20%20%20%20%20%20%20%20%3C%2FmxCell%3E%20%20%20%20%20%20%20%20%20%3CmxCell%20id%3D%22BUKun72IPZGw3HyGiH4M-8%22%20value%3D%22Publsih%20to%20NATS%20JetStream%20for%20send%20an%20email%26amp%3Bnbsp%3Bto%20confirm%20user%20account%22%20style%3D%22text%3Bhtml%3D1%3BstrokeColor%3Dnone%3BfillColor%3Dnone%3Balign%3Dcenter%3BverticalAlign%3Dmiddle%3BwhiteSpace%3Dwrap%3Brounded%3D0%3BfontColor%3D%23B85450%3B%22%20parent%3D%221%22%20vertex%3D%221%22%3E%20%20%20%20%20%20%20%20%20%20%20%3CmxGeometry%20x%3D%22438%22%20y%3D%22375%22%20width%3D%22200%22%20height%3D%2230%22%20as%3D%22geometry%22%20%2F%3E%20%20%20%20%20%20%20%20%20%3C%2FmxCell%3E%20%20%20%20%20%20%20%3C%2Froot%3E%20%20%20%20%20%3C%2FmxGraphModel%3E%20%20%20%3C%2Fdiagram%3E%20%3C%2Fmxfile%3E%20">
   <defs
      id="defs141">
     <g
@@ -592,7 +592,7 @@
      stroke-width="1"
      stroke-linecap="butt"
      stroke-linejoin="miter"
-     stroke="rgb(84.309387%, 60.778809%, 0%)"
+     stroke="rgb(42.349243%, 55.688477%, 74.899292%)"
      stroke-opacity="1"
      stroke-miterlimit="10"
      d="M 30.997923 30.997923 L 134.632388 30.997923 "
@@ -600,19 +600,19 @@
      id="path259" />
   <path
      fill-rule="nonzero"
-     fill="rgb(84.309387%, 60.778809%, 0%)"
+     fill="rgb(42.349243%, 55.688477%, 74.899292%)"
      fill-opacity="1"
      stroke-width="1"
      stroke-linecap="butt"
      stroke-linejoin="miter"
-     stroke="rgb(84.309387%, 60.778809%, 0%)"
+     stroke="rgb(42.349243%, 55.688477%, 74.899292%)"
      stroke-opacity="1"
      stroke-miterlimit="10"
      d="M 139.879439 30.997923 L 132.878166 34.501162 L 134.632388 30.997923 L 132.878166 27.499889 Z M 139.879439 30.997923 "
      transform="matrix(0.750422, 0, 0, 0.750422, 0.375211, 0.375211)"
      id="path261" />
   <g
-     fill="#d79b00"
+     fill="#6c8ebf"
      fill-opacity="1"
      id="g271">
     <use
@@ -637,7 +637,7 @@
        id="use269" />
   </g>
   <g
-     fill="#d79b00"
+     fill="#6c8ebf"
      fill-opacity="1"
      id="g299">
     <use
@@ -1006,7 +1006,7 @@
      stroke-width="1"
      stroke-linecap="butt"
      stroke-linejoin="miter"
-     stroke="rgb(58.81958%, 45.098877%, 65.098572%)"
+     stroke="rgb(72.158813%, 32.939148%, 31.369019%)"
      stroke-opacity="1"
      stroke-miterlimit="10"
      d="M 260.998869 34.66253 L 366.502076 35.198687 L 464.629219 35.948266 "
@@ -1014,19 +1014,19 @@
      id="path411" />
   <path
      fill-rule="nonzero"
-     fill="rgb(58.81958%, 45.098877%, 65.098572%)"
+     fill="rgb(72.158813%, 32.939148%, 31.369019%)"
      fill-opacity="1"
      stroke-width="1"
      stroke-linecap="butt"
      stroke-linejoin="miter"
-     stroke="rgb(58.81958%, 45.098877%, 65.098572%)"
+     stroke="rgb(72.158813%, 32.939148%, 31.369019%)"
      stroke-opacity="1"
      stroke-miterlimit="10"
      d="M 469.881476 35.989909 L 462.859381 39.441095 L 464.629219 35.948266 L 462.911435 32.439821 Z M 469.881476 35.989909 "
      transform="matrix(0.750422, 0, 0, 0.750422, 0.375211, 0.375211)"
      id="path413" />
   <g
-     fill="#9673a6"
+     fill="#b85450"
      fill-opacity="1"
      id="g441">
     <use
@@ -1096,7 +1096,7 @@
        id="use439" />
   </g>
   <g
-     fill="#9673a6"
+     fill="#b85450"
      fill-opacity="1"
      id="g485">
     <use
@@ -1206,7 +1206,7 @@
        id="use483" />
   </g>
   <g
-     fill="#9673a6"
+     fill="#b85450"
      fill-opacity="1"
      id="g503">
     <use
@@ -1251,7 +1251,7 @@
        id="use501" />
   </g>
   <g
-     fill="#9673a6"
+     fill="#b85450"
      fill-opacity="1"
      id="g507">
     <use
@@ -1261,7 +1261,7 @@
        id="use505" />
   </g>
   <g
-     fill="#9673a6"
+     fill="#b85450"
      fill-opacity="1"
      id="g555">
     <use
