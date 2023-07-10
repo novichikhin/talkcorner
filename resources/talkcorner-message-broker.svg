@@ -4,10 +4,10 @@
    height="65.040001pt"
    viewBox="0 0 444.95999 65.040001"
    version="1.1"
-   id="svg559"
+   id="svg557"
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg" content="%3Cmxfile%20host%3D%22app.diagrams.net%22%20modified%3D%222023-07-07T09%3A05%3A14.353Z%22%20agent%3D%22Mozilla%2F5.0%20(Windows%20NT%2010.0%3B%20Win64%3B%20x64)%20AppleWebKit%2F537.36%20(KHTML%2C%20like%20Gecko)%20Chrome%2F114.0.0.0%20Safari%2F537.36%22%20etag%3D%22EDfWgeGNescPhwHYlGIx%22%20version%3D%2221.6.1%22%20type%3D%22device%22%3E%20%20%20%3Cdiagram%20name%3D%22%D0%A1%D1%82%D1%80%D0%B0%D0%BD%D0%B8%D1%86%D0%B0%201%22%20id%3D%22OUTGT3oxDU2LB99CVwfX%22%3E%20%20%20%20%20%3CmxGraphModel%20dx%3D%221434%22%20dy%3D%22796%22%20grid%3D%221%22%20gridSize%3D%2210%22%20guides%3D%221%22%20tooltips%3D%221%22%20connect%3D%221%22%20arrows%3D%221%22%20fold%3D%221%22%20page%3D%220%22%20pageScale%3D%221%22%20pageWidth%3D%22827%22%20pageHeight%3D%221169%22%20math%3D%220%22%20shadow%3D%220%22%3E%20%20%20%20%20%20%20%3Croot%3E%20%20%20%20%20%20%20%20%20%3CmxCell%20id%3D%220%22%20%2F%3E%20%20%20%20%20%20%20%20%20%3CmxCell%20id%3D%221%22%20parent%3D%220%22%20%2F%3E%20%20%20%20%20%20%20%20%20%3CmxCell%20id%3D%22cB5IOTAWgXirzFRbW4Fy-5%22%20value%3D%22FastAPI%20endpoint%20for%20create%20user%20with%26amp%3Bnbsp%3Bbusiness%20logic%26amp%3Bnbsp%3B%22%20style%3D%22rounded%3D0%3BwhiteSpace%3Dwrap%3Bhtml%3D1%3BfillColor%3D%23dae8fc%3BstrokeColor%3D%236c8ebf%3B%22%20parent%3D%221%22%20vertex%3D%221%22%3E%20%20%20%20%20%20%20%20%20%20%20%3CmxGeometry%20x%3D%22310%22%20y%3D%22380%22%20width%3D%22120%22%20height%3D%2250%22%20as%3D%22geometry%22%20%2F%3E%20%20%20%20%20%20%20%20%20%3C%2FmxCell%3E%20%20%20%20%20%20%20%20%20%3CmxCell%20id%3D%22BUKun72IPZGw3HyGiH4M-2%22%20style%3D%22edgeStyle%3DorthogonalEdgeStyle%3Brounded%3D0%3BorthogonalLoop%3D1%3BjettySize%3Dauto%3Bhtml%3D1%3BentryX%3D0%3BentryY%3D0.5%3BentryDx%3D0%3BentryDy%3D0%3B%22%20parent%3D%221%22%20source%3D%22BUKun72IPZGw3HyGiH4M-1%22%20target%3D%22cB5IOTAWgXirzFRbW4Fy-5%22%20edge%3D%221%22%3E%20%20%20%20%20%20%20%20%20%20%20%3CmxGeometry%20relative%3D%221%22%20as%3D%22geometry%22%20%2F%3E%20%20%20%20%20%20%20%20%20%3C%2FmxCell%3E%20%20%20%20%20%20%20%20%20%3CmxCell%20id%3D%22BUKun72IPZGw3HyGiH4M-4%22%20value%3D%22POST%20%2Fapi%2Fv1%2Fuser%22%20style%3D%22edgeLabel%3Bhtml%3D1%3Balign%3Dcenter%3BverticalAlign%3Dmiddle%3Bresizable%3D0%3Bpoints%3D%5B%5D%3B%22%20parent%3D%22BUKun72IPZGw3HyGiH4M-2%22%20vertex%3D%221%22%20connectable%3D%220%22%3E%20%20%20%20%20%20%20%20%20%20%20%3CmxGeometry%20x%3D%22-0.1801%22%20relative%3D%221%22%20as%3D%22geometry%22%3E%20%20%20%20%20%20%20%20%20%20%20%20%20%3CmxPoint%20x%3D%225%22%20y%3D%22-8%22%20as%3D%22offset%22%20%2F%3E%20%20%20%20%20%20%20%20%20%20%20%3C%2FmxGeometry%3E%20%20%20%20%20%20%20%20%20%3C%2FmxCell%3E%20%20%20%20%20%20%20%20%20%3CmxCell%20id%3D%22BUKun72IPZGw3HyGiH4M-1%22%20value%3D%22Client%22%20style%3D%22shape%3DumlActor%3BverticalLabelPosition%3Dbottom%3BverticalAlign%3Dtop%3Bhtml%3D1%3BoutlineConnect%3D0%3BfillColor%3D%23d5e8d4%3BstrokeColor%3D%2382b366%3B%22%20parent%3D%221%22%20vertex%3D%221%22%3E%20%20%20%20%20%20%20%20%20%20%20%3CmxGeometry%20x%3D%22170%22%20y%3D%22375%22%20width%3D%2230%22%20height%3D%2260%22%20as%3D%22geometry%22%20%2F%3E%20%20%20%20%20%20%20%20%20%3C%2FmxCell%3E%20%20%20%20%20%20%20%20%20%3CmxCell%20id%3D%22BUKun72IPZGw3HyGiH4M-5%22%20value%3D%22NATS%20JetStream%20consumer%20for%20send%20an%20email%22%20style%3D%22rounded%3D0%3BwhiteSpace%3Dwrap%3Bhtml%3D1%3BfillColor%3D%23f8cecc%3BstrokeColor%3D%23b85450%3B%22%20parent%3D%221%22%20vertex%3D%221%22%3E%20%20%20%20%20%20%20%20%20%20%20%3CmxGeometry%20x%3D%22640%22%20y%3D%22385%22%20width%3D%22120%22%20height%3D%2250%22%20as%3D%22geometry%22%20%2F%3E%20%20%20%20%20%20%20%20%20%3C%2FmxCell%3E%20%20%20%20%20%20%20%20%20%3CmxCell%20id%3D%22BUKun72IPZGw3HyGiH4M-6%22%20style%3D%22edgeStyle%3DorthogonalEdgeStyle%3Brounded%3D0%3BorthogonalLoop%3D1%3BjettySize%3Dauto%3Bhtml%3D1%3BentryX%3D0%3BentryY%3D0.5%3BentryDx%3D0%3BentryDy%3D0%3B%22%20parent%3D%221%22%20target%3D%22BUKun72IPZGw3HyGiH4M-5%22%20edge%3D%221%22%3E%20%20%20%20%20%20%20%20%20%20%20%3CmxGeometry%20relative%3D%221%22%20as%3D%22geometry%22%3E%20%20%20%20%20%20%20%20%20%20%20%20%20%3CmxPoint%20x%3D%22430%22%20y%3D%22408.66%22%20as%3D%22sourcePoint%22%20%2F%3E%20%20%20%20%20%20%20%20%20%20%20%20%20%3CmxPoint%20x%3D%22540%22%20y%3D%22408.66%22%20as%3D%22targetPoint%22%20%2F%3E%20%20%20%20%20%20%20%20%20%20%20%3C%2FmxGeometry%3E%20%20%20%20%20%20%20%20%20%3C%2FmxCell%3E%20%20%20%20%20%20%20%20%20%3CmxCell%20id%3D%22BUKun72IPZGw3HyGiH4M-8%22%20value%3D%22Publsih%20to%20NATS%20JetStream%20for%20send%20an%20email%26amp%3Bnbsp%3Bto%20confirm%20user%20account%22%20style%3D%22text%3Bhtml%3D1%3BstrokeColor%3Dnone%3BfillColor%3Dnone%3Balign%3Dcenter%3BverticalAlign%3Dmiddle%3BwhiteSpace%3Dwrap%3Brounded%3D0%3B%22%20parent%3D%221%22%20vertex%3D%221%22%3E%20%20%20%20%20%20%20%20%20%20%20%3CmxGeometry%20x%3D%22438%22%20y%3D%22375%22%20width%3D%22200%22%20height%3D%2230%22%20as%3D%22geometry%22%20%2F%3E%20%20%20%20%20%20%20%20%20%3C%2FmxCell%3E%20%20%20%20%20%20%20%3C%2Froot%3E%20%20%20%20%20%3C%2FmxGraphModel%3E%20%20%20%3C%2Fdiagram%3E%20%3C%2Fmxfile%3E%20">
+   xmlns:svg="http://www.w3.org/2000/svg" content="%3Cmxfile%20host%3D%22app.diagrams.net%22%20modified%3D%222023-07-10T17%3A23%3A47.089Z%22%20agent%3D%22Mozilla%2F5.0%20(Windows%20NT%2010.0%3B%20Win64%3B%20x64)%20AppleWebKit%2F537.36%20(KHTML%2C%20like%20Gecko)%20Chrome%2F114.0.0.0%20Safari%2F537.36%22%20etag%3D%22u2DshA_8wn3EHIH3ik4_%22%20version%3D%2221.6.1%22%20type%3D%22device%22%3E%20%20%20%3Cdiagram%20name%3D%22%D0%A1%D1%82%D1%80%D0%B0%D0%BD%D0%B8%D1%86%D0%B0%201%22%20id%3D%22OUTGT3oxDU2LB99CVwfX%22%3E%20%20%20%20%20%3CmxGraphModel%20dx%3D%22819%22%20dy%3D%22455%22%20grid%3D%221%22%20gridSize%3D%2210%22%20guides%3D%221%22%20tooltips%3D%221%22%20connect%3D%221%22%20arrows%3D%221%22%20fold%3D%221%22%20page%3D%220%22%20pageScale%3D%221%22%20pageWidth%3D%22827%22%20pageHeight%3D%221169%22%20math%3D%220%22%20shadow%3D%220%22%3E%20%20%20%20%20%20%20%3Croot%3E%20%20%20%20%20%20%20%20%20%3CmxCell%20id%3D%220%22%20%2F%3E%20%20%20%20%20%20%20%20%20%3CmxCell%20id%3D%221%22%20parent%3D%220%22%20%2F%3E%20%20%20%20%20%20%20%20%20%3CmxCell%20id%3D%22cB5IOTAWgXirzFRbW4Fy-5%22%20value%3D%22FastAPI%20endpoint%20for%20create%20user%20with%26amp%3Bnbsp%3Bbusiness%20logic%26amp%3Bnbsp%3B%22%20style%3D%22rounded%3D0%3BwhiteSpace%3Dwrap%3Bhtml%3D1%3BfillColor%3D%23dae8fc%3BstrokeColor%3D%236c8ebf%3B%22%20parent%3D%221%22%20vertex%3D%221%22%3E%20%20%20%20%20%20%20%20%20%20%20%3CmxGeometry%20x%3D%22310%22%20y%3D%22380%22%20width%3D%22120%22%20height%3D%2250%22%20as%3D%22geometry%22%20%2F%3E%20%20%20%20%20%20%20%20%20%3C%2FmxCell%3E%20%20%20%20%20%20%20%20%20%3CmxCell%20id%3D%22BUKun72IPZGw3HyGiH4M-2%22%20style%3D%22edgeStyle%3DorthogonalEdgeStyle%3Brounded%3D0%3BorthogonalLoop%3D1%3BjettySize%3Dauto%3Bhtml%3D1%3BentryX%3D0%3BentryY%3D0.5%3BentryDx%3D0%3BentryDy%3D0%3BstrokeColor%3D%23D79B00%3B%22%20parent%3D%221%22%20source%3D%22BUKun72IPZGw3HyGiH4M-1%22%20target%3D%22cB5IOTAWgXirzFRbW4Fy-5%22%20edge%3D%221%22%3E%20%20%20%20%20%20%20%20%20%20%20%3CmxGeometry%20relative%3D%221%22%20as%3D%22geometry%22%20%2F%3E%20%20%20%20%20%20%20%20%20%3C%2FmxCell%3E%20%20%20%20%20%20%20%20%20%3CmxCell%20id%3D%22BUKun72IPZGw3HyGiH4M-4%22%20value%3D%22POST%20%2Fapi%2Fv1%2Fuser%22%20style%3D%22edgeLabel%3Bhtml%3D1%3Balign%3Dcenter%3BverticalAlign%3Dmiddle%3Bresizable%3D0%3Bpoints%3D%5B%5D%3BlabelBackgroundColor%3Dnone%3BfontColor%3D%23D79B00%3B%22%20parent%3D%22BUKun72IPZGw3HyGiH4M-2%22%20vertex%3D%221%22%20connectable%3D%220%22%3E%20%20%20%20%20%20%20%20%20%20%20%3CmxGeometry%20x%3D%22-0.1801%22%20relative%3D%221%22%20as%3D%22geometry%22%3E%20%20%20%20%20%20%20%20%20%20%20%20%20%3CmxPoint%20x%3D%225%22%20y%3D%22-8%22%20as%3D%22offset%22%20%2F%3E%20%20%20%20%20%20%20%20%20%20%20%3C%2FmxGeometry%3E%20%20%20%20%20%20%20%20%20%3C%2FmxCell%3E%20%20%20%20%20%20%20%20%20%3CmxCell%20id%3D%22BUKun72IPZGw3HyGiH4M-1%22%20value%3D%22Client%22%20style%3D%22shape%3DumlActor%3BverticalLabelPosition%3Dbottom%3BverticalAlign%3Dtop%3Bhtml%3D1%3BoutlineConnect%3D0%3BfillColor%3D%23d5e8d4%3BstrokeColor%3D%2382b366%3BfontColor%3D%2382B366%3B%22%20parent%3D%221%22%20vertex%3D%221%22%3E%20%20%20%20%20%20%20%20%20%20%20%3CmxGeometry%20x%3D%22170%22%20y%3D%22375%22%20width%3D%2230%22%20height%3D%2260%22%20as%3D%22geometry%22%20%2F%3E%20%20%20%20%20%20%20%20%20%3C%2FmxCell%3E%20%20%20%20%20%20%20%20%20%3CmxCell%20id%3D%22BUKun72IPZGw3HyGiH4M-5%22%20value%3D%22NATS%20JetStream%20consumer%20for%20send%20an%20email%22%20style%3D%22rounded%3D0%3BwhiteSpace%3Dwrap%3Bhtml%3D1%3BfillColor%3D%23f8cecc%3BstrokeColor%3D%23b85450%3B%22%20parent%3D%221%22%20vertex%3D%221%22%3E%20%20%20%20%20%20%20%20%20%20%20%3CmxGeometry%20x%3D%22640%22%20y%3D%22385%22%20width%3D%22120%22%20height%3D%2250%22%20as%3D%22geometry%22%20%2F%3E%20%20%20%20%20%20%20%20%20%3C%2FmxCell%3E%20%20%20%20%20%20%20%20%20%3CmxCell%20id%3D%22BUKun72IPZGw3HyGiH4M-6%22%20style%3D%22edgeStyle%3DorthogonalEdgeStyle%3Brounded%3D0%3BorthogonalLoop%3D1%3BjettySize%3Dauto%3Bhtml%3D1%3BentryX%3D0%3BentryY%3D0.5%3BentryDx%3D0%3BentryDy%3D0%3BstrokeColor%3D%239673A6%3B%22%20parent%3D%221%22%20target%3D%22BUKun72IPZGw3HyGiH4M-5%22%20edge%3D%221%22%3E%20%20%20%20%20%20%20%20%20%20%20%3CmxGeometry%20relative%3D%221%22%20as%3D%22geometry%22%3E%20%20%20%20%20%20%20%20%20%20%20%20%20%3CmxPoint%20x%3D%22430%22%20y%3D%22408.66%22%20as%3D%22sourcePoint%22%20%2F%3E%20%20%20%20%20%20%20%20%20%20%20%20%20%3CmxPoint%20x%3D%22540%22%20y%3D%22408.66%22%20as%3D%22targetPoint%22%20%2F%3E%20%20%20%20%20%20%20%20%20%20%20%3C%2FmxGeometry%3E%20%20%20%20%20%20%20%20%20%3C%2FmxCell%3E%20%20%20%20%20%20%20%20%20%3CmxCell%20id%3D%22BUKun72IPZGw3HyGiH4M-8%22%20value%3D%22Publsih%20to%20NATS%20JetStream%20for%20send%20an%20email%26amp%3Bnbsp%3Bto%20confirm%20user%20account%22%20style%3D%22text%3Bhtml%3D1%3BstrokeColor%3Dnone%3BfillColor%3Dnone%3Balign%3Dcenter%3BverticalAlign%3Dmiddle%3BwhiteSpace%3Dwrap%3Brounded%3D0%3BfontColor%3D%239673A6%3B%22%20parent%3D%221%22%20vertex%3D%221%22%3E%20%20%20%20%20%20%20%20%20%20%20%3CmxGeometry%20x%3D%22438%22%20y%3D%22375%22%20width%3D%22200%22%20height%3D%2230%22%20as%3D%22geometry%22%20%2F%3E%20%20%20%20%20%20%20%20%20%3C%2FmxCell%3E%20%20%20%20%20%20%20%3C%2Froot%3E%20%20%20%20%20%3C%2FmxGraphModel%3E%20%20%20%3C%2Fdiagram%3E%20%3C%2Fmxfile%3E%20">
   <defs
      id="defs141">
     <g
@@ -592,7 +592,7 @@
      stroke-width="1"
      stroke-linecap="butt"
      stroke-linejoin="miter"
-     stroke="rgb(0%, 0%, 0%)"
+     stroke="rgb(84.309387%, 60.778809%, 0%)"
      stroke-opacity="1"
      stroke-miterlimit="10"
      d="M 30.997923 30.997923 L 134.632388 30.997923 "
@@ -600,117 +600,111 @@
      id="path259" />
   <path
      fill-rule="nonzero"
-     fill="rgb(0%, 0%, 0%)"
+     fill="rgb(84.309387%, 60.778809%, 0%)"
      fill-opacity="1"
      stroke-width="1"
      stroke-linecap="butt"
      stroke-linejoin="miter"
-     stroke="rgb(0%, 0%, 0%)"
+     stroke="rgb(84.309387%, 60.778809%, 0%)"
      stroke-opacity="1"
      stroke-miterlimit="10"
      d="M 139.879439 30.997923 L 132.878166 34.501162 L 134.632388 30.997923 L 132.878166 27.499889 Z M 139.879439 30.997923 "
      transform="matrix(0.750422, 0, 0, 0.750422, 0.375211, 0.375211)"
      id="path261" />
-  <path
-     fill-rule="nonzero"
-     fill="rgb(100%, 100%, 100%)"
-     fill-opacity="1"
-     d="M 28.515625 13.507813 L 95.304688 13.507813 L 95.304688 23.261719 L 28.515625 23.261719 Z M 28.515625 13.507813 "
-     id="path263" />
   <g
-     fill="#000000"
+     fill="#d79b00"
      fill-opacity="1"
-     id="g273">
+     id="g271">
     <use
        xlink:href="#glyph-1-1"
        x="28.269785"
        y="21.011803"
-       id="use265" />
+       id="use263" />
     <use
        xlink:href="#glyph-1-2"
        x="33.775562"
        y="21.011803"
-       id="use267" />
+       id="use265" />
     <use
        xlink:href="#glyph-1-3"
        x="40.196285"
        y="21.011803"
-       id="use269" />
+       id="use267" />
     <use
        xlink:href="#glyph-1-4"
        x="45.702061"
        y="21.011803"
-       id="use271" />
+       id="use269" />
   </g>
   <g
-     fill="#000000"
+     fill="#d79b00"
      fill-opacity="1"
-     id="g301">
+     id="g299">
     <use
        xlink:href="#glyph-1-5"
        x="50.595192"
        y="21.011803"
-       id="use275" />
+       id="use273" />
     <use
        xlink:href="#glyph-1-6"
        x="52.888596"
        y="21.011803"
-       id="use277" />
+       id="use275" />
     <use
        xlink:href="#glyph-1-7"
        x="55.181995"
        y="21.011803"
-       id="use279" />
+       id="use277" />
     <use
        xlink:href="#glyph-1-8"
        x="59.772831"
        y="21.011803"
-       id="use281" />
+       id="use279" />
     <use
        xlink:href="#glyph-1-9"
        x="64.36367"
        y="21.011803"
-       id="use283" />
+       id="use281" />
     <use
        xlink:href="#glyph-1-6"
        x="66.197586"
        y="21.011803"
-       id="use285" />
+       id="use283" />
     <use
        xlink:href="#glyph-1-10"
        x="68.490982"
        y="21.011803"
-       id="use287" />
+       id="use285" />
     <use
        xlink:href="#glyph-1-11"
        x="72.618301"
        y="21.011803"
-       id="use289" />
+       id="use287" />
     <use
        xlink:href="#glyph-1-6"
        x="77.209137"
        y="21.011803"
-       id="use291" />
+       id="use289" />
     <use
        xlink:href="#glyph-1-12"
        x="79.502541"
        y="21.011803"
-       id="use293" />
+       id="use291" />
     <use
        xlink:href="#glyph-1-13"
        x="84.093376"
        y="21.011803"
-       id="use295" />
+       id="use293" />
     <use
        xlink:href="#glyph-1-14"
        x="88.220695"
        y="21.011803"
-       id="use297" />
+       id="use295" />
     <use
        xlink:href="#glyph-1-15"
        x="92.811531"
        y="21.011803"
-       id="use299" />
+       id="use297" />
   </g>
   <path
      fill-rule="nonzero"
@@ -724,7 +718,7 @@
      stroke-miterlimit="4"
      d="M 23.502136 8.50015 C 23.502136 8.994664 23.450082 9.478767 23.356384 9.96287 C 23.257481 10.446973 23.116935 10.915459 22.929541 11.36833 C 22.742146 11.826406 22.507903 12.258455 22.237222 12.664476 C 21.961335 13.075704 21.64901 13.455698 21.305454 13.804461 C 20.956691 14.153223 20.576696 14.460342 20.165469 14.736229 C 19.759447 15.012115 19.327399 15.241153 18.869323 15.428548 C 18.416452 15.615943 17.947965 15.761694 17.463863 15.855391 C 16.97976 15.954294 16.490451 16.001143 16.001143 16.001143 C 15.506629 16.001143 15.017321 15.954294 14.538423 15.855391 C 14.05432 15.761694 13.585834 15.615943 13.127758 15.428548 C 12.674887 15.241153 12.242838 15.012115 11.831611 14.736229 C 11.425589 14.460342 11.045595 14.153223 10.696832 13.804461 C 10.34807 13.455698 10.035746 13.075704 9.765064 12.664476 C 9.489178 12.258455 9.26014 11.826406 9.072745 11.36833 C 8.880145 10.915459 8.739599 10.446973 8.645902 9.96287 C 8.546999 9.478767 8.50015 8.994664 8.50015 8.50015 C 8.50015 8.005636 8.546999 7.521534 8.645902 7.037431 C 8.739599 6.553328 8.880145 6.084841 9.072745 5.63197 C 9.26014 5.173895 9.489178 4.741846 9.765064 4.335824 C 10.035746 3.924597 10.34807 3.544602 10.696832 3.19584 C 11.045595 2.847077 11.425589 2.539958 11.831611 2.264072 C 12.242838 1.988185 12.674887 1.759147 13.127758 1.571752 C 13.585834 1.384358 14.05432 1.238606 14.538423 1.144909 C 15.017321 1.046006 15.506629 0.999157 16.001143 0.999157 C 16.490451 0.999157 16.97976 1.046006 17.463863 1.144909 C 17.947965 1.238606 18.416452 1.384358 18.869323 1.571752 C 19.327399 1.759147 19.759447 1.988185 20.165469 2.264072 C 20.576696 2.539958 20.956691 2.847077 21.305454 3.19584 C 21.64901 3.544602 21.961335 3.924597 22.237222 4.335824 C 22.507903 4.741846 22.742146 5.173895 22.929541 5.63197 C 23.116935 6.084841 23.257481 6.553328 23.356384 7.037431 C 23.450082 7.521534 23.502136 8.005636 23.502136 8.50015 Z M 23.502136 8.50015 "
      transform="matrix(0.750422, 0, 0, 0.750422, 0.375211, 0.375211)"
-     id="path303" />
+     id="path301" />
   <path
      fill="none"
      stroke-width="1"
@@ -735,51 +729,51 @@
      stroke-miterlimit="10"
      d="M 16.001143 16.001143 L 16.001143 40.997511 M 16.001143 20.998334 L 0.999157 20.998334 M 16.001143 20.998334 L 30.997923 20.998334 M 16.001143 40.997511 L 0.999157 61.001894 M 16.001143 40.997511 L 30.997923 61.001894 "
      transform="matrix(0.750422, 0, 0, 0.750422, 0.375211, 0.375211)"
-     id="path305" />
+     id="path303" />
   <g
-     fill="#000000"
+     fill="#82b366"
      fill-opacity="1"
-     id="g319">
+     id="g317">
     <use
        xlink:href="#glyph-0-24"
        x="0.86767501"
        y="59.283298"
-       id="use307" />
+       id="use305" />
     <use
        xlink:href="#glyph-0-22"
        x="7.3708391"
        y="59.283298"
-       id="use309" />
+       id="use307" />
     <use
        xlink:href="#glyph-0-14"
        x="9.3714752"
        y="59.283298"
-       id="use311" />
+       id="use309" />
     <use
        xlink:href="#glyph-0-9"
        x="11.37211"
        y="59.283298"
-       id="use313" />
+       id="use311" />
     <use
        xlink:href="#glyph-0-10"
        x="16.380295"
        y="59.283298"
-       id="use315" />
+       id="use313" />
     <use
        xlink:href="#glyph-0-4"
        x="21.388479"
        y="59.283298"
-       id="use317" />
+       id="use315" />
   </g>
   <path
      fill-rule="nonzero"
      fill="rgb(97.24884%, 80.778503%, 79.998779%)"
      fill-opacity="1"
      d="M 353.824219 8.628906 L 443.875 8.628906 L 443.875 46.152344 L 353.824219 46.152344 Z M 353.824219 8.628906 "
-     id="path321" />
+     id="path319" />
   <g
      clip-path="url(#clip-0)"
-     id="g325">
+     id="g323">
     <path
        fill="none"
        stroke-width="1"
@@ -790,600 +784,600 @@
        stroke-miterlimit="4"
        d="M 471.00064,10.998746 H 591.00091 V 61.001894 H 471.00064 Z m 0,0"
        transform="matrix(0.750422,0,0,0.750422,0.375211,0.375211)"
-       id="path323" />
+       id="path321" />
   </g>
   <g
      fill="#000000"
      fill-opacity="1"
-     id="g331">
+     id="g329">
     <use
        xlink:href="#glyph-0-25"
        x="365.02145"
        y="19.51096"
-       id="use327" />
+       id="use325" />
     <use
        xlink:href="#glyph-0-5"
        x="371.5246"
        y="19.51096"
-       id="use329" />
+       id="use327" />
   </g>
   <g
      fill="#000000"
      fill-opacity="1"
-     id="g357">
+     id="g355">
     <use
        xlink:href="#glyph-0-26"
        x="376.86255"
        y="19.51096"
-       id="use333" />
+       id="use331" />
     <use
        xlink:href="#glyph-0-27"
        x="382.36322"
        y="19.51096"
-       id="use335" />
+       id="use333" />
     <use
        xlink:href="#glyph-0-8"
        x="388.36951"
        y="19.51096"
-       id="use337" />
+       id="use335" />
     <use
        xlink:href="#glyph-0-28"
        x="390.8714"
        y="19.51096"
-       id="use339" />
+       id="use337" />
     <use
        xlink:href="#glyph-0-9"
        x="395.37393"
        y="19.51096"
-       id="use341" />
+       id="use339" />
     <use
        xlink:href="#glyph-0-4"
        x="400.38211"
        y="19.51096"
-       id="use343" />
+       id="use341" />
     <use
        xlink:href="#glyph-0-27"
        x="402.884"
        y="19.51096"
-       id="use345" />
+       id="use343" />
     <use
        xlink:href="#glyph-0-4"
        x="408.89032"
        y="19.51096"
-       id="use347" />
+       id="use345" />
     <use
        xlink:href="#glyph-0-16"
        x="411.39221"
        y="19.51096"
-       id="use349" />
+       id="use347" />
     <use
        xlink:href="#glyph-0-9"
        x="414.39096"
        y="19.51096"
-       id="use351" />
+       id="use349" />
     <use
        xlink:href="#glyph-0-2"
        x="419.39914"
        y="19.51096"
-       id="use353" />
+       id="use351" />
     <use
        xlink:href="#glyph-0-29"
        x="424.40735"
        y="19.51096"
-       id="use355" />
+       id="use353" />
   </g>
   <g
      fill="#000000"
      fill-opacity="1"
-     id="g399">
+     id="g397">
     <use
        xlink:href="#glyph-0-17"
        x="354.92593"
        y="30.016859"
-       id="use359" />
+       id="use357" />
     <use
        xlink:href="#glyph-0-13"
        x="359.42844"
        y="30.016859"
-       id="use361" />
+       id="use359" />
     <use
        xlink:href="#glyph-0-10"
        x="364.43665"
        y="30.016859"
-       id="use363" />
+       id="use361" />
     <use
        xlink:href="#glyph-0-3"
        x="369.44482"
        y="30.016859"
-       id="use365" />
+       id="use363" />
     <use
        xlink:href="#glyph-0-18"
        x="373.94736"
        y="30.016859"
-       id="use367" />
+       id="use365" />
     <use
        xlink:href="#glyph-0-29"
        x="378.95554"
        y="30.016859"
-       id="use369" />
+       id="use367" />
     <use
        xlink:href="#glyph-0-9"
        x="386.45682"
        y="30.016859"
-       id="use371" />
+       id="use369" />
     <use
        xlink:href="#glyph-0-16"
        x="391.465"
        y="30.016859"
-       id="use373" />
+       id="use371" />
     <use
        xlink:href="#glyph-0-8"
        x="394.46375"
        y="30.016859"
-       id="use375" />
+       id="use373" />
     <use
        xlink:href="#glyph-0-15"
        x="396.96564"
        y="30.016859"
-       id="use377" />
+       id="use375" />
     <use
        xlink:href="#glyph-0-13"
        x="399.46753"
        y="30.016859"
-       id="use379" />
+       id="use377" />
     <use
        xlink:href="#glyph-0-16"
        x="404.47574"
        y="30.016859"
-       id="use381" />
+       id="use379" />
     <use
        xlink:href="#glyph-0-8"
        x="407.47449"
        y="30.016859"
-       id="use383" />
+       id="use381" />
     <use
        xlink:href="#glyph-0-3"
        x="409.97638"
        y="30.016859"
-       id="use385" />
+       id="use383" />
     <use
        xlink:href="#glyph-0-9"
        x="414.47891"
        y="30.016859"
-       id="use387" />
+       id="use385" />
     <use
        xlink:href="#glyph-0-10"
        x="419.48709"
        y="30.016859"
-       id="use389" />
+       id="use387" />
     <use
        xlink:href="#glyph-0-11"
        x="424.49527"
        y="30.016859"
-       id="use391" />
+       id="use389" />
     <use
        xlink:href="#glyph-0-8"
        x="429.50345"
        y="30.016859"
-       id="use393" />
+       id="use391" />
     <use
        xlink:href="#glyph-0-2"
        x="432.00534"
        y="30.016859"
-       id="use395" />
+       id="use393" />
     <use
        xlink:href="#glyph-0-10"
        x="437.01352"
        y="30.016859"
-       id="use397" />
+       id="use395" />
   </g>
   <g
      fill="#000000"
      fill-opacity="1"
-     id="g411">
+     id="g409">
     <use
        xlink:href="#glyph-0-9"
        x="387.70996"
        y="41.273182"
-       id="use401" />
+       id="use399" />
     <use
        xlink:href="#glyph-0-29"
        x="392.71814"
        y="41.273182"
-       id="use403" />
+       id="use401" />
     <use
        xlink:href="#glyph-0-2"
        x="400.21942"
        y="41.273182"
-       id="use405" />
+       id="use403" />
     <use
        xlink:href="#glyph-0-14"
        x="405.2276"
        y="41.273182"
-       id="use407" />
+       id="use405" />
     <use
        xlink:href="#glyph-0-22"
        x="407.22824"
        y="41.273182"
-       id="use409" />
+       id="use407" />
   </g>
   <path
      fill="none"
      stroke-width="1"
      stroke-linecap="butt"
      stroke-linejoin="miter"
-     stroke="rgb(0%, 0%, 0%)"
+     stroke="rgb(58.81958%, 45.098877%, 65.098572%)"
      stroke-opacity="1"
      stroke-miterlimit="10"
      d="M 260.998869 34.66253 L 366.502076 35.198687 L 464.629219 35.948266 "
      transform="matrix(0.750422, 0, 0, 0.750422, 0.375211, 0.375211)"
-     id="path413" />
+     id="path411" />
   <path
      fill-rule="nonzero"
-     fill="rgb(0%, 0%, 0%)"
+     fill="rgb(58.81958%, 45.098877%, 65.098572%)"
      fill-opacity="1"
      stroke-width="1"
      stroke-linecap="butt"
      stroke-linejoin="miter"
-     stroke="rgb(0%, 0%, 0%)"
+     stroke="rgb(58.81958%, 45.098877%, 65.098572%)"
      stroke-opacity="1"
      stroke-miterlimit="10"
      d="M 469.881476 35.989909 L 462.859381 39.441095 L 464.629219 35.948266 L 462.911435 32.439821 Z M 469.881476 35.989909 "
      transform="matrix(0.750422, 0, 0, 0.750422, 0.375211, 0.375211)"
-     id="path415" />
+     id="path413" />
   <g
-     fill="#000000"
+     fill="#9673a6"
      fill-opacity="1"
-     id="g443">
+     id="g441">
     <use
        xlink:href="#glyph-0-6"
        x="204.91197"
        y="9.7554798"
-       id="use417" />
+       id="use415" />
     <use
        xlink:href="#glyph-0-18"
        x="210.91827"
        y="9.7554798"
-       id="use419" />
+       id="use417" />
     <use
        xlink:href="#glyph-0-21"
        x="215.92645"
        y="9.7554798"
-       id="use421" />
+       id="use419" />
     <use
        xlink:href="#glyph-0-22"
        x="220.93465"
        y="9.7554798"
-       id="use423" />
+       id="use421" />
     <use
        xlink:href="#glyph-0-3"
        x="222.93527"
        y="9.7554798"
-       id="use425" />
+       id="use423" />
     <use
        xlink:href="#glyph-0-14"
        x="227.43781"
        y="9.7554798"
-       id="use427" />
+       id="use425" />
     <use
        xlink:href="#glyph-0-20"
        x="229.43845"
        y="9.7554798"
-       id="use429" />
+       id="use427" />
     <use
        xlink:href="#glyph-0-8"
        x="234.44662"
        y="9.7554798"
-       id="use431" />
+       id="use429" />
     <use
        xlink:href="#glyph-0-4"
        x="236.94852"
        y="9.7554798"
-       id="use433" />
+       id="use431" />
     <use
        xlink:href="#glyph-0-13"
        x="239.45041"
        y="9.7554798"
-       id="use435" />
+       id="use433" />
     <use
        xlink:href="#glyph-0-8"
        x="244.4586"
        y="9.7554798"
-       id="use437" />
+       id="use435" />
     <use
        xlink:href="#glyph-0-25"
        x="246.96049"
        y="9.7554798"
-       id="use439" />
+       id="use437" />
     <use
        xlink:href="#glyph-0-5"
        x="253.46365"
        y="9.7554798"
-       id="use441" />
+       id="use439" />
   </g>
   <g
-     fill="#000000"
+     fill="#9673a6"
      fill-opacity="1"
-     id="g487">
+     id="g485">
     <use
        xlink:href="#glyph-0-26"
        x="258.80161"
        y="9.7554798"
-       id="use445" />
+       id="use443" />
     <use
        xlink:href="#glyph-0-27"
        x="264.30228"
        y="9.7554798"
-       id="use447" />
+       id="use445" />
     <use
        xlink:href="#glyph-0-8"
        x="270.30856"
        y="9.7554798"
-       id="use449" />
+       id="use447" />
     <use
        xlink:href="#glyph-0-28"
        x="272.81046"
        y="9.7554798"
-       id="use451" />
+       id="use449" />
     <use
        xlink:href="#glyph-0-9"
        x="277.31299"
        y="9.7554798"
-       id="use453" />
+       id="use451" />
     <use
        xlink:href="#glyph-0-4"
        x="282.32117"
        y="9.7554798"
-       id="use455" />
+       id="use453" />
     <use
        xlink:href="#glyph-0-27"
        x="284.82306"
        y="9.7554798"
-       id="use457" />
+       id="use455" />
     <use
        xlink:href="#glyph-0-4"
        x="290.82938"
        y="9.7554798"
-       id="use459" />
+       id="use457" />
     <use
        xlink:href="#glyph-0-16"
        x="293.33127"
        y="9.7554798"
-       id="use461" />
+       id="use459" />
     <use
        xlink:href="#glyph-0-9"
        x="296.33002"
        y="9.7554798"
-       id="use463" />
+       id="use461" />
     <use
        xlink:href="#glyph-0-2"
        x="301.3382"
        y="9.7554798"
-       id="use465" />
+       id="use463" />
     <use
        xlink:href="#glyph-0-29"
        x="306.34637"
        y="9.7554798"
-       id="use467" />
+       id="use465" />
     <use
        xlink:href="#glyph-0-8"
        x="313.84769"
        y="9.7554798"
-       id="use469" />
+       id="use467" />
     <use
        xlink:href="#glyph-0-15"
        x="316.34958"
        y="9.7554798"
-       id="use471" />
+       id="use469" />
     <use
        xlink:href="#glyph-0-13"
        x="318.85147"
        y="9.7554798"
-       id="use473" />
+       id="use471" />
     <use
        xlink:href="#glyph-0-16"
        x="323.85965"
        y="9.7554798"
-       id="use475" />
+       id="use473" />
     <use
        xlink:href="#glyph-0-8"
        x="326.8584"
        y="9.7554798"
-       id="use477" />
+       id="use475" />
     <use
        xlink:href="#glyph-0-3"
        x="329.36029"
        y="9.7554798"
-       id="use479" />
+       id="use477" />
     <use
        xlink:href="#glyph-0-9"
        x="333.86282"
        y="9.7554798"
-       id="use481" />
+       id="use479" />
     <use
        xlink:href="#glyph-0-10"
        x="338.871"
        y="9.7554798"
-       id="use483" />
+       id="use481" />
     <use
        xlink:href="#glyph-0-11"
        x="343.87918"
        y="9.7554798"
-       id="use485" />
+       id="use483" />
   </g>
   <g
-     fill="#000000"
+     fill="#9673a6"
      fill-opacity="1"
-     id="g505">
+     id="g503">
     <use
        xlink:href="#glyph-0-2"
        x="211.82993"
        y="21.011803"
-       id="use489" />
+       id="use487" />
     <use
        xlink:href="#glyph-0-10"
        x="216.8381"
        y="21.011803"
-       id="use491" />
+       id="use489" />
     <use
        xlink:href="#glyph-0-8"
        x="221.84628"
        y="21.011803"
-       id="use493" />
+       id="use491" />
     <use
        xlink:href="#glyph-0-9"
        x="224.34818"
        y="21.011803"
-       id="use495" />
+       id="use493" />
     <use
        xlink:href="#glyph-0-29"
        x="229.35637"
        y="21.011803"
-       id="use497" />
+       id="use495" />
     <use
        xlink:href="#glyph-0-2"
        x="236.85765"
        y="21.011803"
-       id="use499" />
+       id="use497" />
     <use
        xlink:href="#glyph-0-14"
        x="241.86583"
        y="21.011803"
-       id="use501" />
+       id="use499" />
     <use
        xlink:href="#glyph-0-22"
        x="243.86647"
        y="21.011803"
-       id="use503" />
+       id="use501" />
   </g>
   <g
-     fill="#000000"
+     fill="#9673a6"
      fill-opacity="1"
-     id="g509">
+     id="g507">
     <use
        xlink:href="#glyph-0-8"
        x="245.86711"
        y="21.011803"
-       id="use507" />
+       id="use505" />
   </g>
   <g
-     fill="#000000"
+     fill="#9673a6"
      fill-opacity="1"
-     id="g557">
+     id="g555">
     <use
        xlink:href="#glyph-0-4"
        x="248.369"
        y="21.011803"
-       id="use511" />
+       id="use509" />
     <use
        xlink:href="#glyph-0-13"
        x="250.8709"
        y="21.011803"
-       id="use513" />
+       id="use511" />
     <use
        xlink:href="#glyph-0-8"
        x="255.87907"
        y="21.011803"
-       id="use515" />
+       id="use513" />
     <use
        xlink:href="#glyph-0-17"
        x="258.38098"
        y="21.011803"
-       id="use517" />
+       id="use515" />
     <use
        xlink:href="#glyph-0-13"
        x="262.88348"
        y="21.011803"
-       id="use519" />
+       id="use517" />
     <use
        xlink:href="#glyph-0-10"
        x="267.89169"
        y="21.011803"
-       id="use521" />
+       id="use519" />
     <use
        xlink:href="#glyph-0-15"
        x="272.89987"
        y="21.011803"
-       id="use523" />
+       id="use521" />
     <use
        xlink:href="#glyph-0-14"
        x="275.40176"
        y="21.011803"
-       id="use525" />
+       id="use523" />
     <use
        xlink:href="#glyph-0-16"
        x="277.4024"
        y="21.011803"
-       id="use527" />
+       id="use525" />
     <use
        xlink:href="#glyph-0-29"
        x="280.40115"
        y="21.011803"
-       id="use529" />
+       id="use527" />
     <use
        xlink:href="#glyph-0-8"
        x="287.90244"
        y="21.011803"
-       id="use531" />
+       id="use529" />
     <use
        xlink:href="#glyph-0-18"
        x="290.40433"
        y="21.011803"
-       id="use533" />
+       id="use531" />
     <use
        xlink:href="#glyph-0-3"
        x="295.41251"
        y="21.011803"
-       id="use535" />
+       id="use533" />
     <use
        xlink:href="#glyph-0-9"
        x="299.91504"
        y="21.011803"
-       id="use537" />
+       id="use535" />
     <use
        xlink:href="#glyph-0-16"
        x="304.92322"
        y="21.011803"
-       id="use539" />
+       id="use537" />
     <use
        xlink:href="#glyph-0-8"
        x="307.92197"
        y="21.011803"
-       id="use541" />
+       id="use539" />
     <use
        xlink:href="#glyph-0-2"
        x="310.42386"
        y="21.011803"
-       id="use543" />
+       id="use541" />
     <use
        xlink:href="#glyph-0-17"
        x="315.43207"
        y="21.011803"
-       id="use545" />
+       id="use543" />
     <use
        xlink:href="#glyph-0-17"
        x="319.9346"
        y="21.011803"
-       id="use547" />
+       id="use545" />
     <use
        xlink:href="#glyph-0-13"
        x="324.4371"
        y="21.011803"
-       id="use549" />
+       id="use547" />
     <use
        xlink:href="#glyph-0-18"
        x="329.44531"
        y="21.011803"
-       id="use551" />
+       id="use549" />
     <use
        xlink:href="#glyph-0-10"
        x="334.45349"
        y="21.011803"
-       id="use553" />
+       id="use551" />
     <use
        xlink:href="#glyph-0-4"
        x="339.46167"
        y="21.011803"
-       id="use555" />
+       id="use553" />
   </g>
 </svg>
