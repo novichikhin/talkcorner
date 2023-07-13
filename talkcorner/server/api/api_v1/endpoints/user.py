@@ -3,7 +3,7 @@ import uuid
 from typing import Union
 
 import msgpack
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.security import OAuth2PasswordRequestForm
 from nats.js import JetStreamContext
 from passlib.context import CryptContext
@@ -11,7 +11,8 @@ from starlette.status import (
     HTTP_404_NOT_FOUND,
     HTTP_400_BAD_REQUEST,
     HTTP_409_CONFLICT,
-    HTTP_401_UNAUTHORIZED, HTTP_403_FORBIDDEN
+    HTTP_401_UNAUTHORIZED,
+    HTTP_403_FORBIDDEN
 )
 
 from talkcorner.common import types, exceptions
@@ -110,8 +111,8 @@ async def refresh(
     responses=user_auth_responses
 )
 async def read_all(
-        offset: int = 0,
-        limit: int = 5,
+        offset: int = Query(default=0, ge=0, le=500),
+        limit: int = Query(default=5, ge=1, le=1000),
         holder: DatabaseHolder = Depends(DatabaseHolderMarker)
 ):
     users = await holder.user.read_all(offset=offset, limit=limit)

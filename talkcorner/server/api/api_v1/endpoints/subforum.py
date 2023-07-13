@@ -1,6 +1,6 @@
 from typing import Union
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from starlette.status import HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
 
 from talkcorner.common import types, exceptions
@@ -19,8 +19,8 @@ router = APIRouter(responses=user_auth_responses)
     dependencies=[Depends(get_user())]
 )
 async def read_all(
-        offset: int = 0,
-        limit: int = 5,
+        offset: int = Query(default=0, ge=0, le=500),
+        limit: int = Query(default=5, ge=1, le=1000),
         holder: DatabaseHolder = Depends(DatabaseHolderMarker)
 ):
     subforums = await holder.subforum.read_all(offset=offset, limit=limit)
