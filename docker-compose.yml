@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 services:
   server:
@@ -10,8 +10,15 @@ services:
     env_file:
       - .env
     depends_on:
-      - postgres
-      - nats
+      postgres:
+        condition: service_healthy
+      nats:
+        condition: service_started
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://server:8080/api/v1/healthcheck/" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   broadcaster-email:
     build:
@@ -20,8 +27,10 @@ services:
     env_file:
       - .env
     depends_on:
-      - server
-      - nats
+      server:
+        condition: service_healthy
+      nats:
+        condition: service_started
 
   postgres:
     image: postgres:14
@@ -35,6 +44,11 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=postgres
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   nats:
     image: nats

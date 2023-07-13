@@ -3,7 +3,8 @@ from fastapi import APIRouter
 from talkcorner.server.api.api_v1.endpoints import (
     user,
     forum,
-    subforum
+    subforum,
+    healthcheck
 )
 from talkcorner.server.api.api_v1.endpoints.topic.setup import register_topic_routers
 
@@ -27,6 +28,12 @@ def register_routers() -> APIRouter:
         subforum.router,
         prefix="/subforum",
         tags=["subforum"]
+    )
+
+    router.include_router(
+        healthcheck.router,
+        prefix="/healthcheck",
+        tags=["healthcheck"]
     )
 
     router.include_router(
