@@ -6,9 +6,9 @@ from starlette.status import HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
 
 from talkcorner.common import types, exceptions
 from talkcorner.common.database.holder import DatabaseHolder
-from talkcorner.common.types import errors
+from talkcorner.server.api.api_v1 import responses
 from talkcorner.server.api.api_v1.dependencies.database import DatabaseHolderMarker
-from talkcorner.server.api.api_v1.responses.user import user_auth_responses
+from talkcorner.server.api.api_v1.responses.main import user_auth_responses
 from talkcorner.server.core.auth import get_user
 
 router = APIRouter(responses=user_auth_responses)
@@ -35,7 +35,7 @@ async def read_all(
     dependencies=[Depends(get_user())],
     responses={
         HTTP_404_NOT_FOUND: {
-            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | errors.TopicNotFound
+            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | responses.TopicNotFound
         }
     }
 )
@@ -56,11 +56,11 @@ async def read(id: uuid.UUID, holder: DatabaseHolder = Depends(DatabaseHolderMar
     response_model=types.Topic,
     responses={
         HTTP_404_NOT_FOUND: {
-            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | errors.ForumNotFound
+            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | responses.ForumNotFound
         },
         HTTP_400_BAD_REQUEST: {
             "description": "Unable to create topic error",
-            "model": errors.UnableCreateTopic
+            "model": responses.UnableCreateTopic
         }
     }
 )
@@ -96,13 +96,13 @@ async def create(
     responses={
         HTTP_404_NOT_FOUND: {
             "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | Union[
-                errors.ForumNotFound,
-                errors.TopicNotFoundOrNotCreator
+                responses.ForumNotFound,
+                responses.TopicNotFoundOrNotCreator
             ]
         },
         HTTP_400_BAD_REQUEST: {
             "description": "Unable to update topic error",
-            "model": errors.UnableUpdateTopic
+            "model": responses.UnableUpdateTopic
         }
     }
 )
@@ -143,7 +143,7 @@ async def update(
     response_model=types.Topic,
     responses={
         HTTP_404_NOT_FOUND: {
-            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | errors.TopicNotFoundOrNotCreator
+            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | responses.TopicNotFoundOrNotCreator
         }
     }
 )

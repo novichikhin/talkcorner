@@ -10,6 +10,7 @@ from alembic.command import upgrade
 from alembic.config import Config as AlembicConfig
 from fastapi import FastAPI
 from httpx import AsyncClient
+from sqlalchemy import URL, make_url
 from sqlalchemy.orm import sessionmaker, close_all_sessions
 from testcontainers.postgres import PostgresContainer
 
@@ -26,8 +27,16 @@ from tests.mocks.nats import JetStreamContextMock
 
 @pytest.fixture(scope="session", autouse=True)
 def app(postgres_url: str) -> FastAPI:
-    settings = types.Setting(_env_file=".env.example").copy(
-        update={"database_uri": postgres_url.replace("psycopg2", "asyncpg")}
+    url: URL = make_url(postgres_url)
+    settings = types.Settings(_env_file=".env.example").copy(
+        update={
+            "pg_driver": "asyncpg",
+            "pg_host": url.host,
+            "pg_port": url.port,
+            "pg_user": url.username,
+            "pg_password": url.password,
+            "pg_db": url.database
+        }
     )
 
     return register_app(settings=settings)

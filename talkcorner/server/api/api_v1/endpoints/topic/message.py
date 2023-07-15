@@ -5,9 +5,9 @@ from starlette.status import HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
 
 from talkcorner.common import types, exceptions
 from talkcorner.common.database.holder import DatabaseHolder
-from talkcorner.common.types import errors
+from talkcorner.server.api.api_v1 import responses
 from talkcorner.server.api.api_v1.dependencies.database import DatabaseHolderMarker
-from talkcorner.server.api.api_v1.responses.user import user_auth_responses
+from talkcorner.server.api.api_v1.responses.main import user_auth_responses
 from talkcorner.server.core.auth import get_user
 
 router = APIRouter(responses=user_auth_responses)
@@ -34,7 +34,7 @@ async def read_all(
     dependencies=[Depends(get_user())],
     responses={
         HTTP_404_NOT_FOUND: {
-            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | errors.TopicMessageNotFound
+            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | responses.TopicMessageNotFound
         }
     }
 )
@@ -55,11 +55,11 @@ async def read(id: uuid.UUID, holder: DatabaseHolder = Depends(DatabaseHolderMar
     response_model=types.TopicMessage,
     responses={
         HTTP_404_NOT_FOUND: {
-            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | errors.TopicNotFound
+            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | responses.TopicNotFound
         },
         HTTP_400_BAD_REQUEST: {
             "description": "Unable to create topic message error",
-            "model": errors.UnableCreateTopicMessage
+            "model": responses.UnableCreateTopicMessage
         }
     }
 )
@@ -94,10 +94,10 @@ async def create(
     responses={
         HTTP_400_BAD_REQUEST: {
             "description": "Unable to update topic message",
-            "model": errors.UnableUpdateTopicMessage
+            "model": responses.UnableUpdateTopicMessage
         },
         HTTP_404_NOT_FOUND: {
-            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | errors.TopicMessageNotFoundOrNotCreator
+            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | responses.TopicMessageNotFoundOrNotCreator
         }
     }
 )
@@ -133,7 +133,7 @@ async def update(
     response_model=types.TopicMessage,
     responses={
         HTTP_404_NOT_FOUND: {
-            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | errors.TopicMessageNotFoundOrNotCreator
+            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | responses.TopicMessageNotFoundOrNotCreator
         }
     }
 )

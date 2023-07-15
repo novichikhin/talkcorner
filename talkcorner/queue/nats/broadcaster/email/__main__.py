@@ -7,7 +7,7 @@ from nats.aio.msg import Msg
 from nats.errors import TimeoutError
 
 from talkcorner.common import types
-from talkcorner.common.queue.nats.factory import nats_create_connect, nats_create_jetstream
+from talkcorner.common.queue.nats.factory import nats_create_connect, nats_create_jetstream, nats_build_connection_uri
 from talkcorner.common.services.broadcaster.email import EmailBroadcaster
 
 
@@ -28,9 +28,16 @@ async def send_an_email(msg: Msg, email_broadcaster: EmailBroadcaster) -> None:
 
 
 async def main():
-    settings = types.Setting()
+    settings = types.Settings()
 
-    nc = await nats_create_connect(connection_uri=settings.nats_url)
+    nc = await nats_create_connect(
+        connection_uri=nats_build_connection_uri(
+            host=settings.nats_host,
+            port=settings.nats_client_port,
+            user=settings.nats_user,
+            password=settings.nats_password
+        )
+    )
     js = nats_create_jetstream(nats=nc)
 
     subscribe = await js.pull_subscribe(

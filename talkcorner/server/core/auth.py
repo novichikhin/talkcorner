@@ -10,7 +10,7 @@ from starlette.status import HTTP_401_UNAUTHORIZED, HTTP_404_NOT_FOUND, HTTP_403
 from talkcorner.common import types
 from talkcorner.common.database.holder import DatabaseHolder
 from talkcorner.server.api.api_v1.dependencies.database import DatabaseHolderMarker
-from talkcorner.server.api.api_v1.dependencies.settings import SettingsMarker
+from talkcorner.server.api.api_v1.dependencies.setting import SettingsMarker
 from talkcorner.server.core.security import verify_password
 
 credentials_exception = HTTPException(
@@ -30,7 +30,7 @@ def get_token(authorization: str) -> str:
 
 async def verify_refresh_token(
         authorization: str = Header(alias="Authorization"),
-        settings: types.Setting = Depends(SettingsMarker)
+        settings: types.Settings = Depends(SettingsMarker)
 ) -> types.RefreshToken:
     refresh_token = get_token(authorization=authorization)
 
@@ -72,12 +72,12 @@ async def authenticate_user(
 
 def get_user(
         check_email_verified: bool = True
-) -> Callable[[str, DatabaseHolder, types.Setting], Awaitable[types.User]]:
+) -> Callable[[str, DatabaseHolder, types.Settings], Awaitable[types.User]]:
 
     async def wrapper(
             authorization: str = Header(alias="Authorization"),
             holder: DatabaseHolder = Depends(DatabaseHolderMarker),
-            settings: types.Setting = Depends(SettingsMarker)
+            settings: types.Settings = Depends(SettingsMarker)
     ) -> types.User:
         try:
             payload = jwt.decode(

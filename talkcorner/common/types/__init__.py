@@ -1,4 +1,4 @@
-from talkcorner.common.types.setting import Setting
+from talkcorner.common.types.setting import Settings
 from talkcorner.common.types.user import (
     User,
     UserLogin,

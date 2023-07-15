@@ -18,12 +18,12 @@ from starlette.status import (
 from talkcorner.common import types, exceptions
 from talkcorner.common.database.holder import DatabaseHolder
 from talkcorner.common.services.auth import create_access_token, create_refresh_token
-from talkcorner.common.types import errors
+from talkcorner.server.api.api_v1 import responses
 from talkcorner.server.api.api_v1.dependencies.database import DatabaseHolderMarker
 from talkcorner.server.api.api_v1.dependencies.nats import NatsJetStreamMarker
 from talkcorner.server.api.api_v1.dependencies.security import CryptContextMarker
-from talkcorner.server.api.api_v1.dependencies.settings import SettingsMarker
-from talkcorner.server.api.api_v1.responses.user import user_auth_responses
+from talkcorner.server.api.api_v1.dependencies.setting import SettingsMarker
+from talkcorner.server.api.api_v1.responses.main import user_auth_responses
 from talkcorner.server.core.auth import (
     authenticate_user,
     get_user,
@@ -40,7 +40,7 @@ router = APIRouter()
     responses={
         HTTP_401_UNAUTHORIZED: {
             "description": "Wrong username (email) or password error",
-            "model": errors.WrongUsernameOrPassword
+            "model": responses.WrongUsernameOrPassword
         }
     }
 )
@@ -48,7 +48,7 @@ async def login(
         form_data: OAuth2PasswordRequestForm = Depends(),
         holder: DatabaseHolder = Depends(DatabaseHolderMarker),
         crypt_context: CryptContext = Depends(CryptContextMarker),
-        settings: types.Setting = Depends(SettingsMarker)
+        settings: types.Settings = Depends(SettingsMarker)
 ):
     user: types.User = await authenticate_user(
         username=form_data.username,
@@ -86,13 +86,13 @@ async def login(
     responses={
         HTTP_401_UNAUTHORIZED: {
             "description": "Could not validate credentials error",
-            "model": errors.NotValidateCredentials
+            "model": responses.NotValidateCredentials
         }
     }
 )
 async def refresh(
         refresh_token: types.RefreshToken = Depends(verify_refresh_token),
-        settings: types.Setting = Depends(SettingsMarker)
+        settings: types.Settings = Depends(SettingsMarker)
 ):
     new_access_token = create_access_token(
         payload={"user_id": str(refresh_token.user_id)},
@@ -127,7 +127,7 @@ async def read_all(
     response_model_exclude={"email", "email_token", "email_verified", "password"},
     responses=user_auth_responses | {
         HTTP_404_NOT_FOUND: {
-            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | errors.UserNotFound
+            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | responses.UserNotFound
         }
     }
 )
@@ -150,8 +150,8 @@ async def read(id: uuid.UUID, holder: DatabaseHolder = Depends(DatabaseHolderMar
     responses=user_auth_responses | {
         HTTP_403_FORBIDDEN: {
             "model": Union[
-                errors.EmailAlreadyConfirmed,
-                errors.EmailTokenIncorrect
+                responses.EmailAlreadyConfirmed,
+                responses.EmailTokenIncorrect
             ]
         }
     }
@@ -191,8 +191,8 @@ async def email_verify(
     response_model=types.User,
     response_model_exclude={"password", "email_token"},
     responses={
-        HTTP_409_CONFLICT: {"model": Union[errors.EmailAlreadyExists, errors.UsernameAlreadyExists]},
-        HTTP_400_BAD_REQUEST: {"description": "Unable to create user error", "model": errors.UnableCreateUser}
+        HTTP_409_CONFLICT: {"model": Union[responses.EmailAlreadyExists, responses.UsernameAlreadyExists]},
+        HTTP_400_BAD_REQUEST: {"description": "Unable to create user error", "model": responses.UnableCreateUser}
     }
 )
 async def create(
@@ -200,7 +200,7 @@ async def create(
         holder: DatabaseHolder = Depends(DatabaseHolderMarker),
         crypt_context: CryptContext = Depends(CryptContextMarker),
         js: JetStreamContext = Depends(NatsJetStreamMarker),
-        settings: types.Setting = Depends(SettingsMarker)
+        settings: types.Settings = Depends(SettingsMarker)
 ):
     try:
         user = await holder.user.create(

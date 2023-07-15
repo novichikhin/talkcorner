@@ -5,13 +5,13 @@ from fastapi import FastAPI
 
 from talkcorner.common import types
 from talkcorner.common.services.auth import create_access_token, create_refresh_token
-from talkcorner.server.api.api_v1.dependencies.settings import SettingsMarker
+from talkcorner.server.api.api_v1.dependencies.setting import SettingsMarker
 from tests.fixtures.protocols.auth_token import CreateAuthAccessToken, CreateAuthRefreshToken
 
 
 @pytest.fixture(scope="function")
 def create_auth_access_token(app: FastAPI) -> CreateAuthAccessToken:
-    settings: types.Setting = app.dependency_overrides[SettingsMarker]()
+    settings: types.Settings = app.dependency_overrides[SettingsMarker]()
 
     def create_auth_access_token(user_id: uuid.UUID) -> str:
         return create_access_token(
@@ -25,7 +25,7 @@ def create_auth_access_token(app: FastAPI) -> CreateAuthAccessToken:
 
 @pytest.fixture(scope="function")
 def create_auth_refresh_token(app: FastAPI) -> CreateAuthRefreshToken:
-    settings: types.Setting = app.dependency_overrides[SettingsMarker]()
+    settings: types.Settings = app.dependency_overrides[SettingsMarker]()
 
     def create_auth_refresh_token(user_id: uuid.UUID) -> str:
         return create_refresh_token(

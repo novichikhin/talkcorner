@@ -3,9 +3,9 @@ from starlette.status import HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
 
 from talkcorner.common import types, exceptions
 from talkcorner.common.database.holder import DatabaseHolder
-from talkcorner.common.types import errors
+from talkcorner.server.api.api_v1 import responses
 from talkcorner.server.api.api_v1.dependencies.database import DatabaseHolderMarker
-from talkcorner.server.api.api_v1.responses.user import user_auth_responses
+from talkcorner.server.api.api_v1.responses.main import user_auth_responses
 from talkcorner.server.core.auth import get_user
 
 router = APIRouter(responses=user_auth_responses)
@@ -32,7 +32,7 @@ async def read_all(
     dependencies=[Depends(get_user())],
     responses={
         HTTP_404_NOT_FOUND: {
-            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | errors.ForumNotFound
+            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | responses.ForumNotFound
         }
     }
 )
@@ -72,10 +72,10 @@ async def create(
     responses={
         HTTP_400_BAD_REQUEST: {
             "description": "Unable to update forum error",
-            "model": errors.UnableUpdateForum
+            "model": responses.UnableUpdateForum
         },
         HTTP_404_NOT_FOUND: {
-            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | errors.ForumNotFoundOrNotCreator
+            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | responses.ForumNotFoundOrNotCreator
         }
     }
 )
@@ -111,7 +111,7 @@ async def update(
     response_model=types.Forum,
     responses={
         HTTP_404_NOT_FOUND: {
-            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | errors.ForumNotFoundOrNotCreator
+            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | responses.ForumNotFoundOrNotCreator
         }
     }
 )

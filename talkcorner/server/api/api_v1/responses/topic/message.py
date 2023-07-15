@@ -1,4 +1,4 @@
-from talkcorner.common.types.errors.common import Error
+from talkcorner.server.api.api_v1.responses.common import Error
 
 
 class TopicMessageNotFound(Error):

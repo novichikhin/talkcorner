@@ -3,6 +3,16 @@ from nats.js import JetStreamContext, api
 from nats.js.errors import NotFoundError
 
 
+def nats_build_connection_uri(
+        *,
+        host: str,
+        port: int,
+        user: str,
+        password: str
+) -> str:
+    return f"nats://{user}:{password}@{host}:{port}"
+
+
 async def nats_create_connect(connection_uri: str) -> nats.NATS:
     return await nats.connect(servers=connection_uri)
 

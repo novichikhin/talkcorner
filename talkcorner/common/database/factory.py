@@ -1,9 +1,31 @@
 from typing import AsyncGenerator, Callable, Any
 
+from sqlalchemy import URL
 from sqlalchemy.ext.asyncio import AsyncSession, AsyncEngine, async_sessionmaker
 from sqlalchemy.ext.asyncio import create_async_engine
 
 from talkcorner.common.database.holder import DatabaseHolder
+
+
+def sa_build_connection_uri(
+        *,
+        driver: str,
+        host: str,
+        port: int,
+        user: str,
+        password: str,
+        db: str
+) -> str:
+    url = URL.create(
+        drivername=driver,
+        username=user,
+        password=password,
+        host=host,
+        port=port,
+        database=db
+    )
+
+    return f"postgresql+{url.render_as_string(hide_password=False)}"
 
 
 def sa_create_engine(connection_uri: str, **engine_kwargs) -> AsyncEngine:

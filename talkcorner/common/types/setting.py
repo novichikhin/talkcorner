@@ -4,7 +4,7 @@ from pydantic import BaseSettings, Field, EmailStr
 from pydantic.env_settings import env_file_sentinel, DotenvType
 
 
-class Setting(BaseSettings):
+class Settings(BaseSettings):
 
     def __init__(
             self,
@@ -18,9 +18,17 @@ class Setting(BaseSettings):
     server_host: str = Field(default="127.0.0.1")
     server_port: int = Field(default=8080)
 
-    database_uri: str = Field(default=...)
+    pg_driver: str = Field(default=...)
+    pg_host: str = Field(default=...)
+    pg_port: int = Field(default=...)
+    pg_user: str = Field(default=...)
+    pg_password: str = Field(default=...)
+    pg_db: str = Field(default=...)
 
-    nats_url: str = Field(default=...)
+    nats_host: str = Field(default=...)
+    nats_client_port: int = Field(default=...)
+    nats_user: str = Field(default=...)
+    nats_password: str = Field(default=...)
     nats_stream_name: str = Field(default=...)
 
     authorize_access_token_secret_key: str = Field(default=...)

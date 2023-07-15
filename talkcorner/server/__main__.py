@@ -7,8 +7,8 @@ from talkcorner.common import types
 
 
 def run_application() -> None:
-    settings = types.Setting()
-    app = register_app(settings)
+    settings = types.Settings()
+    app = register_app(settings=settings)
 
     if platform == "linux":
         import multiprocessing

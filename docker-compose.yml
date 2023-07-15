@@ -6,7 +6,7 @@ services:
       context: ./
       dockerfile: docker/server/Dockerfile
     ports:
-      - "8080:8080"
+      - "${SERVER_PORT}:${SERVER_PORT}"
     env_file:
       - .env
     depends_on:
@@ -15,7 +15,7 @@ services:
       nats:
         condition: service_started
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://server:8080/api/v1/healthcheck/" ]
+      test: [ "CMD", "curl", "-f", "http://server:${SERVER_PORT}/api/v1/healthcheck/" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -37,13 +37,15 @@ services:
     volumes:
       - ./postgres/data:/var/lib/postgresql/data/:z
     restart: always
+    env_file:
+      - .env
     ports:
-      - "5432:5432"
+      - "${PG_PORT}:${PG_PORT}"
     environment:
-      - POSTGRES_HOST=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=postgres
+      - POSTGRES_HOST=${PG_HOST}
+      - POSTGRES_USER=${PG_USER}
+      - POSTGRES_PASSWORD=${PG_PASSWORD}
+      - POSTGRES_DB=${PG_DB}
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready" ]
       interval: 10s
@@ -55,8 +57,10 @@ services:
     volumes:
       - ./nats/data:/etc/nats
     restart: always
+    env_file:
+      - .env
     ports:
-      - "4222:4222"
-      - "6222:6222"
-      - "8222:8222"
-    command: ["-js", "--user", "nats", "--pass", "nats"]
+      - "${NATS_CLIENT_PORT}:${NATS_CLIENT_PORT}"
+      - "${NATS_HTTP_PORT}:${NATS_HTTP_PORT}"
+      - "${NATS_ROUTING_PORT}:${NATS_ROUTING_PORT}"
+    command: ["-js", "--user", "${NATS_USER}", "--pass", "${NATS_PASSWORD}"]

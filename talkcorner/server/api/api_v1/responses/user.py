@@ -1,16 +1,36 @@
-from typing import Any, Union
+from talkcorner.server.api.api_v1.responses.common import Error
 
-from starlette.status import HTTP_401_UNAUTHORIZED, HTTP_404_NOT_FOUND
+class NotValidateCredentials(Error):
+    detail: str = "Could not validate credentials"
 
-from talkcorner.common.types import errors
 
-user_auth_responses: dict[Union[int, str], dict[str, Any]] = {
-    HTTP_401_UNAUTHORIZED: {
-        "description": "Could not validate credentials error",
-        "model": errors.NotValidateCredentials
-    },
-    HTTP_404_NOT_FOUND: {
-        "description": "Authentication user not found error",
-        "model": errors.AuthenticationUserNotFound
-    }
-}
+class AuthenticationUserNotFound(Error):
+    detail: str = "Authentication user not found"
+
+
+class UserNotFound(Error):
+    detail: str = "User not found"
+
+
+class WrongUsernameOrPassword(Error):
+    detail: str = "Wrong username (email) or password"
+
+
+class EmailAlreadyConfirmed(Error):
+    detail: str = "Email already confirmed"
+
+
+class EmailTokenIncorrect(Error):
+    detail: str = "Email token is incorrect"
+
+
+class EmailAlreadyExists(Error):
+    detail: str = "User email already exists"
+
+
+class UsernameAlreadyExists(Error):
+    detail: str = "User username already exists"
+
+
+class UnableCreateUser(Error):
+    detail: str = "Unable to create user"

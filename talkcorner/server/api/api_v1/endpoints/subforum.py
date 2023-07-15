@@ -5,9 +5,9 @@ from starlette.status import HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
 
 from talkcorner.common import types, exceptions
 from talkcorner.common.database.holder import DatabaseHolder
-from talkcorner.common.types import errors
+from talkcorner.server.api.api_v1 import responses
 from talkcorner.server.api.api_v1.dependencies.database import DatabaseHolderMarker
-from talkcorner.server.api.api_v1.responses.user import user_auth_responses
+from talkcorner.server.api.api_v1.responses.main import user_auth_responses
 from talkcorner.server.core.auth import get_user
 
 router = APIRouter(responses=user_auth_responses)
@@ -34,7 +34,7 @@ async def read_all(
     dependencies=[Depends(get_user())],
     responses={
         HTTP_404_NOT_FOUND: {
-            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | errors.SubforumNotFound
+            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | responses.SubforumNotFound
         }
     }
 )
@@ -56,10 +56,10 @@ async def read(id: int, holder: DatabaseHolder = Depends(DatabaseHolderMarker)):
     responses={
         HTTP_400_BAD_REQUEST: {
             "model": Union[
-                errors.ParentForumNotFoundOrNotCreator,
-                errors.ChildForumNotFoundOrNotCreator,
-                errors.ParentChildForumsAlreadyExists,
-                errors.UnableCreateSubforum
+                responses.ParentForumNotFoundOrNotCreator,
+                responses.ChildForumNotFoundOrNotCreator,
+                responses.ParentChildForumsAlreadyExists,
+                responses.UnableCreateSubforum
             ]
         }
     }
@@ -111,13 +111,13 @@ async def create(
     responses={
         HTTP_400_BAD_REQUEST: {
             "model": Union[
-                errors.ParentForumNotFoundOrNotCreator,
-                errors.ChildForumNotFoundOrNotCreator,
-                errors.UnableUpdateSubforum
+                responses.ParentForumNotFoundOrNotCreator,
+                responses.ChildForumNotFoundOrNotCreator,
+                responses.UnableUpdateSubforum
             ]
         },
         HTTP_404_NOT_FOUND: {
-            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | errors.SubforumNotFoundOrNotCreator
+            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | responses.SubforumNotFoundOrNotCreator
         }
     }
 )
@@ -171,7 +171,7 @@ async def update(
     response_model=types.Subforum,
     responses={
         HTTP_404_NOT_FOUND: {
-            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | errors.SubforumNotFoundOrNotCreator
+            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | responses.SubforumNotFoundOrNotCreator
         }
     }
 )
