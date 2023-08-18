@@ -14,7 +14,8 @@ from sqlalchemy import URL, make_url
 from sqlalchemy.orm import sessionmaker, close_all_sessions
 from testcontainers.postgres import PostgresContainer
 
-from talkcorner.common.settings.app import AppSettings
+from talkcorner.common.settings.environments.base import AppEnvTypes
+from talkcorner.common.settings.main import get_app_settings
 from talkcorner.server.api.api_v1.dependencies.database import DatabaseSessionMarker
 from talkcorner.server.api.api_v1.dependencies.nats import NatsJetStreamMarker
 from talkcorner.server.api.setup import register_app
@@ -28,7 +29,7 @@ from tests.mocks.nats import JetStreamContextMock
 @pytest.fixture(scope="session", autouse=True)
 def app(postgres_url: str) -> FastAPI:
     url: URL = make_url(postgres_url)
-    settings = AppSettings(_env_file=".env.example").model_copy( # type: ignore
+    settings = get_app_settings(app_env=AppEnvTypes.dev).model_copy(
         update={
             "pg_driver": "asyncpg",
             "pg_host": url.host,

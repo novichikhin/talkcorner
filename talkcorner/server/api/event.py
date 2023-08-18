@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from sqlalchemy.ext.asyncio import AsyncEngine
 
-from talkcorner.common.settings.app import AppSettings
+from talkcorner.common.settings.environments.app import AppSettings
 from talkcorner.server.api.api_v1.dependencies.database import DatabaseEngineMarker
 from talkcorner.server.api.api_v1.dependencies.nats import NatsMarker, NatsJetStreamMarker
 from talkcorner.common.queue.nats.factory import (

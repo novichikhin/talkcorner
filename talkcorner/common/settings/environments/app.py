@@ -1,6 +1,6 @@
 from pydantic import Field, EmailStr
 
-from talkcorner.common.settings.base import BaseAppSettings
+from talkcorner.common.settings.environments.base import BaseAppSettings
 
 
 class AppSettings(BaseAppSettings):

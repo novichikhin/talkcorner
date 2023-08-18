@@ -1,14 +1,18 @@
 import logging
 import asyncio
+import os
 
 import uvicorn
 
-from talkcorner.common.settings.app import AppSettings
+from talkcorner.common.settings.environments.base import AppEnvTypes
+from talkcorner.common.settings.main import get_app_settings
 from talkcorner.server.api.setup import register_app
 
 
 def run_application() -> None:
-    settings = AppSettings()
+    settings = get_app_settings(
+        app_env=AppEnvTypes.prod if os.getenv("IS_PRODUCTION") else AppEnvTypes.dev
+    )
     app = register_app(settings=settings)
 
     config = uvicorn.Config(

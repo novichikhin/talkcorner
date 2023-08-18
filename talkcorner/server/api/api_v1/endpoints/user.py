@@ -12,7 +12,7 @@ from starlette.status import (
     HTTP_403_FORBIDDEN
 )
 
-from talkcorner.common.settings.app import AppSettings
+from talkcorner.common.settings.environments.app import AppSettings
 from talkcorner.server.api.api_v1 import responses
 from talkcorner.server.api.api_v1.core.auth import api_verify_refresh_token, api_get_user
 from talkcorner.server.api.api_v1.dependencies.database import DatabaseHolderMarker

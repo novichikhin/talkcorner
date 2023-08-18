@@ -2,7 +2,7 @@ from typing import Callable, Awaitable
 
 from fastapi import Header, Depends
 
-from talkcorner.common.settings.app import AppSettings
+from talkcorner.common.settings.environments.app import AppSettings
 from talkcorner.server.api.api_v1.dependencies.database import DatabaseHolderMarker
 from talkcorner.server.api.api_v1.dependencies.setting import SettingsMarker
 from talkcorner.server.database.holder import DatabaseHolder

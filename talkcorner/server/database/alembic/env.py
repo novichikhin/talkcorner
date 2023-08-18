@@ -1,3 +1,4 @@
+import os
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
@@ -5,11 +6,14 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from talkcorner.common.settings.app import AppSettings
+from talkcorner.common.settings.environments.base import AppEnvTypes
+from talkcorner.common.settings.main import get_app_settings
 from talkcorner.server.database.factory import sa_build_connection_uri
 from talkcorner.server.database.models.base import BaseModel
 
-settings = AppSettings()
+settings = get_app_settings(
+    app_env=AppEnvTypes.prod if os.getenv("IS_PRODUCTION") else AppEnvTypes.dev
+)
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

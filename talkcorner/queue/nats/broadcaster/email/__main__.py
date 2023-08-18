@@ -1,4 +1,5 @@
 import asyncio
+import os
 
 import msgpack
 import pydantic
@@ -11,7 +12,9 @@ from talkcorner.common.queue.nats.factory import (
     nats_create_jetstream,
     nats_build_connection_uri
 )
-from talkcorner.common.settings.app import AppSettings
+
+from talkcorner.common.settings.environments.base import AppEnvTypes
+from talkcorner.common.settings.main import get_app_settings
 from talkcorner.common.types.broadcast.email import EmailBroadcast
 from talkcorner.queue.nats.broadcaster.email.services.broadcaster.email import EmailBroadcaster
 
@@ -33,7 +36,9 @@ async def send_an_email(msg: Msg, email_broadcaster: EmailBroadcaster) -> None:
 
 
 async def main():
-    settings = AppSettings()
+    settings = get_app_settings(
+        app_env=AppEnvTypes.prod if os.getenv("IS_PRODUCTION") else AppEnvTypes.dev
+    )
 
     nc = await nats_create_connect(
         connection_uri=[

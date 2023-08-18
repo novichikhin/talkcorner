@@ -5,7 +5,7 @@ from jose import jwt, JWTError
 from jose.constants import ALGORITHMS
 from passlib.context import CryptContext
 
-from talkcorner.common.settings.app import AppSettings
+from talkcorner.common.settings.environments.app import AppSettings
 from talkcorner.server.api.api_v1.dependencies.setting import SettingsMarker
 from talkcorner.server.api.api_v1.exceptions.user import (
     WrongUsernameOrPasswordError,

@@ -1,9 +1,8 @@
-from fastapi import FastAPI, HTTPException
-from fastapi.exceptions import RequestValidationError
+from fastapi import FastAPI
 from passlib.context import CryptContext
-from starlette.status import HTTP_422_UNPROCESSABLE_ENTITY, HTTP_500_INTERNAL_SERVER_ERROR
+from starlette.status import HTTP_500_INTERNAL_SERVER_ERROR
 
-from talkcorner.common.settings.app import AppSettings
+from talkcorner.common.settings.environments.app import AppSettings
 from talkcorner.server.api.api_v1 import responses
 from talkcorner.server.api.api_v1.dependencies.database import (
     DatabaseHolderMarker,

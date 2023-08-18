@@ -3,7 +3,7 @@ import uuid
 import pytest
 from fastapi import FastAPI
 
-from talkcorner.common.settings.app import AppSettings
+from talkcorner.common.settings.environments.app import AppSettings
 from talkcorner.server.api.api_v1.dependencies.setting import SettingsMarker
 from talkcorner.server.services.auth.token import create_access_token, create_refresh_token
 from tests.fixtures.protocols.auth_token import CreateAuthAccessToken, CreateAuthRefreshToken
