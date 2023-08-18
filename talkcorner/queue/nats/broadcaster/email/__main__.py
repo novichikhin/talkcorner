@@ -6,16 +6,21 @@ import pydantic
 from nats.aio.msg import Msg
 from nats.errors import TimeoutError
 
-from talkcorner.common import types
-from talkcorner.common.queue.nats.factory import nats_create_connect, nats_create_jetstream, nats_build_connection_uri
-from talkcorner.common.services.broadcaster.email import EmailBroadcaster
+from talkcorner.common.queue.nats.factory import (
+    nats_create_connect,
+    nats_create_jetstream,
+    nats_build_connection_uri
+)
+from talkcorner.common.settings.app import AppSettings
+from talkcorner.common.types.broadcast.email import EmailBroadcast
+from talkcorner.queue.nats.broadcaster.email.services.broadcaster.email import EmailBroadcaster
 
 
 async def send_an_email(msg: Msg, email_broadcaster: EmailBroadcaster) -> None:
     unpacked_data = msgpack.unpackb(msg.data)
 
     try:
-        email_broadcast = types.EmailBroadcast(**unpacked_data)
+        email_broadcast = EmailBroadcast(**unpacked_data)
     except pydantic.ValidationError:
         return
 
@@ -28,15 +33,17 @@ async def send_an_email(msg: Msg, email_broadcaster: EmailBroadcaster) -> None:
 
 
 async def main():
-    settings = types.Settings()
+    settings = AppSettings()
 
     nc = await nats_create_connect(
-        connection_uri=nats_build_connection_uri(
-            host=settings.nats_host,
-            port=settings.nats_client_port,
-            user=settings.nats_user,
-            password=settings.nats_password
-        )
+        connection_uri=[
+            nats_build_connection_uri(
+                host=settings.nats_host,
+                port=settings.nats_client_port,
+                user=settings.nats_user,
+                password=settings.nats_password
+            )
+        ]
     )
     js = nats_create_jetstream(nats=nc)
 
@@ -65,7 +72,10 @@ async def main():
         except TimeoutError:
             continue
 
-        tasks = [asyncio.create_task(send_an_email(msg=msg, email_broadcaster=email_broadcaster)) for msg in msgs]
+        tasks = [
+            asyncio.create_task(send_an_email(msg=msg, email_broadcaster=email_broadcaster))
+            for msg in msgs
+        ]
         await asyncio.wait(tasks)
 
 

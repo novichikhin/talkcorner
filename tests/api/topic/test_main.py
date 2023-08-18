@@ -1,17 +1,19 @@
 import uuid
 
+import pytest
 from httpx import AsyncClient
 
-from talkcorner.common.database.holder import DatabaseHolder
+from talkcorner.server.api.api_v1.exceptions.topic.main import TopicNotFoundError
+from talkcorner.server.database.holder import DatabaseHolder
 from tests.fixtures.protocols.auth_token import CreateAuthAccessToken
 from tests.fixtures.protocols.user import CreateUser
 
 
 async def test_get_topics(
-        client: AsyncClient,
-        holder: DatabaseHolder,
-        create_user: CreateUser,
-        create_auth_access_token: CreateAuthAccessToken
+    client: AsyncClient,
+    holder: DatabaseHolder,
+    create_user: CreateUser,
+    create_auth_access_token: CreateAuthAccessToken
 ):
     user = await create_user()
 
@@ -27,6 +29,8 @@ async def test_get_topics(
         body="Test Body Topic",
         creator_id=user.id
     )
+
+    await holder.commit()
 
     response = await client.get(
         "/api/v1/topic/",
@@ -46,10 +50,10 @@ async def test_get_topics(
 
 
 async def test_get_topic(
-        client: AsyncClient,
-        holder: DatabaseHolder,
-        create_user: CreateUser,
-        create_auth_access_token: CreateAuthAccessToken
+    client: AsyncClient,
+    holder: DatabaseHolder,
+    create_user: CreateUser,
+    create_auth_access_token: CreateAuthAccessToken
 ):
     user = await create_user()
 
@@ -65,6 +69,8 @@ async def test_get_topic(
         body="Test Body Topic",
         creator_id=user.id
     )
+
+    await holder.commit()
 
     response = await client.get(
         f"/api/v1/topic/{topic.id}",
@@ -82,10 +88,10 @@ async def test_get_topic(
 
 
 async def test_create_topic(
-        client: AsyncClient,
-        holder: DatabaseHolder,
-        create_user: CreateUser,
-        create_auth_access_token: CreateAuthAccessToken
+    client: AsyncClient,
+    holder: DatabaseHolder,
+    create_user: CreateUser,
+    create_auth_access_token: CreateAuthAccessToken
 ):
     user = await create_user()
 
@@ -94,6 +100,8 @@ async def test_create_topic(
         description=None,
         creator_id=user.id
     )
+
+    await holder.commit()
 
     response = await client.post(
         "/api/v1/topic/",
@@ -122,10 +130,10 @@ async def test_create_topic(
 
 
 async def test_update_topic(
-        client: AsyncClient,
-        holder: DatabaseHolder,
-        create_user: CreateUser,
-        create_auth_access_token: CreateAuthAccessToken
+    client: AsyncClient,
+    holder: DatabaseHolder,
+    create_user: CreateUser,
+    create_auth_access_token: CreateAuthAccessToken
 ):
     new_title = "New Test Title Topic"
     new_body = "New Test Body Topic"
@@ -144,6 +152,8 @@ async def test_update_topic(
         body="Test Body Topic",
         creator_id=user.id
     )
+
+    await holder.commit()
 
     response = await client.put(
         f"/api/v1/topic/{topic.id}",
@@ -169,10 +179,10 @@ async def test_update_topic(
 
 
 async def test_delete_topic(
-        client: AsyncClient,
-        holder: DatabaseHolder,
-        create_user: CreateUser,
-        create_auth_access_token: CreateAuthAccessToken
+    client: AsyncClient,
+    holder: DatabaseHolder,
+    create_user: CreateUser,
+    create_auth_access_token: CreateAuthAccessToken
 ):
     user = await create_user()
 
@@ -189,6 +199,8 @@ async def test_delete_topic(
         creator_id=user.id
     )
 
+    await holder.commit()
+
     response = await client.delete(
         f"/api/v1/topic/{topic.id}",
         headers={"Authorization": f"Bearer {create_auth_access_token(user_id=user.id)}"}
@@ -200,6 +212,5 @@ async def test_delete_topic(
 
     assert str(topic.id) == json["id"]
 
-    deleted_topic = await holder.topic.read_by_id(topic_id=uuid.UUID(json["id"]))
-
-    assert not deleted_topic
+    with pytest.raises(TopicNotFoundError):
+        await holder.topic.read_by_id(topic_id=uuid.UUID(json["id"]))

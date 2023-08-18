@@ -1,2 +1,0 @@
-class Talkcorner(Exception):
-    pass

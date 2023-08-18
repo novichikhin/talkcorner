@@ -1,17 +1,19 @@
 import uuid
 
+import pytest
 from httpx import AsyncClient
 
-from talkcorner.common.database.holder import DatabaseHolder
+from talkcorner.server.api.api_v1.exceptions.topic.message import TopicMessageNotFoundError
+from talkcorner.server.database.holder import DatabaseHolder
 from tests.fixtures.protocols.auth_token import CreateAuthAccessToken
 from tests.fixtures.protocols.user import CreateUser
 
 
 async def test_get_topic_messages(
-        client: AsyncClient,
-        holder: DatabaseHolder,
-        create_user: CreateUser,
-        create_auth_access_token: CreateAuthAccessToken
+    client: AsyncClient,
+    holder: DatabaseHolder,
+    create_user: CreateUser,
+    create_auth_access_token: CreateAuthAccessToken
 ):
     user = await create_user()
 
@@ -33,6 +35,8 @@ async def test_get_topic_messages(
         body="Test Body Topic Message",
         creator_id=user.id
     )
+
+    await holder.commit()
 
     response = await client.get(
         "/api/v1/topic/message/",
@@ -51,10 +55,10 @@ async def test_get_topic_messages(
 
 
 async def test_get_topic_message(
-        client: AsyncClient,
-        holder: DatabaseHolder,
-        create_user: CreateUser,
-        create_auth_access_token: CreateAuthAccessToken
+    client: AsyncClient,
+    holder: DatabaseHolder,
+    create_user: CreateUser,
+    create_auth_access_token: CreateAuthAccessToken
 ):
     user = await create_user()
 
@@ -77,6 +81,8 @@ async def test_get_topic_message(
         creator_id=user.id
     )
 
+    await holder.commit()
+
     response = await client.get(
         f"/api/v1/topic/message/{topic_message.id}",
         headers={"Authorization": f"Bearer {create_auth_access_token(user_id=user.id)}"}
@@ -92,10 +98,10 @@ async def test_get_topic_message(
 
 
 async def test_create_topic_message(
-        client: AsyncClient,
-        holder: DatabaseHolder,
-        create_user: CreateUser,
-        create_auth_access_token: CreateAuthAccessToken
+    client: AsyncClient,
+    holder: DatabaseHolder,
+    create_user: CreateUser,
+    create_auth_access_token: CreateAuthAccessToken
 ):
     user = await create_user()
 
@@ -111,6 +117,8 @@ async def test_create_topic_message(
         body="Test Body Topic",
         creator_id=user.id
     )
+
+    await holder.commit()
 
     response = await client.post(
         "/api/v1/topic/message/",
@@ -137,10 +145,10 @@ async def test_create_topic_message(
 
 
 async def test_update_topic_message(
-        client: AsyncClient,
-        holder: DatabaseHolder,
-        create_user: CreateUser,
-        create_auth_access_token: CreateAuthAccessToken
+    client: AsyncClient,
+    holder: DatabaseHolder,
+    create_user: CreateUser,
+    create_auth_access_token: CreateAuthAccessToken
 ):
     new_body = "New Test Body Topic Message"
 
@@ -165,6 +173,8 @@ async def test_update_topic_message(
         creator_id=user.id
     )
 
+    await holder.commit()
+
     response = await client.put(
         f"/api/v1/topic/message/{topic_message.id}",
         json={
@@ -187,10 +197,10 @@ async def test_update_topic_message(
 
 
 async def test_delete_topic_message(
-        client: AsyncClient,
-        holder: DatabaseHolder,
-        create_user: CreateUser,
-        create_auth_access_token: CreateAuthAccessToken
+    client: AsyncClient,
+    holder: DatabaseHolder,
+    create_user: CreateUser,
+    create_auth_access_token: CreateAuthAccessToken
 ):
     user = await create_user()
 
@@ -213,6 +223,8 @@ async def test_delete_topic_message(
         creator_id=user.id
     )
 
+    await holder.commit()
+
     response = await client.delete(
         f"/api/v1/topic/message/{topic_message.id}",
         headers={"Authorization": f"Bearer {create_auth_access_token(user_id=user.id)}"}
@@ -224,6 +236,5 @@ async def test_delete_topic_message(
 
     assert str(topic_message.id) == json["id"]
 
-    deleted_topic_message = await holder.topic_message.read_by_id(topic_message_id=uuid.UUID(json["id"]))
-
-    assert not deleted_topic_message
+    with pytest.raises(TopicMessageNotFoundError):
+        await holder.topic_message.read_by_id(topic_message_id=uuid.UUID(json["id"]))

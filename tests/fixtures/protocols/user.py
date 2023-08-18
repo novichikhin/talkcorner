@@ -1,6 +1,6 @@
 from typing import Protocol, Optional
 
-from talkcorner.common import dto
+from talkcorner.server.schemas.user import User
 
 
 class CreateUser(Protocol):
@@ -11,5 +11,5 @@ class CreateUser(Protocol):
             identifier: Optional[str] = None,
             password: Optional[str] = None,
             email_verified: bool = True
-    ) -> dto.User:
+    ) -> User:
         pass

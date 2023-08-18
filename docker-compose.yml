@@ -5,6 +5,7 @@ services:
     build:
       context: ./
       dockerfile: docker/server/Dockerfile
+    restart: always
     ports:
       - "${SERVER_PORT}:${SERVER_PORT}"
     env_file:
@@ -24,6 +25,7 @@ services:
     build:
       context: ./
       dockerfile: docker/email-broadcaster/Dockerfile
+    restart: always
     env_file:
       - .env
     depends_on:
@@ -33,7 +35,7 @@ services:
         condition: service_started
 
   postgres:
-    image: postgres:14
+    image: postgres:latest
     volumes:
       - ./postgres/data:/var/lib/postgresql/data/:z
     restart: always

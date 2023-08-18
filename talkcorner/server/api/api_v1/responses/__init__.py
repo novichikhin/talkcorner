@@ -1,38 +1,35 @@
-from talkcorner.server.api.api_v1.responses.common import Validation, SomethingWentWrong
+from talkcorner.server.api.api_v1.responses.something_went_wrong import SomethingWentWrong
 from talkcorner.server.api.api_v1.responses.user import (
     NotValidateCredentials,
-    AuthenticationUserNotFound,
     UserNotFound,
-    WrongUsernameOrPassword,
+    AuthenticationUserNotFound,
+    UsernameAlreadyExists,
+    EmailAlreadyExists,
     EmailAlreadyConfirmed,
     EmailTokenIncorrect,
-    EmailAlreadyExists,
-    UsernameAlreadyExists,
-    UnableCreateUser
+    WrongUsernameOrPassword,
+    EmailNotActivated,
+    EmailNotVerified
 )
 from talkcorner.server.api.api_v1.responses.forum import (
     ForumNotFound,
-    ForumNotFoundOrNotCreator,
-    UnableUpdateForum
+    ForumNotCreator,
+    ForumNotUpdated,
+    ForumNotDeleted
 )
 from talkcorner.server.api.api_v1.responses.subforum import (
     SubforumNotFound,
-    SubforumNotFoundOrNotCreator,
-    ParentForumNotFoundOrNotCreator,
-    ChildForumNotFoundOrNotCreator,
-    ParentChildForumsAlreadyExists,
-    UnableCreateSubforum,
-    UnableUpdateSubforum
+    SubforumNotUpdated,
+    SubforumNotDeleted,
+    ParentChildForumsAlreadyExists
 )
 from talkcorner.server.api.api_v1.responses.topic.main import (
     TopicNotFound,
-    TopicNotFoundOrNotCreator,
-    UnableCreateTopic,
-    UnableUpdateTopic
+    TopicNotUpdated,
+    TopicNotDeleted
 )
 from talkcorner.server.api.api_v1.responses.topic.message import (
     TopicMessageNotFound,
-    TopicMessageNotFoundOrNotCreator,
-    UnableCreateTopicMessage,
-    UnableUpdateTopicMessage
+    TopicMessageNotUpdated,
+    TopicMessageNotDeleted
 )

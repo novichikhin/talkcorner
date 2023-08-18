@@ -1,37 +1,48 @@
 import uuid
+from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, Query
 from starlette.status import HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
 
-from talkcorner.common import types, exceptions
-from talkcorner.common.database.holder import DatabaseHolder
 from talkcorner.server.api.api_v1 import responses
+from talkcorner.server.api.api_v1.core.auth import api_get_user
 from talkcorner.server.api.api_v1.dependencies.database import DatabaseHolderMarker
 from talkcorner.server.api.api_v1.responses.main import user_auth_responses
-from talkcorner.server.core.auth import get_user
+from talkcorner.server.database.holder import DatabaseHolder
+from talkcorner.server.schemas.topic.message import TopicMessage, TopicMessageCreate, TopicMessageUpdate
+from talkcorner.server.schemas.user import User
+from talkcorner.server.services.topic.message import (
+    get_topic_messages,
+    get_topic_message,
+    create_topic_message,
+    update_topic_message,
+    delete_topic_message
+)
 
 router = APIRouter(responses=user_auth_responses)
 
 
 @router.get(
     "/",
-    response_model=list[types.TopicMessage],
-    dependencies=[Depends(get_user())]
+    response_model=List[TopicMessage],
+    dependencies=[Depends(api_get_user())]
 )
 async def read_all(
-        offset: int = Query(default=0, ge=0, le=500),
-        limit: int = Query(default=5, ge=1, le=1000),
-        holder: DatabaseHolder = Depends(DatabaseHolderMarker)
+    offset: int = Query(default=0, ge=0, le=500),
+    limit: int = Query(default=5, ge=1, le=1000),
+    holder: DatabaseHolder = Depends(DatabaseHolderMarker)
 ):
-    topic_messages = await holder.topic_message.read_all(offset=offset, limit=limit)
-
-    return [types.TopicMessage.from_dto(topic_message=topic_message) for topic_message in topic_messages]
+    return await get_topic_messages(
+        offset=offset,
+        limit=limit,
+        holder=holder
+    )
 
 
 @router.get(
     "/{id}",
-    response_model=types.TopicMessage,
-    dependencies=[Depends(get_user())],
+    response_model=TopicMessage,
+    dependencies=[Depends(api_get_user())],
     responses={
         HTTP_404_NOT_FOUND: {
             "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | responses.TopicMessageNotFound
@@ -39,115 +50,71 @@ async def read_all(
     }
 )
 async def read(id: uuid.UUID, holder: DatabaseHolder = Depends(DatabaseHolderMarker)):
-    topic_message = await holder.topic_message.read_by_id(topic_message_id=id)
-
-    if not topic_message:
-        raise HTTPException(
-            status_code=HTTP_404_NOT_FOUND,
-            detail="Topic message not found"
-        )
-
-    return types.TopicMessage.from_dto(topic_message=topic_message)
+    return await get_topic_message(topic_message_id=id, holder=holder)
 
 
 @router.post(
     "/",
-    response_model=types.TopicMessage,
+    response_model=TopicMessage,
     responses={
         HTTP_404_NOT_FOUND: {
             "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | responses.TopicNotFound
-        },
-        HTTP_400_BAD_REQUEST: {
-            "description": "Unable to create topic message error",
-            "model": responses.UnableCreateTopicMessage
         }
     }
 )
 async def create(
-        topic_message_create: types.TopicMessageCreate,
-        holder: DatabaseHolder = Depends(DatabaseHolderMarker),
-        user: types.User = Depends(get_user())
+    topic_message_create: TopicMessageCreate,
+    holder: DatabaseHolder = Depends(DatabaseHolderMarker),
+    user: User = Depends(api_get_user())
 ):
-    try:
-        topic_message = await holder.topic_message.create(
-            topic_id=topic_message_create.topic_id,
-            body=topic_message_create.body,
-            creator_id=user.id
-        )
-    except exceptions.TopicNotFound:
-        raise HTTPException(
-            status_code=HTTP_404_NOT_FOUND,
-            detail="Topic not found"
-        )
-    except exceptions.UnableInteraction:
-        raise HTTPException(
-            status_code=HTTP_400_BAD_REQUEST,
-            detail="Unable to create topic message"
-        )
-
-    return types.TopicMessage.from_dto(topic_message=topic_message)
+    return await create_topic_message(
+        topic_message_create=topic_message_create,
+        holder=holder,
+        user=user
+    )
 
 
 @router.put(
     "/{id}",
-    response_model=types.TopicMessage,
+    response_model=TopicMessage,
     responses={
         HTTP_400_BAD_REQUEST: {
-            "description": "Unable to update topic message",
-            "model": responses.UnableUpdateTopicMessage
-        },
-        HTTP_404_NOT_FOUND: {
-            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | responses.TopicMessageNotFoundOrNotCreator
+            "description": "Topic message not updated error",
+            "model": responses.TopicMessageNotUpdated
         }
     }
 )
 async def update(
-        id: uuid.UUID,
-        topic_message_update: types.TopicMessageUpdate,
-        holder: DatabaseHolder = Depends(DatabaseHolderMarker),
-        user: types.User = Depends(get_user())
+    id: uuid.UUID,
+    topic_message_update: TopicMessageUpdate,
+    holder: DatabaseHolder = Depends(DatabaseHolderMarker),
+    user: User = Depends(api_get_user())
 ):
-    try:
-        topic_message = await holder.topic_message.update(
-            topic_message_id=id,
-            creator_id=user.id,
-            data=topic_message_update.dict(exclude_unset=True)
-        )
-    except exceptions.UnableInteraction:
-        raise HTTPException(
-            status_code=HTTP_400_BAD_REQUEST,
-            detail="Unable to update topic message"
-        )
-
-    if not topic_message:
-        raise HTTPException(
-            status_code=HTTP_404_NOT_FOUND,
-            detail="Topic message not found or you are not the creator of this topic message"
-        )
-
-    return types.TopicMessage.from_dto(topic_message=topic_message)
+    return await update_topic_message(
+        topic_message_id=id,
+        topic_message_update=topic_message_update,
+        holder=holder,
+        user=user
+    )
 
 
 @router.delete(
     "/{id}",
-    response_model=types.TopicMessage,
+    response_model=TopicMessage,
     responses={
-        HTTP_404_NOT_FOUND: {
-            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | responses.TopicMessageNotFoundOrNotCreator
+        HTTP_400_BAD_REQUEST: {
+            "description": "Topic message not deleted error",
+            "model": responses.TopicMessageNotDeleted
         }
     }
 )
 async def delete(
-        id: uuid.UUID,
-        holder: DatabaseHolder = Depends(DatabaseHolderMarker),
-        user: types.User = Depends(get_user())
+    id: uuid.UUID,
+    holder: DatabaseHolder = Depends(DatabaseHolderMarker),
+    user: User = Depends(api_get_user())
 ):
-    topic_message = await holder.topic_message.delete(topic_message_id=id, creator_id=user.id)
-
-    if not topic_message:
-        raise HTTPException(
-            status_code=HTTP_404_NOT_FOUND,
-            detail="Topic message not found or you are not the creator of this topic message"
-        )
-
-    return types.TopicMessage.from_dto(topic_message=topic_message)
+    return await delete_topic_message(
+        topic_message_id=id,
+        holder=holder,
+        user=user
+    )

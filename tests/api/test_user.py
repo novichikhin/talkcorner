@@ -2,7 +2,7 @@ import uuid
 
 from httpx import AsyncClient
 
-from talkcorner.common.database.holder import DatabaseHolder
+from talkcorner.server.database.holder import DatabaseHolder
 from tests.fixtures.protocols.auth_token import CreateAuthAccessToken, CreateAuthRefreshToken
 from tests.fixtures.protocols.user import CreateUser
 
@@ -35,9 +35,9 @@ async def test_login_user(client: AsyncClient, create_user: CreateUser):
 
 
 async def test_refresh_token(
-        client: AsyncClient,
-        create_user: CreateUser,
-        create_auth_refresh_token: CreateAuthRefreshToken
+    client: AsyncClient,
+    create_user: CreateUser,
+    create_auth_refresh_token: CreateAuthRefreshToken
 ):
     user = await create_user()
 
@@ -62,10 +62,10 @@ async def test_refresh_token(
 
 
 async def test_email_verify(
-        client: AsyncClient,
-        create_user: CreateUser,
-        create_auth_access_token: CreateAuthAccessToken,
-        holder: DatabaseHolder
+    client: AsyncClient,
+    create_user: CreateUser,
+    create_auth_access_token: CreateAuthAccessToken,
+    holder: DatabaseHolder
 ):
     user = await create_user(email_verified=False)
 
@@ -86,9 +86,9 @@ async def test_email_verify(
 
 
 async def test_get_users(
-        client: AsyncClient,
-        create_user: CreateUser,
-        create_auth_access_token: CreateAuthAccessToken
+    client: AsyncClient,
+    create_user: CreateUser,
+    create_auth_access_token: CreateAuthAccessToken
 ):
     user = await create_user()
 
@@ -108,9 +108,9 @@ async def test_get_users(
 
 
 async def test_get_user(
-        client: AsyncClient,
-        create_user: CreateUser,
-        create_auth_access_token: CreateAuthAccessToken
+    client: AsyncClient,
+    create_user: CreateUser,
+    create_auth_access_token: CreateAuthAccessToken
 ):
     user = await create_user()
 

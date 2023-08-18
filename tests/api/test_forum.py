@@ -1,15 +1,17 @@
+import pytest
 from httpx import AsyncClient
 
-from talkcorner.common.database.holder import DatabaseHolder
+from talkcorner.server.api.api_v1.exceptions.forum import ForumNotFoundError
+from talkcorner.server.database.holder import DatabaseHolder
 from tests.fixtures.protocols.auth_token import CreateAuthAccessToken
 from tests.fixtures.protocols.user import CreateUser
 
 
 async def test_get_forums(
-        client: AsyncClient,
-        holder: DatabaseHolder,
-        create_user: CreateUser,
-        create_auth_access_token: CreateAuthAccessToken
+    client: AsyncClient,
+    holder: DatabaseHolder,
+    create_user: CreateUser,
+    create_auth_access_token: CreateAuthAccessToken
 ):
     user = await create_user()
 
@@ -18,6 +20,7 @@ async def test_get_forums(
         description=None,
         creator_id=user.id
     )
+    await holder.commit()
 
     response = await client.get(
         "/api/v1/forum/",
@@ -37,10 +40,10 @@ async def test_get_forums(
 
 
 async def test_get_forum(
-        client: AsyncClient,
-        holder: DatabaseHolder,
-        create_user: CreateUser,
-        create_auth_access_token: CreateAuthAccessToken
+    client: AsyncClient,
+    holder: DatabaseHolder,
+    create_user: CreateUser,
+    create_auth_access_token: CreateAuthAccessToken
 ):
     user = await create_user()
 
@@ -49,6 +52,7 @@ async def test_get_forum(
         description=None,
         creator_id=user.id
     )
+    await holder.commit()
 
     response = await client.get(
         f"/api/v1/forum/{forum.id}",
@@ -66,10 +70,10 @@ async def test_get_forum(
 
 
 async def test_create_forum(
-        client: AsyncClient,
-        holder: DatabaseHolder,
-        create_user: CreateUser,
-        create_auth_access_token: CreateAuthAccessToken
+    client: AsyncClient,
+    holder: DatabaseHolder,
+    create_user: CreateUser,
+    create_auth_access_token: CreateAuthAccessToken
 ):
     user = await create_user()
 
@@ -97,10 +101,10 @@ async def test_create_forum(
 
 
 async def test_update_forum(
-        client: AsyncClient,
-        holder: DatabaseHolder,
-        create_user: CreateUser,
-        create_auth_access_token: CreateAuthAccessToken
+    client: AsyncClient,
+    holder: DatabaseHolder,
+    create_user: CreateUser,
+    create_auth_access_token: CreateAuthAccessToken
 ):
     user = await create_user()
 
@@ -109,6 +113,7 @@ async def test_update_forum(
         description=None,
         creator_id=user.id
     )
+    await holder.commit()
 
     new_description = "New Description"
 
@@ -134,10 +139,10 @@ async def test_update_forum(
 
 
 async def test_delete_forum(
-        client: AsyncClient,
-        holder: DatabaseHolder,
-        create_user: CreateUser,
-        create_auth_access_token: CreateAuthAccessToken
+    client: AsyncClient,
+    holder: DatabaseHolder,
+    create_user: CreateUser,
+    create_auth_access_token: CreateAuthAccessToken
 ):
     user = await create_user()
 
@@ -146,6 +151,7 @@ async def test_delete_forum(
         description=None,
         creator_id=user.id
     )
+    await holder.commit()
 
     response = await client.delete(
         f"/api/v1/forum/{forum.id}",
@@ -158,6 +164,5 @@ async def test_delete_forum(
 
     assert forum.id == json["id"]
 
-    deleted_forum = await holder.forum.read_by_id(forum_id=json["id"])
-
-    assert not deleted_forum
+    with pytest.raises(ForumNotFoundError):
+        await holder.forum.read_by_id(forum_id=json["id"])

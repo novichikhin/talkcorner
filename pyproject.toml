@@ -7,7 +7,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-fastapi = "^0.95.2"
+fastapi = "^0.101.0"
 sqlalchemy = "^2.0.15"
 uvicorn = "^0.22.0"
 uuid6 = "^2023.5.2"
@@ -23,13 +23,14 @@ pytest-asyncio = "^0.21.0"
 psycopg2-binary = "^2.9.6"
 passlib = "^1.7.4"
 python-jose = "^3.3.0"
-pydantic = {extras = ["email"], version = "^1.10.8"}
+pydantic = {extras = ["email"], version = "^2.2.0"}
 python-multipart = "^0.0.6"
 bcrypt = "^4.0.1"
 testcontainers = "^3.7.1"
 httpx = "^0.24.1"
 msgpack = "^1.0.5"
 aiosmtplib = "^2.0.2"
+pydantic-settings = "^2.0.2"
 
 
 [build-system]

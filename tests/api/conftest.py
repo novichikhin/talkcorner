@@ -14,11 +14,11 @@ from sqlalchemy import URL, make_url
 from sqlalchemy.orm import sessionmaker, close_all_sessions
 from testcontainers.postgres import PostgresContainer
 
-from talkcorner.common import types
-from talkcorner.common.database.models.main import Base
+from talkcorner.common.settings.app import AppSettings
 from talkcorner.server.api.api_v1.dependencies.database import DatabaseSessionMarker
 from talkcorner.server.api.api_v1.dependencies.nats import NatsJetStreamMarker
 from talkcorner.server.api.setup import register_app
+from talkcorner.server.database.models.base import BaseModel
 from tests.fixtures.conftest import holder, crypt_context, nats_mock # noqa: F401
 from tests.fixtures.user import create_user # noqa: F401
 from tests.fixtures.auth_token import create_auth_access_token, create_auth_refresh_token # noqa: F401
@@ -28,7 +28,7 @@ from tests.mocks.nats import JetStreamContextMock
 @pytest.fixture(scope="session", autouse=True)
 def app(postgres_url: str) -> FastAPI:
     url: URL = make_url(postgres_url)
-    settings = types.Settings(_env_file=".env.example").copy(
+    settings = AppSettings(_env_file=".env.example").model_copy( # type: ignore
         update={
             "pg_driver": "asyncpg",
             "pg_host": url.host,
@@ -60,7 +60,7 @@ async def client(app: FastAPI):
 @pytest.fixture(scope="function", autouse=True)
 async def clean_tables(session_factory: sessionmaker) -> None:
     async with session_factory() as session:
-        for table in Base.metadata.tables:
+        for table in BaseModel.metadata.tables:
             await session.execute(sa.text(f"TRUNCATE TABLE {table} CASCADE;"))
         await session.commit()
 
@@ -95,8 +95,6 @@ def alembic_config(postgres_url: str) -> AlembicConfig:
         thx github.com/bomzheg/Shvatka
     """
     alembic_cfg = AlembicConfig("alembic.ini")
-
-    alembic_cfg.set_main_option("script_location", "talkcorner/common/database/alembic")
     alembic_cfg.set_main_option("sqlalchemy.url", postgres_url)
 
     return alembic_cfg

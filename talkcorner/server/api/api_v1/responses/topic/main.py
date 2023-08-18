@@ -1,17 +1,22 @@
-from talkcorner.server.api.api_v1.responses.common import Error
+import uuid
+
+from pydantic import BaseModel
+
+from talkcorner.server.api.api_v1.responses.base import BaseResponse
 
 
-class TopicNotFound(Error):
-    detail: str = "Topic not found"
+class TopicNotFoundDetail(BaseModel):
+    message: str = "Topic not found"
+    topic_id: uuid.UUID
 
 
-class TopicNotFoundOrNotCreator(Error):
-    detail: str = "Topic not found or you are not the creator of this topic"
+class TopicNotFound(BaseResponse):
+    detail: TopicNotFoundDetail
 
 
-class UnableCreateTopic(Error):
-    detail: str = "Unable to create topic"
+class TopicNotUpdated(BaseResponse):
+    detail: str = "Topic not updated: topic not found or you are not the creator of this topic"
 
 
-class UnableUpdateTopic(Error):
-    detail: str = "Unable to update topic"
+class TopicNotDeleted(BaseResponse):
+    detail: str = "Topic not deleted: topic not found or you are not the creator of this topic"

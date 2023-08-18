@@ -1,3 +1,5 @@
+from typing import List
+
 import nats
 from nats.js import JetStreamContext, api
 from nats.js.errors import NotFoundError
@@ -13,7 +15,7 @@ def nats_build_connection_uri(
     return f"nats://{user}:{password}@{host}:{port}"
 
 
-async def nats_create_connect(connection_uri: str) -> nats.NATS:
+async def nats_create_connect(connection_uri: List[str]) -> nats.NATS:
     return await nats.connect(servers=connection_uri)
 
 

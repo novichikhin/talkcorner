@@ -1,15 +1,17 @@
+import pytest
 from httpx import AsyncClient
 
-from talkcorner.common.database.holder import DatabaseHolder
+from talkcorner.server.api.api_v1.exceptions.subforum import SubforumNotFoundError
+from talkcorner.server.database.holder import DatabaseHolder
 from tests.fixtures.protocols.auth_token import CreateAuthAccessToken
 from tests.fixtures.protocols.user import CreateUser
 
 
 async def test_get_subforums(
-        client: AsyncClient,
-        holder: DatabaseHolder,
-        create_user: CreateUser,
-        create_auth_access_token: CreateAuthAccessToken
+    client: AsyncClient,
+    holder: DatabaseHolder,
+    create_user: CreateUser,
+    create_auth_access_token: CreateAuthAccessToken
 ):
     user = await create_user()
 
@@ -30,6 +32,8 @@ async def test_get_subforums(
         child_forum_id=child_forum.id,
         creator_id=user.id
     )
+
+    await holder.commit()
 
     response = await client.get(
         "/api/v1/subforum/",
@@ -49,10 +53,10 @@ async def test_get_subforums(
 
 
 async def test_get_subforum(
-        client: AsyncClient,
-        holder: DatabaseHolder,
-        create_user: CreateUser,
-        create_auth_access_token: CreateAuthAccessToken
+    client: AsyncClient,
+    holder: DatabaseHolder,
+    create_user: CreateUser,
+    create_auth_access_token: CreateAuthAccessToken
 ):
     user = await create_user()
 
@@ -74,6 +78,8 @@ async def test_get_subforum(
         creator_id=user.id
     )
 
+    await holder.commit()
+
     response = await client.get(
         f"/api/v1/subforum/{subforum.id}",
         headers={"Authorization": f"Bearer {create_auth_access_token(user_id=user.id)}"}
@@ -90,10 +96,10 @@ async def test_get_subforum(
 
 
 async def test_create_subforum(
-        client: AsyncClient,
-        holder: DatabaseHolder,
-        create_user: CreateUser,
-        create_auth_access_token: CreateAuthAccessToken
+    client: AsyncClient,
+    holder: DatabaseHolder,
+    create_user: CreateUser,
+    create_auth_access_token: CreateAuthAccessToken
 ):
     user = await create_user()
 
@@ -108,6 +114,8 @@ async def test_create_subforum(
         description=None,
         creator_id=user.id
     )
+
+    await holder.commit()
 
     response = await client.post(
         "/api/v1/subforum/",
@@ -134,10 +142,10 @@ async def test_create_subforum(
 
 
 async def test_update_subforum(
-        client: AsyncClient,
-        holder: DatabaseHolder,
-        create_user: CreateUser,
-        create_auth_access_token: CreateAuthAccessToken
+    client: AsyncClient,
+    holder: DatabaseHolder,
+    create_user: CreateUser,
+    create_auth_access_token: CreateAuthAccessToken
 ):
     user = await create_user()
 
@@ -165,6 +173,8 @@ async def test_update_subforum(
         creator_id=user.id
     )
 
+    await holder.commit()
+
     response = await client.put(
         f"/api/v1/subforum/{subforum.id}",
         json={
@@ -187,10 +197,10 @@ async def test_update_subforum(
 
 
 async def test_delete_subforum(
-        client: AsyncClient,
-        holder: DatabaseHolder,
-        create_user: CreateUser,
-        create_auth_access_token: CreateAuthAccessToken
+    client: AsyncClient,
+    holder: DatabaseHolder,
+    create_user: CreateUser,
+    create_auth_access_token: CreateAuthAccessToken
 ):
     user = await create_user()
 
@@ -212,6 +222,8 @@ async def test_delete_subforum(
         creator_id=user.id
     )
 
+    await holder.commit()
+
     response = await client.delete(
         f"/api/v1/subforum/{subforum.id}",
         headers={"Authorization": f"Bearer {create_auth_access_token(user_id=user.id)}"}
@@ -223,6 +235,5 @@ async def test_delete_subforum(
 
     assert subforum.id == json["id"]
 
-    deleted_subforum = await holder.subforum.read_by_id(subforum_id=json["id"])
-
-    assert not deleted_subforum
+    with pytest.raises(SubforumNotFoundError):
+        await holder.subforum.read_by_id(subforum_id=json["id"])

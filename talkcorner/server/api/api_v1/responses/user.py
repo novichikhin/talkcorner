@@ -1,36 +1,61 @@
-from talkcorner.server.api.api_v1.responses.common import Error
+import uuid
 
-class NotValidateCredentials(Error):
-    detail: str = "Could not validate credentials"
+from pydantic import BaseModel
 
-
-class AuthenticationUserNotFound(Error):
-    detail: str = "Authentication user not found"
+from talkcorner.server.api.api_v1.responses.base import BaseResponse
+from talkcorner.server.enums.credential import CredentialType
 
 
-class UserNotFound(Error):
-    detail: str = "User not found"
+class NotValidateCredentialsDetail(BaseModel):
+    message: str = "Could not validate credentials"
+    credential: CredentialType
 
 
-class WrongUsernameOrPassword(Error):
-    detail: str = "Wrong username (email) or password"
+class NotValidateCredentials(BaseResponse):
+    detail: NotValidateCredentialsDetail
 
 
-class EmailAlreadyConfirmed(Error):
+class UserNotFoundDetail(BaseModel):
+    message: str = "User not found"
+    user_id: uuid.UUID
+
+
+class UserNotFound(BaseResponse):
+    detail: UserNotFoundDetail
+
+
+class AuthenticationUserNotFoundDetail(BaseModel):
+    message: str = "Authentication user not found"
+    user_id: uuid.UUID
+
+
+class AuthenticationUserNotFound(BaseResponse):
+    detail: AuthenticationUserNotFoundDetail
+
+
+class UsernameAlreadyExists(BaseResponse):
+    detail: str = "Username already exists"
+
+
+class EmailAlreadyExists(BaseResponse):
+    detail: str = "Email already exists"
+
+
+class EmailAlreadyConfirmed(BaseResponse):
     detail: str = "Email already confirmed"
 
 
-class EmailTokenIncorrect(Error):
+class EmailTokenIncorrect(BaseResponse):
     detail: str = "Email token is incorrect"
 
 
-class EmailAlreadyExists(Error):
-    detail: str = "User email already exists"
+class WrongUsernameOrPassword(BaseResponse):
+    detail: str = "Wrong username or password"
 
 
-class UsernameAlreadyExists(Error):
-    detail: str = "User username already exists"
+class EmailNotActivated(BaseResponse):
+    detail: str = "Email is not activated"
 
 
-class UnableCreateUser(Error):
-    detail: str = "Unable to create user"
+class EmailNotVerified(BaseResponse):
+    detail: str = "Email is not verified"

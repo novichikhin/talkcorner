@@ -1,37 +1,47 @@
-from typing import Union
+from typing import Union, List
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, Query
 from starlette.status import HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
 
-from talkcorner.common import types, exceptions
-from talkcorner.common.database.holder import DatabaseHolder
 from talkcorner.server.api.api_v1 import responses
+from talkcorner.server.api.api_v1.core.auth import api_get_user
 from talkcorner.server.api.api_v1.dependencies.database import DatabaseHolderMarker
 from talkcorner.server.api.api_v1.responses.main import user_auth_responses
-from talkcorner.server.core.auth import get_user
+from talkcorner.server.database.holder import DatabaseHolder
+from talkcorner.server.schemas.subforum import Subforum, SubforumCreate, SubforumUpdate
+from talkcorner.server.schemas.user import User
+from talkcorner.server.services.subforum import (
+    get_subforums,
+    get_subforum,
+    create_subforum,
+    update_subforum,
+    delete_subforum
+)
 
 router = APIRouter(responses=user_auth_responses)
 
 
 @router.get(
     "/",
-    response_model=list[types.Subforum],
-    dependencies=[Depends(get_user())]
+    response_model=List[Subforum],
+    dependencies=[Depends(api_get_user())]
 )
 async def read_all(
-        offset: int = Query(default=0, ge=0, le=500),
-        limit: int = Query(default=5, ge=1, le=1000),
-        holder: DatabaseHolder = Depends(DatabaseHolderMarker)
+    offset: int = Query(default=0, ge=0, le=500),
+    limit: int = Query(default=5, ge=1, le=1000),
+    holder: DatabaseHolder = Depends(DatabaseHolderMarker)
 ):
-    subforums = await holder.subforum.read_all(offset=offset, limit=limit)
-
-    return [types.Subforum.from_dto(subforum=subforum) for subforum in subforums]
+    return await get_subforums(
+        offset=offset,
+        limit=limit,
+        holder=holder
+    )
 
 
 @router.get(
     "/{id}",
-    response_model=types.Subforum,
-    dependencies=[Depends(get_user())],
+    response_model=Subforum,
+    dependencies=[Depends(api_get_user())],
     responses={
         HTTP_404_NOT_FOUND: {
             "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | responses.SubforumNotFound
@@ -39,153 +49,77 @@ async def read_all(
     }
 )
 async def read(id: int, holder: DatabaseHolder = Depends(DatabaseHolderMarker)):
-    subforum = await holder.subforum.read_by_id(subforum_id=id)
-
-    if not subforum:
-        raise HTTPException(
-            status_code=HTTP_404_NOT_FOUND,
-            detail="Subforum not found"
-        )
-
-    return types.Subforum.from_dto(subforum=subforum)
+    return await get_subforum(subforum_id=id, holder=holder)
 
 
 @router.post(
     "/",
-    response_model=types.Subforum,
+    response_model=Subforum,
     responses={
         HTTP_400_BAD_REQUEST: {
             "model": Union[
-                responses.ParentForumNotFoundOrNotCreator,
-                responses.ChildForumNotFoundOrNotCreator,
-                responses.ParentChildForumsAlreadyExists,
-                responses.UnableCreateSubforum
+                responses.ForumNotCreator,
+                responses.ParentChildForumsAlreadyExists
             ]
         }
     }
 )
 async def create(
-        subforum_create: types.SubforumCreate,
-        holder: DatabaseHolder = Depends(DatabaseHolderMarker),
-        user: types.User = Depends(get_user())
+    subforum_create: SubforumCreate,
+    holder: DatabaseHolder = Depends(DatabaseHolderMarker),
+    user: User = Depends(api_get_user())
 ):
-    parent_forum = await holder.forum.read_by_id(forum_id=subforum_create.parent_forum_id)
-
-    if not parent_forum or parent_forum.creator_id != user.id:
-        raise HTTPException(
-            status_code=HTTP_400_BAD_REQUEST,
-            detail="Parent forum not found or you are not the creator of this forum"
-        )
-
-    child_forum = await holder.forum.read_by_id(forum_id=subforum_create.child_forum_id)
-
-    if not child_forum or child_forum.creator_id != user.id:
-        raise HTTPException(
-            status_code=HTTP_400_BAD_REQUEST,
-            detail="Child forum not found or you are not the creator of this forum"
-        )
-
-    try:
-        subforum = await holder.subforum.create(
-            parent_forum_id=subforum_create.parent_forum_id,
-            child_forum_id=subforum_create.child_forum_id,
-            creator_id=user.id
-        )
-    except exceptions.ParentChildForumsAlreadyExists:
-        raise HTTPException(
-            status_code=HTTP_400_BAD_REQUEST,
-            detail="Parent and child forum already exists"
-        )
-    except exceptions.UnableInteraction:
-        raise HTTPException(
-            status_code=HTTP_400_BAD_REQUEST,
-            detail="Unable to create subforum"
-        )
-
-    return types.Subforum.from_dto(subforum=subforum)
+    return await create_subforum(
+        subforum_create=subforum_create,
+        holder=holder,
+        user=user
+    )
 
 
 @router.put(
     "/{id}",
-    response_model=types.Subforum,
+    response_model=Subforum,
     responses={
         HTTP_400_BAD_REQUEST: {
             "model": Union[
-                responses.ParentForumNotFoundOrNotCreator,
-                responses.ChildForumNotFoundOrNotCreator,
-                responses.UnableUpdateSubforum
+                responses.ForumNotCreator,
+                responses.ParentChildForumsAlreadyExists,
+                responses.SubforumNotUpdated
             ]
-        },
-        HTTP_404_NOT_FOUND: {
-            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | responses.SubforumNotFoundOrNotCreator
         }
     }
 )
 async def update(
-        id: int,
-        subforum_update: types.SubforumUpdate,
-        holder: DatabaseHolder = Depends(DatabaseHolderMarker),
-        user: types.User = Depends(get_user())
+    id: int,
+    subforum_update: SubforumUpdate,
+    holder: DatabaseHolder = Depends(DatabaseHolderMarker),
+    user: User = Depends(api_get_user())
 ):
-    if subforum_update.parent_forum_id:
-        parent_forum = await holder.forum.read_by_id(forum_id=subforum_update.parent_forum_id)
-
-        if not parent_forum or parent_forum.creator_id != user.id:
-            raise HTTPException(
-                status_code=HTTP_400_BAD_REQUEST,
-                detail="Parent forum not found or you are not the creator of this forum"
-            )
-
-    if subforum_update.child_forum_id:
-        child_forum = await holder.forum.read_by_id(forum_id=subforum_update.child_forum_id)
-
-        if not child_forum or child_forum.creator_id != user.id:
-            raise HTTPException(
-                status_code=HTTP_400_BAD_REQUEST,
-                detail="Child forum not found or you are not the creator of this forum"
-            )
-
-    try:
-        subforum = await holder.subforum.update(
-            subforum_id=id,
-            creator_id=user.id,
-            data=subforum_update.dict(exclude_unset=True)
-        )
-    except exceptions.UnableInteraction:
-        raise HTTPException(
-            status_code=HTTP_400_BAD_REQUEST,
-            detail="Unable to update subforum"
-        )
-
-    if not subforum:
-        raise HTTPException(
-            status_code=HTTP_404_NOT_FOUND,
-            detail="Subforum not found or you are not the creator of this subforum"
-        )
-
-    return types.Subforum.from_dto(subforum=subforum)
+    return await update_subforum(
+        subforum_id=id,
+        subforum_update=subforum_update,
+        holder=holder,
+        user=user
+    )
 
 
 @router.delete(
     "/{id}",
-    response_model=types.Subforum,
+    response_model=Subforum,
     responses={
-        HTTP_404_NOT_FOUND: {
-            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | responses.SubforumNotFoundOrNotCreator
+        HTTP_400_BAD_REQUEST: {
+            "description": "Subforum not deleted error",
+            "model": responses.SubforumNotDeleted
         }
     }
 )
 async def delete(
-        id: int,
-        holder: DatabaseHolder = Depends(DatabaseHolderMarker),
-        user: types.User = Depends(get_user())
+    id: int,
+    holder: DatabaseHolder = Depends(DatabaseHolderMarker),
+    user: User = Depends(api_get_user())
 ):
-    subforum = await holder.subforum.delete(subforum_id=id, creator_id=user.id)
-
-    if not subforum:
-        raise HTTPException(
-            status_code=HTTP_404_NOT_FOUND,
-            detail="Subforum not found or you are not the creator of this subforum"
-        )
-
-    return types.Subforum.from_dto(subforum=subforum)
+    return await delete_subforum(
+        subforum_id=id,
+        holder=holder,
+        user=user
+    )

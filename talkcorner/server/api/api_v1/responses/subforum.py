@@ -1,29 +1,24 @@
-from talkcorner.server.api.api_v1.responses.common import Error
+from pydantic import BaseModel
+
+from talkcorner.server.api.api_v1.responses.base import BaseResponse
 
 
-class SubforumNotFound(Error):
-    detail: str = "Subforum not found"
+class SubforumNotFoundDetail(BaseModel):
+    message: str = "Subforum not found"
+    subforum_id: int
 
 
-class SubforumNotFoundOrNotCreator(Error):
-    detail: str = "Subforum not found or you are not the creator of this subforum"
+class SubforumNotFound(BaseResponse):
+    detail: SubforumNotFoundDetail
 
 
-class ParentForumNotFoundOrNotCreator(Error):
-    detail: str = "Parent forum not found or you are not the creator of this forum"
+class SubforumNotUpdated(BaseResponse):
+    detail: str = "Subforum not updated: subforum not found or you are not the creator of this subforum"
 
 
-class ChildForumNotFoundOrNotCreator(Error):
-    detail: str = "Child forum not found or you are not the creator of this forum"
+class SubforumNotDeleted(BaseResponse):
+    detail: str = "Subforum not deleted: subforum not found or you are not the creator of this subforum"
 
 
-class ParentChildForumsAlreadyExists(Error):
+class ParentChildForumsAlreadyExists(BaseResponse):
     detail: str = "Parent and child forum already exists"
-
-
-class UnableCreateSubforum(Error):
-    detail: str = "Unable to create subforum"
-
-
-class UnableUpdateSubforum(Error):
-    detail: str = "Unable to update subforum"

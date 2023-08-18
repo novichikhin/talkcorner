@@ -9,7 +9,5 @@ RUN poetry install --no-dev
 
 COPY . .
 
-EXPOSE 8080
-
 CMD poetry run alembic upgrade head && \
     poetry run python -m talkcorner.server

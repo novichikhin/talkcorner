@@ -1,13 +1,29 @@
-from talkcorner.server.api.api_v1.responses.common import Error
+from pydantic import BaseModel
+
+from talkcorner.server.api.api_v1.responses.base import BaseResponse
 
 
-class ForumNotFound(Error):
-    detail: str = "Forum not found"
+class ForumNotFoundDetail(BaseModel):
+    message: str = "Forum not found"
+    forum_id: int
 
 
-class ForumNotFoundOrNotCreator(Error):
-    detail: str = "Forum not found or you are not the creator of this forum"
+class ForumNotFound(BaseResponse):
+    detail: ForumNotFoundDetail
 
 
-class UnableUpdateForum(Error):
-    detail: str = "Unable to update forum"
+class ForumNotCreatorDetail(BaseModel):
+    message: str = "You are not the creator of this forum"
+    forum_id: int
+
+
+class ForumNotCreator(BaseResponse):
+    detail: ForumNotCreatorDetail
+
+
+class ForumNotUpdated(BaseResponse):
+    detail: str = "Forum not updated: forum not found or you are not the creator of this forum"
+
+
+class ForumNotDeleted(BaseResponse):
+    detail: str = "Forum not deleted: forum not found or you are not the creator of this forum"

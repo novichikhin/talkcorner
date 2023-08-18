@@ -5,7 +5,7 @@ import pytest
 from passlib.context import CryptContext
 from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
 
-from talkcorner.common.database.holder import DatabaseHolder
+from talkcorner.server.database.holder import DatabaseHolder
 from tests.mocks.nats import JetStreamContextMock
 
 
