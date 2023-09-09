@@ -17,7 +17,7 @@ class TopicNotFoundError(BaseAppException):
         }
 
 
-class TopicNotUpdatedError(BaseAppException):
+class TopicNotPatchedError(BaseAppException):
 
     @property
     def detail(self) -> Union[str, Dict[str, Any]]:

@@ -3,7 +3,7 @@ from typing import Optional, Any
 
 from pydantic import model_validator, Field
 
-from talkcorner.server.schemas.base import BaseUpdate, BaseSchema
+from talkcorner.server.schemas.base import BaseSchema, BasePatch
 
 
 class SubforumValidators(BaseSchema):
@@ -31,6 +31,6 @@ class SubforumCreate(SubforumValidators):
     child_forum_id: int
 
 
-class SubforumUpdate(SubforumValidators, BaseUpdate):
+class SubforumPatch(SubforumValidators, BasePatch):
     parent_forum_id: Optional[int] = Field(default=None) # type: ignore
     child_forum_id: Optional[int] = Field(default=None) # type: ignore

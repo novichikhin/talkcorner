@@ -3,7 +3,7 @@ from typing import List
 
 from talkcorner.server.api.api_v1.exceptions.base import BaseAppException
 from talkcorner.server.database.holder import DatabaseHolder
-from talkcorner.server.schemas.topic.message import TopicMessage, TopicMessageCreate, TopicMessageUpdate
+from talkcorner.server.schemas.topic.message import TopicMessage, TopicMessageCreate, TopicMessagePatch
 from talkcorner.server.schemas.user import User
 
 
@@ -44,21 +44,21 @@ async def create_topic_message(
     return created_topic_message
 
 
-async def update_topic_message(
+async def patch_topic_message(
     *,
     topic_message_id: uuid.UUID,
-    topic_message_update: TopicMessageUpdate,
+    topic_message_patch: TopicMessagePatch,
     holder: DatabaseHolder,
     user: User
 ) -> TopicMessage:
-    updated_topic_message = await holder.topic_message.update(
+    patched_topic_message = await holder.topic_message.patch(
         topic_message_id=topic_message_id,
         creator_id=user.id,
-        topic_message_update=topic_message_update
+        topic_message_patch=topic_message_patch
     )
     await holder.commit()
 
-    return updated_topic_message
+    return patched_topic_message
 
 
 async def delete_topic_message(

@@ -15,23 +15,23 @@ from talkcorner.server.api.api_v1.exceptions.base import BaseAppException
 from talkcorner.server.api.api_v1.exceptions.forum import (
     ForumNotFoundError,
     ForumNotCreatorError,
-    ForumNotUpdatedError,
+    ForumNotPatchedError,
     ForumNotDeletedError
 )
 from talkcorner.server.api.api_v1.exceptions.subforum import (
     SubforumNotFoundError,
-    SubforumNotUpdatedError,
+    SubforumNotPatchedError,
     SubforumNotDeletedError,
     ParentChildForumsAlreadyExistsError
 )
 from talkcorner.server.api.api_v1.exceptions.topic.main import (
     TopicNotFoundError,
-    TopicNotUpdatedError,
+    TopicNotPatchedError,
     TopicNotDeletedError
 )
 from talkcorner.server.api.api_v1.exceptions.topic.message import (
     TopicMessageNotFoundError,
-    TopicMessageNotUpdatedError,
+    TopicMessageNotPatchedError,
     TopicMessageNotDeletedError
 )
 from talkcorner.server.api.api_v1.exceptions.user import (
@@ -99,7 +99,7 @@ def register_exceptions(app: FastAPI) -> None:
         forum_not_creator_error_handler
     )
     app.add_exception_handler(
-        ForumNotUpdatedError,
+        ForumNotPatchedError,
         forum_not_updated_error_handler
     )
     app.add_exception_handler(
@@ -112,7 +112,7 @@ def register_exceptions(app: FastAPI) -> None:
         subforum_not_found_error_handler
     )
     app.add_exception_handler(
-        SubforumNotUpdatedError,
+        SubforumNotPatchedError,
         subforum_not_updated_error_handler
     )
     app.add_exception_handler(
@@ -129,7 +129,7 @@ def register_exceptions(app: FastAPI) -> None:
         topic_not_found_error_handler
     )
     app.add_exception_handler(
-        TopicNotUpdatedError,
+        TopicNotPatchedError,
         topic_not_updated_error_handler
     )
     app.add_exception_handler(
@@ -142,7 +142,7 @@ def register_exceptions(app: FastAPI) -> None:
         topic_message_not_found_error_handler
     )
     app.add_exception_handler(
-        TopicMessageNotUpdatedError,
+        TopicMessageNotPatchedError,
         topic_message_not_updated_error_handler
     )
     app.add_exception_handler(
@@ -243,7 +243,7 @@ def forum_not_creator_error_handler(
 
 def forum_not_updated_error_handler(
     _,
-    e: ForumNotUpdatedError
+    e: ForumNotPatchedError
 ) -> JSONResponse:
     return handle_error(err=e, status_code=HTTP_400_BAD_REQUEST)
 
@@ -264,7 +264,7 @@ def subforum_not_found_error_handler(
 
 def subforum_not_updated_error_handler(
     _,
-    e: SubforumNotUpdatedError
+    e: SubforumNotPatchedError
 ) -> JSONResponse:
     return handle_error(err=e, status_code=HTTP_400_BAD_REQUEST)
 
@@ -292,7 +292,7 @@ def topic_not_found_error_handler(
 
 def topic_not_updated_error_handler(
     _,
-    e: TopicNotUpdatedError
+    e: TopicNotPatchedError
 ) -> JSONResponse:
     return handle_error(err=e, status_code=HTTP_400_BAD_REQUEST)
 
@@ -313,7 +313,7 @@ def topic_message_not_found_error_handler(
 
 def topic_message_not_updated_error_handler(
     _,
-    e: TopicMessageNotUpdatedError
+    e: TopicMessageNotPatchedError
 ) -> JSONResponse:
     return handle_error(err=e, status_code=HTTP_400_BAD_REQUEST)
 

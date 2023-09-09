@@ -9,12 +9,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from talkcorner.server.api.api_v1.exceptions.forum import ForumNotFoundError
 from talkcorner.server.api.api_v1.exceptions.topic.main import (
     TopicNotFoundError,
-    TopicNotUpdatedError,
+    TopicNotPatchedError,
     TopicNotDeletedError
 )
 from talkcorner.server.database import models
 from talkcorner.server.database.repositories.base import BaseRepository
-from talkcorner.server.schemas.topic.main import Topic, TopicUpdate
+from talkcorner.server.schemas.topic.main import Topic, TopicPatch
 
 
 class TopicRepository(BaseRepository[models.Topic]):
@@ -35,30 +35,30 @@ class TopicRepository(BaseRepository[models.Topic]):
 
         return topic.to_scheme()
 
-    async def update( # type: ignore
+    async def patch( # type: ignore
         self,
         topic_id: uuid.UUID,
         creator_id: uuid.UUID,
-        topic_update: TopicUpdate
+        topic_patch: TopicPatch
     ) -> Topic:
-        excluded_topic_update = topic_update.model_dump(exclude_unset=True)
+        excluded_topic_patch = topic_patch.model_dump(exclude_unset=True)
 
         stmt = sa.update(models.Topic).where(
             models.Topic.id == topic_id,
             models.Topic.creator_id == creator_id
-        ).values(**excluded_topic_update).returning(models.Topic)
+        ).values(**excluded_topic_patch).returning(models.Topic)
 
         try:
             result: sa.ScalarResult[models.Topic] = await self._session.scalars(
                 sa.select(models.Topic).from_statement(stmt)
             )
         except IntegrityError as e:
-            self._parse_error(err=e, forum_id=topic_update.forum_id)
+            self._parse_error(err=e, forum_id=topic_patch.forum_id)
         else:
             topic: Optional[models.Topic] = result.one_or_none()
 
             if not topic:
-                raise TopicNotUpdatedError
+                raise TopicNotPatchedError
 
             return topic.to_scheme()
 

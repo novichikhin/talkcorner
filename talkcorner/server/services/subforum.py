@@ -3,7 +3,7 @@ from typing import List
 from talkcorner.server.api.api_v1.exceptions.base import BaseAppException
 from talkcorner.server.api.api_v1.exceptions.forum import ForumNotCreatorError
 from talkcorner.server.database.holder import DatabaseHolder
-from talkcorner.server.schemas.subforum import Subforum, SubforumCreate, SubforumUpdate
+from talkcorner.server.schemas.subforum import Subforum, SubforumCreate, SubforumPatch
 from talkcorner.server.schemas.user import User
 
 
@@ -54,37 +54,37 @@ async def create_subforum(
     return created_subforum
 
 
-async def update_subforum(
+async def patch_subforum(
     *,
     subforum_id: int,
-    subforum_update: SubforumUpdate,
+    subforum_patch: SubforumPatch,
     holder: DatabaseHolder,
     user: User
 ) -> Subforum:
-    if subforum_update.parent_forum_id:
-        parent_forum = await holder.forum.read_by_id(forum_id=subforum_update.parent_forum_id)
+    if subforum_patch.parent_forum_id:
+        parent_forum = await holder.forum.read_by_id(forum_id=subforum_patch.parent_forum_id)
 
         if parent_forum.creator_id != user.id:
             raise ForumNotCreatorError(forum_id=parent_forum.id)
 
-    if subforum_update.child_forum_id:
-        child_forum = await holder.forum.read_by_id(forum_id=subforum_update.child_forum_id)
+    if subforum_patch.child_forum_id:
+        child_forum = await holder.forum.read_by_id(forum_id=subforum_patch.child_forum_id)
 
         if child_forum.creator_id != user.id:
             raise ForumNotCreatorError(forum_id=child_forum.id)
 
     try:
-        updated_subforum = await holder.subforum.update(
+        patched_subforum = await holder.subforum.patch(
             subforum_id=subforum_id,
             creator_id=user.id,
-            subforum_update=subforum_update
+            subforum_patch=subforum_patch
         )
         await holder.commit()
     except BaseAppException as e:
         await holder.rollback()
         raise e
 
-    return updated_subforum
+    return patched_subforum
 
 
 async def delete_subforum(

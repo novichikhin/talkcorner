@@ -9,12 +9,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from talkcorner.server.api.api_v1.exceptions.topic.main import TopicNotFoundError
 from talkcorner.server.api.api_v1.exceptions.topic.message import (
     TopicMessageNotFoundError,
-    TopicMessageNotUpdatedError,
+    TopicMessageNotPatchedError,
     TopicMessageNotDeletedError
 )
 from talkcorner.server.database import models
 from talkcorner.server.database.repositories.base import BaseRepository
-from talkcorner.server.schemas.topic.message import TopicMessage, TopicMessageUpdate
+from talkcorner.server.schemas.topic.message import TopicMessage, TopicMessagePatch
 
 
 class TopicMessageRepository(BaseRepository[models.TopicMessage]):
@@ -35,18 +35,18 @@ class TopicMessageRepository(BaseRepository[models.TopicMessage]):
 
         return topic_message.to_scheme()
 
-    async def update(
+    async def patch(
         self,
         topic_message_id: uuid.UUID,
         creator_id: uuid.UUID,
-        topic_message_update: TopicMessageUpdate
+        topic_message_patch: TopicMessagePatch
     ) -> TopicMessage:
-        excluded_topic_message_update = topic_message_update.model_dump(exclude_unset=True)
+        excluded_topic_message_patch = topic_message_patch.model_dump(exclude_unset=True)
 
         stmt = sa.update(models.TopicMessage).where(
             models.TopicMessage.id == topic_message_id,
             models.TopicMessage.creator_id == creator_id
-        ).values(**excluded_topic_message_update).returning(models.TopicMessage)
+        ).values(**excluded_topic_message_patch).returning(models.TopicMessage)
 
         result: sa.ScalarResult[models.TopicMessage] = await self._session.scalars(
             sa.select(models.TopicMessage).from_statement(stmt)
@@ -55,7 +55,7 @@ class TopicMessageRepository(BaseRepository[models.TopicMessage]):
         topic_message: Optional[models.TopicMessage] = result.one_or_none()
 
         if not topic_message:
-            raise TopicMessageNotUpdatedError
+            raise TopicMessageNotPatchedError
 
         return topic_message.to_scheme()
 

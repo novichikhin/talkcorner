@@ -9,13 +9,13 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from talkcorner.server.api.api_v1.exceptions.subforum import (
     SubforumNotFoundError,
-    SubforumNotUpdatedError,
+    SubforumNotPatchedError,
     ParentChildForumsAlreadyExistsError,
     SubforumNotDeletedError
 )
 from talkcorner.server.database import models
 from talkcorner.server.database.repositories.base import BaseRepository
-from talkcorner.server.schemas.subforum import Subforum, SubforumUpdate
+from talkcorner.server.schemas.subforum import Subforum, SubforumPatch
 
 
 class SubforumRepository(BaseRepository[models.Subforum]):
@@ -36,18 +36,18 @@ class SubforumRepository(BaseRepository[models.Subforum]):
 
         return subforum.to_scheme()
 
-    async def update( # type: ignore
+    async def patch( # type: ignore
         self,
         subforum_id: int,
         creator_id: uuid.UUID,
-        subforum_update: SubforumUpdate
+        subforum_patch: SubforumPatch
     ) -> Subforum:
-        excluded_subforum_update = subforum_update.model_dump(exclude_unset=True)
+        excluded_subforum_patch = subforum_patch.model_dump(exclude_unset=True)
 
         stmt = sa.update(models.Subforum).where(
             models.Subforum.id == subforum_id,
             models.Subforum.creator_id == creator_id
-        ).values(**excluded_subforum_update).returning(models.Subforum)
+        ).values(**excluded_subforum_patch).returning(models.Subforum)
 
         try:
             result: sa.ScalarResult[models.Subforum] = await self._session.scalars(
@@ -59,7 +59,7 @@ class SubforumRepository(BaseRepository[models.Subforum]):
             subforum: Optional[models.Subforum] = result.one_or_none()
 
             if not subforum:
-                raise SubforumNotUpdatedError
+                raise SubforumNotPatchedError
 
             return subforum.to_scheme()
 

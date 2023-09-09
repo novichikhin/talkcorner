@@ -141,7 +141,7 @@ async def test_create_subforum(
     assert str(subforum.creator_id) == json["creator_id"]
 
 
-async def test_update_subforum(
+async def test_patch_subforum(
     client: AsyncClient,
     holder: DatabaseHolder,
     create_user: CreateUser,
@@ -175,7 +175,7 @@ async def test_update_subforum(
 
     await holder.commit()
 
-    response = await client.put(
+    response = await client.patch(
         f"/api/v1/subforum/{subforum.id}",
         json={
             "child_forum_id": new_child_forum.id

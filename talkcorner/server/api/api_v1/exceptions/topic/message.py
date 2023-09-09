@@ -17,7 +17,7 @@ class TopicMessageNotFoundError(BaseAppException):
         }
 
 
-class TopicMessageNotUpdatedError(BaseAppException):
+class TopicMessageNotPatchedError(BaseAppException):
 
     @property
     def detail(self) -> Union[str, Dict[str, Any]]:

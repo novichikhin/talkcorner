@@ -4,7 +4,7 @@ from typing import Optional
 
 from pydantic import Field, EmailStr
 
-from talkcorner.server.schemas.base import BaseUpdate, BaseSchema
+from talkcorner.server.schemas.base import BaseSchema, BasePatch
 
 
 class UserValidators(BaseSchema):
@@ -30,5 +30,5 @@ class UserCreate(UserValidators):
     email: EmailStr
 
 
-class UserUpdate(UserValidators, BaseUpdate):
+class UserPatch(UserValidators, BasePatch):
     password: Optional[str] = Field(default=None) # type: ignore

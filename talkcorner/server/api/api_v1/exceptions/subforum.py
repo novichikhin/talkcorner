@@ -16,7 +16,7 @@ class SubforumNotFoundError(BaseAppException):
         }
 
 
-class SubforumNotUpdatedError(BaseAppException):
+class SubforumNotPatchedError(BaseAppException):
 
     @property
     def detail(self) -> Union[str, Dict[str, Any]]:

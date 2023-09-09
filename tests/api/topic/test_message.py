@@ -144,7 +144,7 @@ async def test_create_topic_message(
     assert str(topic_message.creator_id) == json["creator_id"]
 
 
-async def test_update_topic_message(
+async def test_patch_topic_message(
     client: AsyncClient,
     holder: DatabaseHolder,
     create_user: CreateUser,
@@ -175,7 +175,7 @@ async def test_update_topic_message(
 
     await holder.commit()
 
-    response = await client.put(
+    response = await client.patch(
         f"/api/v1/topic/message/{topic_message.id}",
         json={
             "body": new_body

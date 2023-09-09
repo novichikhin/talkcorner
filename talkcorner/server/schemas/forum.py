@@ -4,7 +4,7 @@ from typing import Optional
 
 from pydantic import Field
 
-from talkcorner.server.schemas.base import BaseUpdate, BaseSchema
+from talkcorner.server.schemas.base import BaseSchema, BasePatch
 
 
 class ForumValidators(BaseSchema):
@@ -24,6 +24,6 @@ class ForumCreate(ForumValidators):
     pass
 
 
-class ForumUpdate(ForumValidators, BaseUpdate):
+class ForumPatch(ForumValidators, BasePatch):
     title: Optional[str] = Field(default=None) # type: ignore
     description: Optional[str] = Field(default=None) # type: ignore

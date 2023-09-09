@@ -28,7 +28,7 @@ class ForumNotCreatorError(BaseAppException):
         }
 
 
-class ForumNotUpdatedError(BaseAppException):
+class ForumNotPatchedError(BaseAppException):
 
     @property
     def detail(self) -> Union[str, Dict[str, Any]]:

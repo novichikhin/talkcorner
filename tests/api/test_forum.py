@@ -100,7 +100,7 @@ async def test_create_forum(
     assert forum.description == json["description"]
 
 
-async def test_update_forum(
+async def test_patch_forum(
     client: AsyncClient,
     holder: DatabaseHolder,
     create_user: CreateUser,
@@ -117,7 +117,7 @@ async def test_update_forum(
 
     new_description = "New Description"
 
-    response = await client.put(
+    response = await client.patch(
         f"/api/v1/forum/{forum.id}",
         json={
             "description": new_description

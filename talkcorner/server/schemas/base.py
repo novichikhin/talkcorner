@@ -7,7 +7,7 @@ class BaseSchema(BaseModel):
     pass
 
 
-class BaseUpdate(BaseSchema):
+class BasePatch(BaseSchema):
 
     @model_validator(mode="before")
     def model_validator_update(cls, data: Any) -> Any:

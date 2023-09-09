@@ -8,13 +8,13 @@ from talkcorner.server.api.api_v1.core.auth import api_get_user
 from talkcorner.server.api.api_v1.dependencies.database import DatabaseHolderMarker
 from talkcorner.server.api.api_v1.responses.main import user_auth_responses
 from talkcorner.server.database.holder import DatabaseHolder
-from talkcorner.server.schemas.forum import Forum, ForumCreate, ForumUpdate
+from talkcorner.server.schemas.forum import Forum, ForumCreate, ForumPatch
 from talkcorner.server.schemas.user import User
 from talkcorner.server.services.forum import (
     get_forums,
     get_forum,
     create_forum,
-    update_forum,
+    patch_forum,
     delete_forum
 )
 
@@ -68,7 +68,7 @@ async def create(
     )
 
 
-@router.put(
+@router.patch(
     "/{id}",
     response_model=Forum,
     responses={
@@ -78,15 +78,15 @@ async def create(
         }
     }
 )
-async def update(
+async def patch(
     id: int,
-    forum_update: ForumUpdate,
+    forum_patch: ForumPatch,
     holder: DatabaseHolder = Depends(DatabaseHolderMarker),
     user: User = Depends(api_get_user())
 ):
-    return await update_forum(
+    return await patch_forum(
         forum_id=id,
-        forum_update=forum_update,
+        forum_patch=forum_patch,
         holder=holder,
         user=user
     )

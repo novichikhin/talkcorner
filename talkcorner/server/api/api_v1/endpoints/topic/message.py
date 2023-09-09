@@ -9,13 +9,13 @@ from talkcorner.server.api.api_v1.core.auth import api_get_user
 from talkcorner.server.api.api_v1.dependencies.database import DatabaseHolderMarker
 from talkcorner.server.api.api_v1.responses.main import user_auth_responses
 from talkcorner.server.database.holder import DatabaseHolder
-from talkcorner.server.schemas.topic.message import TopicMessage, TopicMessageCreate, TopicMessageUpdate
+from talkcorner.server.schemas.topic.message import TopicMessage, TopicMessageCreate, TopicMessagePatch
 from talkcorner.server.schemas.user import User
 from talkcorner.server.services.topic.message import (
     get_topic_messages,
     get_topic_message,
     create_topic_message,
-    update_topic_message,
+    patch_topic_message,
     delete_topic_message
 )
 
@@ -74,7 +74,7 @@ async def create(
     )
 
 
-@router.put(
+@router.patch(
     "/{id}",
     response_model=TopicMessage,
     responses={
@@ -84,15 +84,15 @@ async def create(
         }
     }
 )
-async def update(
+async def patch(
     id: uuid.UUID,
-    topic_message_update: TopicMessageUpdate,
+    topic_message_patch: TopicMessagePatch,
     holder: DatabaseHolder = Depends(DatabaseHolderMarker),
     user: User = Depends(api_get_user())
 ):
-    return await update_topic_message(
+    return await patch_topic_message(
         topic_message_id=id,
-        topic_message_update=topic_message_update,
+        topic_message_patch=topic_message_patch,
         holder=holder,
         user=user
     )

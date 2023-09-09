@@ -8,12 +8,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from talkcorner.server.api.api_v1.exceptions.forum import (
     ForumNotFoundError,
-    ForumNotUpdatedError,
+    ForumNotPatchedError,
     ForumNotDeletedError
 )
 from talkcorner.server.database import models
 from talkcorner.server.database.repositories.base import BaseRepository
-from talkcorner.server.schemas.forum import Forum, ForumUpdate
+from talkcorner.server.schemas.forum import Forum, ForumPatch
 
 
 class ForumRepository(BaseRepository[models.Forum]):
@@ -34,18 +34,18 @@ class ForumRepository(BaseRepository[models.Forum]):
 
         return forum.to_scheme()
 
-    async def update(
+    async def patch(
         self,
         forum_id: int,
         creator_id: uuid.UUID,
-        forum_update: ForumUpdate
+        forum_patch: ForumPatch
     ) -> Forum:
-        excluded_forum_update = forum_update.model_dump(exclude_unset=True)
+        excluded_forum_patch = forum_patch.model_dump(exclude_unset=True)
 
         stmt = sa.update(models.Forum).where(
             models.Forum.id == forum_id,
             models.Forum.creator_id == creator_id
-        ).values(**excluded_forum_update).returning(models.Forum)
+        ).values(**excluded_forum_patch).returning(models.Forum)
 
         result: sa.ScalarResult[models.Forum] = await self._session.scalars(
             sa.select(models.Forum).from_statement(stmt)
@@ -54,7 +54,7 @@ class ForumRepository(BaseRepository[models.Forum]):
         forum: Optional[models.Forum] = result.one_or_none()
 
         if not forum:
-            raise ForumNotUpdatedError
+            raise ForumNotPatchedError
 
         return forum.to_scheme()
 

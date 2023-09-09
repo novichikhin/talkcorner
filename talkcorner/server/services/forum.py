@@ -1,7 +1,7 @@
 from typing import List
 
 from talkcorner.server.database.holder import DatabaseHolder
-from talkcorner.server.schemas.forum import Forum, ForumCreate, ForumUpdate
+from talkcorner.server.schemas.forum import Forum, ForumCreate, ForumPatch
 from talkcorner.server.schemas.user import User
 
 
@@ -38,17 +38,17 @@ async def create_forum(
     return created_forum
 
 
-async def update_forum(
+async def patch_forum(
     *,
     forum_id: int,
-    forum_update: ForumUpdate,
+    forum_patch: ForumPatch,
     holder: DatabaseHolder,
     user: User
 ) -> Forum:
-    updated_forum = await holder.forum.update(
+    updated_forum = await holder.forum.patch(
         forum_id=forum_id,
         creator_id=user.id,
-        forum_update=forum_update
+        forum_patch=forum_patch
     )
     await holder.commit()
 
