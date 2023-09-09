@@ -2,7 +2,7 @@ FROM python:3.10
 
 WORKDIR .
 
-COPY poetry.lock pyproject.toml ./
+COPY pyproject.toml ./
 
 RUN python3.10 -m pip install poetry
 RUN poetry install --no-dev
