@@ -67,7 +67,10 @@ async def delete_topic_message(
     holder: DatabaseHolder,
     user: User
 ) -> TopicMessage:
-    deleted_topic_message = await holder.topic_message.delete(topic_message_id=topic_message_id, creator_id=user.id)
+    deleted_topic_message = await holder.topic_message.delete(
+        topic_message_id=topic_message_id,
+        creator_id=user.id
+    )
     await holder.commit()
 
     return deleted_topic_message

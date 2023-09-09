@@ -127,7 +127,10 @@ async def create_user(
     email_broadcaster = EmailBroadcast(
         to_address=user_create.email,
         subject="Confirm email",
-        html=f"To activate the user account, follow the link {settings.email_verify_url}/{user.email_token}"
+        html=(
+            f"To activate the user account, "
+            f"follow the link {settings.email_verify_url}/{user.email_token}"
+        )
     )
 
     await js.publish(

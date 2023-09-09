@@ -42,11 +42,11 @@ async def verify_refresh_token(
             key=settings.authorize_refresh_token_secret_key,
             algorithms=[ALGORITHMS.HS256]
         )
-
-        if not (user_id := payload.get("user_id")):
-            raise NotValidateCredentialsError(credential=CredentialType.JWT_PAYLOAD)
     except JWTError:
         raise NotValidateCredentialsError(credential=CredentialType.JWT_ERROR)
+
+    if not (user_id := payload.get("user_id")):
+        raise NotValidateCredentialsError(credential=CredentialType.JWT_PAYLOAD)
 
     return RefreshToken(token=refresh_token, user_id=uuid.UUID(user_id))
 
@@ -82,18 +82,18 @@ async def get_user(
             key=settings.authorize_access_token_secret_key,
             algorithms=[ALGORITHMS.HS256]
         )
-
-        user_id = payload.get("user_id")
-
-        if not user_id:
-            raise NotValidateCredentialsError(credential=CredentialType.JWT_PAYLOAD)
-
-        try:
-            user_id = uuid.UUID(hex=user_id)
-        except ValueError:
-            raise NotValidateCredentialsError(credential=CredentialType.USER_ID_NOT_UUID)
     except JWTError:
         raise NotValidateCredentialsError(credential=CredentialType.JWT_ERROR)
+
+    user_id = payload.get("user_id")
+
+    if not user_id:
+        raise NotValidateCredentialsError(credential=CredentialType.JWT_PAYLOAD)
+
+    try:
+        user_id = uuid.UUID(hex=user_id)
+    except ValueError:
+        raise NotValidateCredentialsError(credential=CredentialType.USER_ID_NOT_UUID)
 
     user = await holder.user.read_by_authenticate(user_id=user_id)
 
