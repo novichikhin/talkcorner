@@ -9,13 +9,16 @@ from passlib.context import CryptContext
 from talkcorner.common.settings.environments.app import AppSettings
 from talkcorner.common.types.broadcast.email import EmailBroadcast
 from talkcorner.server.api.api_v1.exceptions.base import BaseAppException
-from talkcorner.server.api.api_v1.exceptions.user import EmailAlreadyConfirmedError, EmailTokenIncorrectError
+from talkcorner.server.api.api_v1.exceptions.user import (
+    EmailAlreadyConfirmedError,
+    EmailTokenIncorrectError
+)
 from talkcorner.server.database.holder import DatabaseHolder
-from talkcorner.server.schemas.auth import Authentication, RefreshToken, AccessToken
+from talkcorner.server.schemas.auth import Authorization
 from talkcorner.server.schemas.user import User, UserCreate
 from talkcorner.server.services.auth.main import authorize_user
 from talkcorner.server.services.auth.security import get_password_hash
-from talkcorner.server.services.auth.token import create_access_token, create_refresh_token
+from talkcorner.server.services.auth.token import create_access_token
 
 
 async def login_user(
@@ -25,7 +28,7 @@ async def login_user(
     holder: DatabaseHolder,
     crypt_context: CryptContext,
     settings: AppSettings
-) -> Authentication:
+) -> Authorization:
     user = await authorize_user(
         username=username,
         password=password,
@@ -33,41 +36,13 @@ async def login_user(
         crypt_context=crypt_context
     )
 
-    payload = {
-        "user_id": str(user.id)
-    }
-
     access_token = create_access_token(
-        payload=payload,
+        payload=dict(user_id=str(user.id)),
         secret_key=settings.authorize_access_token_secret_key,
         expire_minutes=settings.authorize_access_token_expire_minutes
     )
 
-    refresh_token = create_refresh_token(
-        payload=payload,
-        secret_key=settings.authorize_refresh_token_secret_key,
-        expire_minutes=settings.authorize_refresh_token_expire_minutes
-    )
-
-    return Authentication(
-        access_token=access_token,
-        refresh_token=refresh_token,
-        token_type="bearer"
-    )
-
-
-async def refresh_token_user(
-    *,
-    refresh_token: RefreshToken,
-    settings: AppSettings
-) -> AccessToken:
-    new_access_token = create_access_token(
-        payload={"user_id": str(refresh_token.user_id)},
-        secret_key=settings.authorize_access_token_secret_key,
-        expire_minutes=settings.authorize_access_token_expire_minutes
-    )
-
-    return AccessToken(access_token=new_access_token, token_type="bearer")
+    return Authorization(access_token=access_token, token_type="bearer")
 
 
 async def get_users(

@@ -14,18 +14,17 @@ from starlette.status import (
 
 from talkcorner.common.settings.environments.app import AppSettings
 from talkcorner.server.api.api_v1 import responses
-from talkcorner.server.api.api_v1.core.auth import api_verify_refresh_token, api_get_user
+from talkcorner.server.api.api_v1.core.auth import api_authenticate_user
 from talkcorner.server.api.api_v1.dependencies.database import DatabaseHolderMarker
 from talkcorner.server.api.api_v1.dependencies.nats import NatsJetStreamMarker
 from talkcorner.server.api.api_v1.dependencies.security import CryptContextMarker
 from talkcorner.server.api.api_v1.dependencies.setting import SettingsMarker
 from talkcorner.server.api.api_v1.responses.main import user_auth_responses
 from talkcorner.server.database.holder import DatabaseHolder
-from talkcorner.server.schemas.auth import Authentication, RefreshToken, AccessToken
+from talkcorner.server.schemas.auth import Authorization
 from talkcorner.server.schemas.user import User, UserCreate
 from talkcorner.server.services.user import (
     login_user,
-    refresh_token_user,
     get_users,
     get_user,
     verify_email_user,
@@ -37,7 +36,7 @@ router = APIRouter()
 
 @router.post(
     "/login",
-    response_model=Authentication,
+    response_model=Authorization,
     responses={
         HTTP_401_UNAUTHORIZED: {
             "description": "Wrong username (email) or password error",
@@ -60,30 +59,10 @@ async def login(
     )
 
 
-@router.post(
-    "/refresh",
-    response_model=AccessToken,
-    responses={
-        HTTP_401_UNAUTHORIZED: {
-            "description": "Could not validate credentials error",
-            "model": responses.NotValidateCredentials
-        }
-    }
-)
-async def refresh(
-    refresh_token: RefreshToken = Depends(api_verify_refresh_token),
-    settings: AppSettings = Depends(SettingsMarker)
-):
-    return await refresh_token_user(
-        refresh_token=refresh_token,
-        settings=settings
-    )
-
-
 @router.get(
     "/",
     response_model=List[User],
-    dependencies=[Depends(api_get_user())],
+    dependencies=[Depends(api_authenticate_user())],
     response_model_exclude={"email", "email_token", "email_verified", "password"},
     responses=user_auth_responses
 )
@@ -102,7 +81,7 @@ async def read_all(
 @router.get(
     "/{id}",
     response_model=User,
-    dependencies=[Depends(api_get_user())],
+    dependencies=[Depends(api_authenticate_user())],
     response_model_exclude={"email", "email_token", "email_verified", "password"},
     responses=user_auth_responses | {
         HTTP_404_NOT_FOUND: {
@@ -131,7 +110,7 @@ async def email_verify(
     id: uuid.UUID,
     holder: DatabaseHolder = Depends(DatabaseHolderMarker),
     user: User = Depends(
-        api_get_user(check_email_verified=False)
+        api_authenticate_user(check_email_verified=False)
     )
 ):
     return await verify_email_user(

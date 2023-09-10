@@ -6,9 +6,3 @@ class CreateAuthAccessToken(Protocol):
 
     def __call__(self, user_id: uuid.UUID) -> str:
         pass
-
-
-class CreateAuthRefreshToken(Protocol):
-
-    def __call__(self, user_id: uuid.UUID) -> str:
-        pass

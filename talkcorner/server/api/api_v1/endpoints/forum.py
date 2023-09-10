@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, Query
 from starlette.status import HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
 
 from talkcorner.server.api.api_v1 import responses
-from talkcorner.server.api.api_v1.core.auth import api_get_user
+from talkcorner.server.api.api_v1.core.auth import api_authenticate_user
 from talkcorner.server.api.api_v1.dependencies.database import DatabaseHolderMarker
 from talkcorner.server.api.api_v1.responses.main import user_auth_responses
 from talkcorner.server.database.holder import DatabaseHolder
@@ -24,7 +24,7 @@ router = APIRouter(responses=user_auth_responses)
 @router.get(
     "/",
     response_model=List[Forum],
-    dependencies=[Depends(api_get_user())]
+    dependencies=[Depends(api_authenticate_user())]
 )
 async def read_all(
     offset: int = Query(default=0, ge=0, le=500),
@@ -41,7 +41,7 @@ async def read_all(
 @router.get(
     "/{id}",
     response_model=Forum,
-    dependencies=[Depends(api_get_user())],
+    dependencies=[Depends(api_authenticate_user())],
     responses={
         HTTP_404_NOT_FOUND: {
             "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | responses.ForumNotFound
@@ -59,7 +59,7 @@ async def read(id: int, holder: DatabaseHolder = Depends(DatabaseHolderMarker)):
 async def create(
     forum_create: ForumCreate,
     holder: DatabaseHolder = Depends(DatabaseHolderMarker),
-    user: User = Depends(api_get_user())
+    user: User = Depends(api_authenticate_user())
 ):
     return await create_forum(
         forum_create=forum_create,
@@ -82,7 +82,7 @@ async def patch(
     id: int,
     forum_patch: ForumPatch,
     holder: DatabaseHolder = Depends(DatabaseHolderMarker),
-    user: User = Depends(api_get_user())
+    user: User = Depends(api_authenticate_user())
 ):
     return await patch_forum(
         forum_id=id,
@@ -105,7 +105,7 @@ async def patch(
 async def delete(
     id: int,
     holder: DatabaseHolder = Depends(DatabaseHolderMarker),
-    user: User = Depends(api_get_user())
+    user: User = Depends(api_authenticate_user())
 ):
     return await delete_forum(
         forum_id=id,

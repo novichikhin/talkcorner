@@ -18,17 +18,3 @@ def create_access_token(
         key=secret_key,
         algorithm=ALGORITHMS.HS256
     )
-
-
-def create_refresh_token(
-    payload: dict[str, Any],
-    secret_key: str,
-    expire_minutes: int
-) -> str:
-    payload["exp"] = dt.datetime.utcnow() + dt.timedelta(minutes=expire_minutes)
-
-    return jwt.encode(
-        claims=payload,
-        key=secret_key,
-        algorithm=ALGORITHMS.HS256
-    )

@@ -1,12 +1,10 @@
 import uuid
 
-from fastapi import Depends
 from jose import jwt, JWTError
 from jose.constants import ALGORITHMS
 from passlib.context import CryptContext
 
 from talkcorner.common.settings.environments.app import AppSettings
-from talkcorner.server.api.api_v1.dependencies.setting import SettingsMarker
 from talkcorner.server.api.api_v1.exceptions.user import (
     WrongUsernameOrPasswordError,
     EmailNotActivatedError,
@@ -15,7 +13,6 @@ from talkcorner.server.api.api_v1.exceptions.user import (
 from talkcorner.server.database.holder import DatabaseHolder
 from talkcorner.server.enums.credential import CredentialType
 
-from talkcorner.server.schemas.auth import RefreshToken
 from talkcorner.server.schemas.user import User
 from talkcorner.server.services.auth.security import verify_password
 
@@ -27,28 +24,6 @@ def get_token(authorization: str) -> str:
         raise NotValidateCredentialsError(credential=CredentialType.AUTHORIZATION_NOT_BEARER)
 
     return param
-
-
-async def verify_refresh_token(
-    *,
-    authorization: str,
-    settings: AppSettings = Depends(SettingsMarker)
-) -> RefreshToken:
-    refresh_token = get_token(authorization=authorization)
-
-    try:
-        payload = jwt.decode(
-            token=refresh_token,
-            key=settings.authorize_refresh_token_secret_key,
-            algorithms=[ALGORITHMS.HS256]
-        )
-    except JWTError:
-        raise NotValidateCredentialsError(credential=CredentialType.JWT_ERROR)
-
-    if not (user_id := payload.get("user_id")):
-        raise NotValidateCredentialsError(credential=CredentialType.JWT_PAYLOAD)
-
-    return RefreshToken(token=refresh_token, user_id=uuid.UUID(user_id))
 
 
 async def authorize_user(
@@ -69,7 +44,7 @@ async def authorize_user(
     return user
 
 
-async def get_user(
+async def authenticate_user(
     *,
     authorization: str,
     check_email_verified: bool,
