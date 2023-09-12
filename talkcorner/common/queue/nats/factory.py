@@ -6,11 +6,11 @@ from nats.js.errors import NotFoundError
 
 
 def nats_build_connection_uri(
-        *,
-        host: str,
-        port: int,
-        user: str,
-        password: str
+    *,
+    host: str,
+    port: int,
+    user: str,
+    password: str
 ) -> str:
     return f"nats://{user}:{password}@{host}:{port}"
 

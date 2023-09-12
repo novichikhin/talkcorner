@@ -12,6 +12,7 @@ from talkcorner.server.api.api_v1.dependencies.database import (
 from talkcorner.server.api.api_v1.dependencies.security import CryptContextMarker
 from talkcorner.server.api.api_v1.dependencies.setting import SettingsMarker
 from talkcorner.server.api.api_v1.endpoints.setup import register_routers
+from talkcorner.server.api.api_v1.exceptions.setup import init_exceptions
 from talkcorner.server.api.event import lifespan
 from talkcorner.server.database.factory import (
     sa_create_engine,
@@ -47,6 +48,7 @@ def register_app(settings: AppSettings) -> FastAPI:
     session_factory = sa_create_session_factory(engine=engine)
 
     app.include_router(router=register_routers(), prefix=settings.api_v1_str)
+    init_exceptions(app=app)
 
     app.dependency_overrides.update(
         {

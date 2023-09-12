@@ -48,7 +48,7 @@ from talkcorner.server.api.api_v1.exceptions.user import (
 )
 
 
-def register_exceptions(app: FastAPI) -> None:
+def init_exceptions(app: FastAPI) -> None:
     app.add_exception_handler(
         NotValidateCredentialsError,
         not_validate_credentials_error_handler
