@@ -6,9 +6,11 @@ from pydantic import Field
 
 from talkcorner.server.schemas.base import BaseSchema, BasePatch
 
+BODY_MIN_LENGTH, BODY_MAX_LENGTH = 1, 4096
+
 
 class TopicMessageValidators(BaseSchema):
-    body: str = Field(min_length=1, max_length=4096)
+    body: str = Field(min_length=BODY_MIN_LENGTH, max_length=BODY_MAX_LENGTH)
 
 
 class TopicMessage(TopicMessageValidators):
@@ -25,5 +27,9 @@ class TopicMessageCreate(TopicMessageValidators):
     topic_id: uuid.UUID
 
 
-class TopicMessagePatch(TopicMessageValidators, BasePatch):
-    body: Optional[str] = Field(default=None) # type: ignore
+class TopicMessagePatch(BasePatch):
+    body: Optional[str] = Field(
+        default=None,
+        min_length=BODY_MIN_LENGTH,
+        max_length=BODY_MAX_LENGTH
+    )

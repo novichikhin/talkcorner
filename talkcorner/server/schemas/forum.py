@@ -6,10 +6,13 @@ from pydantic import Field
 
 from talkcorner.server.schemas.base import BaseSchema, BasePatch
 
+TITLE_MIN_LENGTH, TITLE_MAX_LENGTH = 10, 64
+DESCRIPTION_MIN_LENGTH, DESCRIPTION_MAX_LENGTH = 10, 256
+
 
 class ForumValidators(BaseSchema):
-    title: str = Field(min_length=10, max_length=64)
-    description: Optional[str] = Field(min_length=10, max_length=256)
+    title: str = Field(min_length=TITLE_MIN_LENGTH, max_length=TITLE_MAX_LENGTH)
+    description: Optional[str] = Field(min_length=DESCRIPTION_MIN_LENGTH, max_length=DESCRIPTION_MAX_LENGTH)
 
 
 class Forum(ForumValidators):
@@ -24,6 +27,15 @@ class ForumCreate(ForumValidators):
     pass
 
 
-class ForumPatch(ForumValidators, BasePatch):
-    title: Optional[str] = Field(default=None) # type: ignore
-    description: Optional[str] = Field(default=None) # type: ignore
+class ForumPatch(BasePatch):
+    title: Optional[str] = Field(
+        default=None,
+        min_length=TITLE_MIN_LENGTH,
+        max_length=TITLE_MAX_LENGTH
+    )
+
+    description: Optional[str] = Field(
+        default=None,
+        min_length=DESCRIPTION_MIN_LENGTH,
+        max_length=DESCRIPTION_MAX_LENGTH
+    )

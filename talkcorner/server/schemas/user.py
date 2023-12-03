@@ -6,10 +6,13 @@ from pydantic import Field, EmailStr
 
 from talkcorner.server.schemas.base import BaseSchema, BasePatch
 
+USERNAME_MIN_LENGTH, USERNAME_MAX_LENGTH = 4, 24
+PASSWORD_MIN_LENGTH, PASSWORD_MAX_LENGTH = 8, 64
+
 
 class UserValidators(BaseSchema):
-    username: str = Field(min_length=4, max_length=24)
-    password: str = Field(min_length=8, max_length=64)
+    username: str = Field(min_length=USERNAME_MIN_LENGTH, max_length=USERNAME_MAX_LENGTH)
+    password: str = Field(min_length=PASSWORD_MIN_LENGTH, max_length=PASSWORD_MAX_LENGTH)
 
 
 class User(UserValidators):
@@ -30,5 +33,9 @@ class UserCreate(UserValidators):
     email: EmailStr
 
 
-class UserPatch(UserValidators, BasePatch):
-    password: Optional[str] = Field(default=None) # type: ignore
+class UserPatch(BasePatch):
+    password: Optional[str] = Field(
+        default=None,
+        min_length=PASSWORD_MIN_LENGTH,
+        max_length=PASSWORD_MAX_LENGTH
+    )
