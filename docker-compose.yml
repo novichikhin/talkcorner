@@ -1,10 +1,11 @@
 version: "3"
 
 services:
-  server:
+  api:
     build:
       context: ./
-      dockerfile: docker/server/Dockerfile
+      dockerfile: docker/api/Dockerfile
+    image: talkcorner/api
     restart: always
     ports:
       - "${SERVER_PORT}:${SERVER_PORT}"
@@ -13,8 +14,8 @@ services:
     environment:
       - IS_PRODUCTION=yes
     depends_on:
-      postgres:
-        condition: service_healthy
+      migrations:
+        condition: service_completed_successfully
       nats:
         condition: service_started
     healthcheck:
@@ -23,20 +24,32 @@ services:
       timeout: 5s
       retries: 5
 
-  broadcaster-email:
+  broadcaster:
     build:
       context: ./
-      dockerfile: docker/email-broadcaster/Dockerfile
+      dockerfile: docker/broadcaster/Dockerfile
+    image: talkcorner/broadcaster
     restart: always
     env_file:
       - .env
     environment:
       - IS_PRODUCTION=yes
     depends_on:
-      server:
-        condition: service_healthy
       nats:
         condition: service_started
+
+  migrations:
+    build:
+      context: ./
+      dockerfile: docker/migrations/Dockerfile
+    image: talkcorner/migrations
+    env_file:
+      - .env
+    environment:
+      - IS_PRODUCTION=yes
+    depends_on:
+      postgres:
+        condition: service_healthy
 
   postgres:
     image: postgres:latest
@@ -45,8 +58,8 @@ services:
     restart: always
     env_file:
       - .env
-    ports:
-      - "${PG_PORT}:${PG_PORT}"
+    expose:
+      - "${PG_PORT}"
     environment:
       - POSTGRES_HOST=${PG_HOST}
       - POSTGRES_USER=${PG_USER}
@@ -65,8 +78,8 @@ services:
     restart: always
     env_file:
       - .env
-    ports:
-      - "${NATS_CLIENT_PORT}:${NATS_CLIENT_PORT}"
-      - "${NATS_HTTP_PORT}:${NATS_HTTP_PORT}"
-      - "${NATS_ROUTING_PORT}:${NATS_ROUTING_PORT}"
+    expose:
+      - "${NATS_CLIENT_PORT}"
+      - "${NATS_HTTP_PORT}"
+      - "${NATS_ROUTING_PORT}"
     command: ["-js", "--user", "${NATS_USER}", "--pass", "${NATS_PASSWORD}"]

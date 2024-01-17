@@ -1,6 +1,6 @@
 from typing import Protocol, Optional
 
-from talkcorner.server.schemas.user import User
+from talkcorner.schemas.user import User
 
 
 class CreateUser(Protocol):

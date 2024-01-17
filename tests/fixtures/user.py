@@ -5,10 +5,10 @@ from typing import Optional
 import pytest
 from passlib.context import CryptContext
 
-from talkcorner.server.api.api_v1.exceptions.base import BaseAppException
-from talkcorner.server.database.holder import DatabaseHolder
-from talkcorner.server.schemas.user import User
-from talkcorner.server.services.auth.security import get_password_hash
+from talkcorner.exceptions.base import BaseAppException
+from talkcorner.database.holder import DatabaseHolder
+from talkcorner.schemas.user import User
+from talkcorner.services.auth.security import get_password_hash
 from tests.fixtures.protocols.user import CreateUser
 
 

@@ -14,12 +14,12 @@ from sqlalchemy import URL, make_url
 from sqlalchemy.orm import sessionmaker, close_all_sessions
 from testcontainers.postgres import PostgresContainer
 
-from talkcorner.common.settings.environments.base import AppEnvTypes
-from talkcorner.common.settings.main import get_app_settings
-from talkcorner.server.api.api_v1.dependencies.database import DatabaseSessionMarker
-from talkcorner.server.api.api_v1.dependencies.nats import NatsJetStreamMarker
-from talkcorner.server.api.setup import register_app
-from talkcorner.server.database.models.base import BaseModel
+from talkcorner.settings.environments.base import AppEnvTypes
+from talkcorner.settings.main import get_app_settings
+from talkcorner.api.api_v1.dependencies.database import DatabaseSessionMarker
+from talkcorner.api.api_v1.dependencies.nats import NatsJetStreamMarker
+from talkcorner.api.setup import register_app
+from talkcorner.database.models.base import BaseModel
 from tests.fixtures.conftest import holder, crypt_context, nats_mock # noqa: F401
 from tests.fixtures.user import create_user # noqa: F401
 from tests.fixtures.auth_token import create_auth_access_token # noqa: F401

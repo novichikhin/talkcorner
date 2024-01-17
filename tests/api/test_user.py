@@ -2,7 +2,7 @@ import uuid
 
 from httpx import AsyncClient
 
-from talkcorner.server.database.holder import DatabaseHolder
+from talkcorner.database.holder import DatabaseHolder
 from tests.fixtures.protocols.auth_token import CreateAuthAccessToken
 from tests.fixtures.protocols.user import CreateUser
 

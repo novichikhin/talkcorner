@@ -1,8 +1,8 @@
 import pytest
 from httpx import AsyncClient
 
-from talkcorner.server.api.api_v1.exceptions.subforum import SubforumNotFoundError
-from talkcorner.server.database.holder import DatabaseHolder
+from talkcorner.exceptions.subforum import SubforumNotFoundError
+from talkcorner.database.holder import DatabaseHolder
 from tests.fixtures.protocols.auth_token import CreateAuthAccessToken
 from tests.fixtures.protocols.user import CreateUser
 

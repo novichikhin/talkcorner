@@ -3,8 +3,8 @@ import uuid
 import pytest
 from httpx import AsyncClient
 
-from talkcorner.server.api.api_v1.exceptions.topic.main import TopicNotFoundError
-from talkcorner.server.database.holder import DatabaseHolder
+from talkcorner.exceptions.topic.main import TopicNotFoundError
+from talkcorner.database.holder import DatabaseHolder
 from tests.fixtures.protocols.auth_token import CreateAuthAccessToken
 from tests.fixtures.protocols.user import CreateUser
 
