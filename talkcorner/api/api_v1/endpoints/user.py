@@ -63,7 +63,7 @@ async def login(
     "/",
     response_model=List[User],
     dependencies=[Depends(api_authenticate_user())],
-    response_model_exclude={"email", "email_token", "email_verified", "password"},
+    response_model_exclude={"__all__": {"email", "email_token", "email_verified", "password"}},
     responses=user_auth_responses
 )
 async def read_all(
