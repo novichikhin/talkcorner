@@ -29,7 +29,5 @@ class TopicMessageCreate(TopicMessageValidators):
 
 class TopicMessagePatch(BasePatch):
     body: Optional[str] = Field(
-        default=None,
-        min_length=BODY_MIN_LENGTH,
-        max_length=BODY_MAX_LENGTH
+        default=None, min_length=BODY_MIN_LENGTH, max_length=BODY_MAX_LENGTH
     )

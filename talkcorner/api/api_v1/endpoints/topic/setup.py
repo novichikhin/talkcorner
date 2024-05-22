@@ -9,10 +9,6 @@ def register_topic_routers() -> APIRouter:
 
     router.include_router(main.router, tags=["topic"])
 
-    router.include_router(
-        message.router,
-        prefix="/message",
-        tags=["message"]
-    )
+    router.include_router(message.router, prefix="/message", tags=["message"])
 
     return router

@@ -7,7 +7,7 @@ from talkcorner.settings.environments.production import ProdAppSettings
 
 environments: Dict[str, Type[AppSettings]] = {
     AppEnvTypes.prod: ProdAppSettings,
-    AppEnvTypes.dev: DevAppSettings
+    AppEnvTypes.dev: DevAppSettings,
 }
 
 

@@ -22,8 +22,12 @@ class ForumNotCreator(BaseResponse):
 
 
 class ForumNotUpdated(BaseResponse):
-    detail: str = "Forum not updated: forum not found or you are not the creator of this forum"
+    detail: str = (
+        "Forum not updated: forum not found or you are not the creator of this forum"
+    )
 
 
 class ForumNotDeleted(BaseResponse):
-    detail: str = "Forum not deleted: forum not found or you are not the creator of this forum"
+    detail: str = (
+        "Forum not deleted: forum not found or you are not the creator of this forum"
+    )

@@ -10,7 +10,9 @@ from tests.mocks.nats import JetStreamContextMock
 
 
 @pytest.fixture(scope="function")
-async def holder(session_factory: async_sessionmaker[AsyncSession]) -> AsyncGenerator[Any, Any]:
+async def holder(
+    session_factory: async_sessionmaker[AsyncSession],
+) -> AsyncGenerator[Any, Any]:
     async with session_factory() as session:
         yield DatabaseHolder(session=session)
 

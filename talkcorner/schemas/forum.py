@@ -12,7 +12,9 @@ DESCRIPTION_MIN_LENGTH, DESCRIPTION_MAX_LENGTH = 10, 256
 
 class ForumValidators(BaseSchema):
     title: str = Field(min_length=TITLE_MIN_LENGTH, max_length=TITLE_MAX_LENGTH)
-    description: Optional[str] = Field(min_length=DESCRIPTION_MIN_LENGTH, max_length=DESCRIPTION_MAX_LENGTH)
+    description: Optional[str] = Field(
+        min_length=DESCRIPTION_MIN_LENGTH, max_length=DESCRIPTION_MAX_LENGTH
+    )
 
 
 class Forum(ForumValidators):
@@ -29,13 +31,11 @@ class ForumCreate(ForumValidators):
 
 class ForumPatch(BasePatch):
     title: Optional[str] = Field(
-        default=None,
-        min_length=TITLE_MIN_LENGTH,
-        max_length=TITLE_MAX_LENGTH
+        default=None, min_length=TITLE_MIN_LENGTH, max_length=TITLE_MAX_LENGTH
     )
 
     description: Optional[str] = Field(
         default=None,
         min_length=DESCRIPTION_MIN_LENGTH,
-        max_length=DESCRIPTION_MAX_LENGTH
+        max_length=DESCRIPTION_MAX_LENGTH,
     )

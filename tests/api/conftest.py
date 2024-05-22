@@ -20,9 +20,9 @@ from talkcorner.api.api_v1.dependencies.database import DatabaseSessionMarker
 from talkcorner.api.api_v1.dependencies.nats import NatsJetStreamMarker
 from talkcorner.api.setup import register_app
 from talkcorner.database.models.base import BaseModel
-from tests.fixtures.conftest import holder, crypt_context, nats_mock # noqa: F401
-from tests.fixtures.user import create_user # noqa: F401
-from tests.fixtures.auth_token import create_auth_access_token # noqa: F401
+from tests.fixtures.conftest import holder, crypt_context, nats_mock  # noqa: F401
+from tests.fixtures.user import create_user  # noqa: F401
+from tests.fixtures.auth_token import create_auth_access_token  # noqa: F401
 from tests.mocks.nats import JetStreamContextMock
 
 
@@ -36,7 +36,7 @@ def app(postgres_url: str) -> FastAPI:
             "pg_port": url.port,
             "pg_user": url.username,
             "pg_password": url.password,
-            "pg_db": url.database
+            "pg_db": url.database,
         }
     )
 
@@ -45,11 +45,7 @@ def app(postgres_url: str) -> FastAPI:
 
 @pytest.fixture(scope="session", autouse=True)
 def nats(app: FastAPI, nats_mock: JetStreamContextMock):
-    app.dependency_overrides.update(
-        {
-            NatsJetStreamMarker: lambda: nats_mock
-        }
-    )
+    app.dependency_overrides.update({NatsJetStreamMarker: lambda: nats_mock})
 
 
 @pytest_asyncio.fixture(scope="session")
@@ -78,7 +74,7 @@ def session_factory(app: FastAPI) -> Generator[sessionmaker, None, None]:
 @pytest.fixture(scope="session")
 def postgres_url() -> Generator[str, None, None]:
     """
-        thx github.com/bomzheg/Shvatka
+    thx github.com/bomzheg/Shvatka
     """
     postgres = PostgresContainer("postgres:latest")
     if os.name == "nt":
@@ -93,7 +89,7 @@ def postgres_url() -> Generator[str, None, None]:
 @pytest.fixture(scope="session")
 def alembic_config(postgres_url: str) -> AlembicConfig:
     """
-        thx github.com/bomzheg/Shvatka
+    thx github.com/bomzheg/Shvatka
     """
     alembic_cfg = AlembicConfig("alembic.ini")
     alembic_cfg.set_main_option("sqlalchemy.url", postgres_url)
@@ -104,6 +100,6 @@ def alembic_config(postgres_url: str) -> AlembicConfig:
 @pytest.fixture(scope="session", autouse=True)
 def upgrade_schema_db(alembic_config: AlembicConfig):
     """
-        thx github.com/bomzheg/Shvatka
+    thx github.com/bomzheg/Shvatka
     """
     upgrade(alembic_config, "head")

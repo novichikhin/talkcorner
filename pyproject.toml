@@ -31,6 +31,7 @@ httpx = "^0.24.1"
 msgpack = "^1.0.5"
 aiosmtplib = "^2.0.2"
 pydantic-settings = "^2.0.2"
+black = "^24.4.2"
 
 
 [build-system]

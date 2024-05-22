@@ -33,13 +33,9 @@ class TopicPatch(BasePatch):
     forum_id: Optional[int] = Field(default=None)
 
     title: Optional[str] = Field(
-        default=None,
-        min_length=TITLE_MIN_LENGTH,
-        max_length=TITLE_MAX_LENGTH
+        default=None, min_length=TITLE_MIN_LENGTH, max_length=TITLE_MAX_LENGTH
     )
 
     body: Optional[str] = Field(
-        default=None,
-        min_length=BODY_MIN_LENGTH,
-        max_length=BODY_MAX_LENGTH
+        default=None, min_length=BODY_MIN_LENGTH, max_length=BODY_MAX_LENGTH
     )

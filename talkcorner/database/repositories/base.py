@@ -1,14 +1,7 @@
 import sqlalchemy as sa
 
 from abc import ABC
-from typing import (
-    TypeVar,
-    Generic,
-    Optional,
-    Sequence,
-    Type,
-    Any
-)
+from typing import TypeVar, Generic, Optional, Sequence, Type, Any
 
 from sqlalchemy.ext.asyncio import AsyncSession
 

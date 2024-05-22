@@ -17,7 +17,7 @@ def create_auth_access_token(app: FastAPI) -> CreateAuthAccessToken:
         return create_access_token(
             payload={"user_id": str(user_id)},
             secret_key=settings.authorize_access_token_secret_key,
-            expire_minutes=settings.authorize_access_token_expire_minutes
+            expire_minutes=settings.authorize_access_token_expire_minutes,
         )
 
     return create_auth_access_token

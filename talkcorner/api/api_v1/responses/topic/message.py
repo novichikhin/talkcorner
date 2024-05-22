@@ -15,8 +15,12 @@ class TopicMessageNotFound(BaseResponse):
 
 
 class TopicMessageNotUpdated(BaseResponse):
-    detail: str = "Topic message not updated: topic message not found or you are not the creator of this topic message"
+    detail: str = (
+        "Topic message not updated: topic message not found or you are not the creator of this topic message"
+    )
 
 
 class TopicMessageNotDeleted(BaseResponse):
-    detail: str = "Topic message not deleted: topic message not found or you are not the creator of this topic message"
+    detail: str = (
+        "Topic message not deleted: topic message not found or you are not the creator of this topic message"
+    )

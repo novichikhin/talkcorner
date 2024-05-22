@@ -10,7 +10,4 @@ class AppEnvTypes(str, enum.Enum):
 
 class BaseAppSettings(BaseSettings):
 
-    model_config = SettingsConfigDict(
-        env_file=".env",
-        validate_assignment=True
-    )
+    model_config = SettingsConfigDict(env_file=".env", validate_assignment=True)

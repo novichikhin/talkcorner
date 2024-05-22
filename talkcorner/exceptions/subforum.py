@@ -10,10 +10,7 @@ class SubforumNotFoundError(BaseAppException):
 
     @property
     def detail(self) -> Union[str, Dict[str, Any]]:
-        return {
-            "message": "Subforum not found",
-            "subforum_id": self.subforum_id
-        }
+        return {"message": "Subforum not found", "subforum_id": self.subforum_id}
 
 
 class SubforumNotPatchedError(BaseAppException):

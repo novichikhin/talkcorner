@@ -28,8 +28,8 @@ if config.get_main_option("sqlalchemy.url") is None:
             port=settings.pg_port,
             user=settings.pg_user,
             password=settings.pg_password,
-            db=settings.pg_db
-        )
+            db=settings.pg_db,
+        ),
     )
 
 # Interpret the config file for Python logging.
@@ -87,9 +87,7 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
-        context.configure(
-            connection=connection, target_metadata=target_metadata
-        )
+        context.configure(connection=connection, target_metadata=target_metadata)
 
         with context.begin_transaction():
             context.run_migrations()

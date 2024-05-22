@@ -8,14 +8,10 @@ from tests.fixtures.protocols.user import CreateUser
 
 
 async def test_login_user(client: AsyncClient, create_user: CreateUser):
-    user = await create_user(password=(password:="qwerty12345"))
+    user = await create_user(password=(password := "qwerty12345"))
 
     response = await client.post(
-        "/api/v1/user/login",
-        data={
-            "username": user.username,
-            "password": password
-        }
+        "/api/v1/user/login", data={"username": user.username, "password": password}
     )
 
     assert response.status_code == 200
@@ -26,8 +22,7 @@ async def test_login_user(client: AsyncClient, create_user: CreateUser):
     assert json["token_type"]
 
     response = await client.get(
-        "/api/v1/user/",
-        headers={"Authorization": f"Bearer {access_token}"}
+        "/api/v1/user/", headers={"Authorization": f"Bearer {access_token}"}
     )
 
     assert response.status_code == 200
@@ -37,13 +32,15 @@ async def test_email_verify(
     client: AsyncClient,
     create_user: CreateUser,
     create_auth_access_token: CreateAuthAccessToken,
-    holder: DatabaseHolder
+    holder: DatabaseHolder,
 ):
     user = await create_user(email_verified=False)
 
     response = await client.get(
         f"/api/v1/user/email/verify/{str(user.email_token)}",
-        headers={"Authorization": f"Bearer {create_auth_access_token(user_id=user.id)}"}
+        headers={
+            "Authorization": f"Bearer {create_auth_access_token(user_id=user.id)}"
+        },
     )
 
     assert response.status_code == 200
@@ -60,13 +57,15 @@ async def test_email_verify(
 async def test_get_users(
     client: AsyncClient,
     create_user: CreateUser,
-    create_auth_access_token: CreateAuthAccessToken
+    create_auth_access_token: CreateAuthAccessToken,
 ):
     user = await create_user()
 
     response = await client.get(
         "/api/v1/user/",
-        headers={"Authorization": f"Bearer {create_auth_access_token(user_id=user.id)}"}
+        headers={
+            "Authorization": f"Bearer {create_auth_access_token(user_id=user.id)}"
+        },
     )
 
     assert response.status_code == 200
@@ -82,13 +81,15 @@ async def test_get_users(
 async def test_get_user(
     client: AsyncClient,
     create_user: CreateUser,
-    create_auth_access_token: CreateAuthAccessToken
+    create_auth_access_token: CreateAuthAccessToken,
 ):
     user = await create_user()
 
     response = await client.get(
         f"/api/v1/user/{user.id}",
-        headers={"Authorization": f"Bearer {create_auth_access_token(user_id=user.id)}"}
+        headers={
+            "Authorization": f"Bearer {create_auth_access_token(user_id=user.id)}"
+        },
     )
 
     assert response.status_code == 200
@@ -105,8 +106,8 @@ async def test_create_user(client: AsyncClient, holder: DatabaseHolder):
         json={
             "username": "Test User",
             "password": "qwerty12345",
-            "email": "test@ya.ru"
-        }
+            "email": "test@ya.ru",
+        },
     )
 
     assert response.status_code == 200

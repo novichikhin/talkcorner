@@ -13,7 +13,7 @@ class TopicMessageNotFoundError(BaseAppException):
     def detail(self) -> Union[str, Dict[str, Any]]:
         return {
             "message": "Topic message not found",
-            "topic_message_id": self.topic_message_id
+            "topic_message_id": self.topic_message_id,
         }
 
 

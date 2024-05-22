@@ -11,7 +11,7 @@ from talkcorner.settings.environments.app import AppSettings
 from talkcorner.exceptions.base import BaseAppException
 from talkcorner.exceptions.user import (
     EmailAlreadyConfirmedError,
-    EmailTokenIncorrectError
+    EmailTokenIncorrectError,
 )
 from talkcorner.database.holder import DatabaseHolder
 from talkcorner.schemas.auth import Authorization
@@ -27,46 +27,31 @@ async def login_user(
     password: str,
     holder: DatabaseHolder,
     crypt_context: CryptContext,
-    settings: AppSettings
+    settings: AppSettings,
 ) -> Authorization:
     user = await authorize_user(
-        username=username,
-        password=password,
-        holder=holder,
-        crypt_context=crypt_context
+        username=username, password=password, holder=holder, crypt_context=crypt_context
     )
 
     access_token = create_access_token(
         payload=dict(user_id=str(user.id)),
         secret_key=settings.authorize_access_token_secret_key,
-        expire_minutes=settings.authorize_access_token_expire_minutes
+        expire_minutes=settings.authorize_access_token_expire_minutes,
     )
 
     return Authorization(access_token=access_token, token_type="bearer")
 
 
-async def get_users(
-    *,
-    offset: int,
-    limit: int,
-    holder: DatabaseHolder
-) -> List[User]:
+async def get_users(*, offset: int, limit: int, holder: DatabaseHolder) -> List[User]:
     return await holder.user.read_all(offset=offset, limit=limit)
 
 
-async def get_user(
-    *,
-    user_id: uuid.UUID,
-    holder: DatabaseHolder
-) -> User:
+async def get_user(*, user_id: uuid.UUID, holder: DatabaseHolder) -> User:
     return await holder.user.read_by_id(user_id=user_id)
 
 
 async def verify_email_user(
-    *,
-    email_token: uuid.UUID,
-    holder: DatabaseHolder,
-    user: User
+    *, email_token: uuid.UUID, holder: DatabaseHolder, user: User
 ) -> User:
     if user.email_verified:
         raise EmailAlreadyConfirmedError
@@ -86,13 +71,15 @@ async def create_user(
     holder: DatabaseHolder,
     crypt_context: CryptContext,
     js: JetStreamContext,
-    settings: AppSettings
+    settings: AppSettings,
 ) -> User:
     try:
         user = await holder.user.create(
             username=user_create.username,
-            password=get_password_hash(crypt_context=crypt_context, password=user_create.password),
-            email=user_create.email
+            password=get_password_hash(
+                crypt_context=crypt_context, password=user_create.password
+            ),
+            email=user_create.email,
         )
         await holder.commit()
     except BaseAppException as e:
@@ -105,13 +92,13 @@ async def create_user(
         html=(
             f"To activate the user account, "
             f"follow the link {settings.email_verify_url}/{user.email_token}"
-        )
+        ),
     )
 
     await js.publish(
         subject=f"{settings.nats_stream_name}.broadcast.email.{str(user.id)}",
         payload=msgpack.packb(dict(json.loads(email_broadcaster.json()))),
-        stream=settings.nats_stream_name
+        stream=settings.nats_stream_name,
     )
 
     return user

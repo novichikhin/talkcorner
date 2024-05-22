@@ -10,7 +10,7 @@ from nats.errors import TimeoutError
 from talkcorner.queue.nats.common import (
     nats_create_connect,
     nats_create_jetstream,
-    nats_build_connection_uri
+    nats_build_connection_uri,
 )
 from talkcorner.schemas.broadcaster import EmailBroadcast
 
@@ -30,7 +30,7 @@ async def send_an_email(msg: Msg, email_broadcaster: EmailBroadcaster) -> None:
     if await email_broadcaster.send(
         to_address=email_broadcast.to_address,
         subject=email_broadcast.subject,
-        html=email_broadcast.html
+        html=email_broadcast.html,
     ):
         await msg.ack()
 
@@ -46,7 +46,7 @@ async def main():
                 host=settings.nats_host,
                 port=settings.nats_client_port,
                 user=settings.nats_user,
-                password=settings.nats_password
+                password=settings.nats_password,
             )
         ]
     )
@@ -55,7 +55,7 @@ async def main():
     subscribe = await js.pull_subscribe(
         subject=f"{settings.nats_stream_name}.broadcast.email.*",
         durable=f"{settings.nats_stream_name}-broadcast-email-sub",
-        stream=settings.nats_stream_name
+        stream=settings.nats_stream_name,
     )
 
     if not subscribe:
@@ -66,11 +66,11 @@ async def main():
         host=settings.email_host,
         port=settings.email_port,
         from_address=settings.email_from_address,
-        password=settings.email_password
+        password=settings.email_password,
     )
 
     while True:
-        await asyncio.sleep(5.)
+        await asyncio.sleep(5.0)
 
         try:
             msgs = await subscribe.fetch(5)
@@ -78,7 +78,9 @@ async def main():
             continue
 
         tasks = [
-            asyncio.create_task(send_an_email(msg=msg, email_broadcaster=email_broadcaster))
+            asyncio.create_task(
+                send_an_email(msg=msg, email_broadcaster=email_broadcaster)
+            )
             for msg in msgs
         ]
         await asyncio.wait(tasks)

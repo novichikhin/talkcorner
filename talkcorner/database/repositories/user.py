@@ -14,7 +14,7 @@ from talkcorner.exceptions.user import (
     WrongUsernameOrPasswordError,
     EmailNotVerifiedError,
     EmailAlreadyExistsError,
-    UsernameAlreadyExistsError
+    UsernameAlreadyExistsError,
 )
 from talkcorner.database import models
 from talkcorner.database.repositories.base import BaseRepository
@@ -60,9 +60,12 @@ class UserRepository(BaseRepository[models.User]):
         return user.to_scheme()
 
     async def verify_email(self, user_id: uuid.UUID) -> User:
-        stmt = sa.update(models.User).where(
-            models.User.id == user_id
-        ).values(email_verified=True).returning(models.User)
+        stmt = (
+            sa.update(models.User)
+            .where(models.User.id == user_id)
+            .values(email_verified=True)
+            .returning(models.User)
+        )
 
         result = await self._session.scalars(
             sa.select(models.User).from_statement(stmt)
@@ -75,19 +78,19 @@ class UserRepository(BaseRepository[models.User]):
 
         return user.to_scheme()
 
-    async def create( # type: ignore
-        self,
-        username: str,
-        password: str,
-        email: str,
-        email_verified: bool = False
+    async def create(  # type: ignore
+        self, username: str, password: str, email: str, email_verified: bool = False
     ) -> User:
-        stmt = insert(models.User).values(
-            username=username,
-            password=password,
-            email=email,
-            email_verified=email_verified
-        ).returning(models.User)
+        stmt = (
+            insert(models.User)
+            .values(
+                username=username,
+                password=password,
+                email=email,
+                email_verified=email_verified,
+            )
+            .returning(models.User)
+        )
 
         try:
             result: sa.ScalarResult[models.User] = await self._session.scalars(
@@ -101,7 +104,7 @@ class UserRepository(BaseRepository[models.User]):
             return user.to_scheme()
 
     def _parse_error_on_create(self, err: DBAPIError) -> None:
-        constraint_name = err.__cause__.__cause__.constraint_name # type: ignore
+        constraint_name = err.__cause__.__cause__.constraint_name  # type: ignore
 
         if constraint_name == "users_email_key":
             raise EmailAlreadyExistsError from err

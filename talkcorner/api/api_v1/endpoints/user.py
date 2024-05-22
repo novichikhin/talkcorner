@@ -9,7 +9,7 @@ from starlette.status import (
     HTTP_404_NOT_FOUND,
     HTTP_409_CONFLICT,
     HTTP_401_UNAUTHORIZED,
-    HTTP_403_FORBIDDEN
+    HTTP_403_FORBIDDEN,
 )
 
 from talkcorner.settings.environments.app import AppSettings
@@ -28,7 +28,7 @@ from talkcorner.services.user import (
     get_users,
     get_user,
     verify_email_user,
-    create_user
+    create_user,
 )
 
 router = APIRouter()
@@ -40,22 +40,22 @@ router = APIRouter()
     responses={
         HTTP_401_UNAUTHORIZED: {
             "description": "Wrong username (email) or password error",
-            "model": responses.WrongUsernameOrPassword
+            "model": responses.WrongUsernameOrPassword,
         }
-    }
+    },
 )
 async def login(
     form_data: OAuth2PasswordRequestForm = Depends(),
     holder: DatabaseHolder = Depends(DatabaseHolderMarker),
     crypt_context: CryptContext = Depends(CryptContextMarker),
-    settings: AppSettings = Depends(SettingsMarker)
+    settings: AppSettings = Depends(SettingsMarker),
 ):
     return await login_user(
         username=form_data.username,
         password=form_data.password,
         holder=holder,
         crypt_context=crypt_context,
-        settings=settings
+        settings=settings,
     )
 
 
@@ -63,19 +63,17 @@ async def login(
     "/",
     response_model=List[User],
     dependencies=[Depends(api_authenticate_user())],
-    response_model_exclude={"__all__": {"email", "email_token", "email_verified", "password"}},
-    responses=user_auth_responses
+    response_model_exclude={
+        "__all__": {"email", "email_token", "email_verified", "password"}
+    },
+    responses=user_auth_responses,
 )
 async def read_all(
     offset: int = Query(default=0, ge=0, le=500),
     limit: int = Query(default=5, ge=1, le=1000),
-    holder: DatabaseHolder = Depends(DatabaseHolderMarker)
+    holder: DatabaseHolder = Depends(DatabaseHolderMarker),
 ):
-    return await get_users(
-        offset=offset,
-        limit=limit,
-        holder=holder
-    )
+    return await get_users(offset=offset, limit=limit, holder=holder)
 
 
 @router.get(
@@ -83,11 +81,13 @@ async def read_all(
     response_model=User,
     dependencies=[Depends(api_authenticate_user())],
     response_model_exclude={"email", "email_token", "email_verified", "password"},
-    responses=user_auth_responses | {
+    responses=user_auth_responses
+    | {
         HTTP_404_NOT_FOUND: {
-            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | responses.UserNotFound
+            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"]
+            | responses.UserNotFound
         }
-    }
+    },
 )
 async def read(id: uuid.UUID, holder: DatabaseHolder = Depends(DatabaseHolderMarker)):
     return await get_user(user_id=id, holder=holder)
@@ -97,27 +97,21 @@ async def read(id: uuid.UUID, holder: DatabaseHolder = Depends(DatabaseHolderMar
     "/email/verify/{id}",
     response_model=User,
     response_model_exclude={"password", "email_token"},
-    responses=user_auth_responses | {
+    responses=user_auth_responses
+    | {
         HTTP_403_FORBIDDEN: {
             "model": Union[
-                responses.EmailAlreadyConfirmed,
-                responses.EmailTokenIncorrect
+                responses.EmailAlreadyConfirmed, responses.EmailTokenIncorrect
             ]
         }
-    }
+    },
 )
 async def email_verify(
     id: uuid.UUID,
     holder: DatabaseHolder = Depends(DatabaseHolderMarker),
-    user: User = Depends(
-        api_authenticate_user(check_email_verified=False)
-    )
+    user: User = Depends(api_authenticate_user(check_email_verified=False)),
 ):
-    return await verify_email_user(
-        email_token=id,
-        holder=holder,
-        user=user
-    )
+    return await verify_email_user(email_token=id, holder=holder, user=user)
 
 
 @router.post(
@@ -127,24 +121,22 @@ async def email_verify(
     responses={
         HTTP_409_CONFLICT: {
             "model": Union[
-                responses.EmailAlreadyExists,
-                responses.UsernameAlreadyExists
+                responses.EmailAlreadyExists, responses.UsernameAlreadyExists
             ]
         }
-
-    }
+    },
 )
 async def create(
     user_create: UserCreate,
     holder: DatabaseHolder = Depends(DatabaseHolderMarker),
     crypt_context: CryptContext = Depends(CryptContextMarker),
     js: JetStreamContext = Depends(NatsJetStreamMarker),
-    settings: AppSettings = Depends(SettingsMarker)
+    settings: AppSettings = Depends(SettingsMarker),
 ):
     return await create_user(
         user_create=user_create,
         holder=holder,
         crypt_context=crypt_context,
         js=js,
-        settings=settings
+        settings=settings,
     )

@@ -11,20 +11,20 @@ async def test_get_forums(
     client: AsyncClient,
     holder: DatabaseHolder,
     create_user: CreateUser,
-    create_auth_access_token: CreateAuthAccessToken
+    create_auth_access_token: CreateAuthAccessToken,
 ):
     user = await create_user()
 
     forum = await holder.forum.create(
-        title="Test Forum",
-        description=None,
-        creator_id=user.id
+        title="Test Forum", description=None, creator_id=user.id
     )
     await holder.commit()
 
     response = await client.get(
         "/api/v1/forum/",
-        headers={"Authorization": f"Bearer {create_auth_access_token(user_id=user.id)}"}
+        headers={
+            "Authorization": f"Bearer {create_auth_access_token(user_id=user.id)}"
+        },
     )
 
     assert response.status_code == 200
@@ -43,20 +43,20 @@ async def test_get_forum(
     client: AsyncClient,
     holder: DatabaseHolder,
     create_user: CreateUser,
-    create_auth_access_token: CreateAuthAccessToken
+    create_auth_access_token: CreateAuthAccessToken,
 ):
     user = await create_user()
 
     forum = await holder.forum.create(
-        title="Test Forum",
-        description=None,
-        creator_id=user.id
+        title="Test Forum", description=None, creator_id=user.id
     )
     await holder.commit()
 
     response = await client.get(
         f"/api/v1/forum/{forum.id}",
-        headers={"Authorization": f"Bearer {create_auth_access_token(user_id=user.id)}"}
+        headers={
+            "Authorization": f"Bearer {create_auth_access_token(user_id=user.id)}"
+        },
     )
 
     assert response.status_code == 200
@@ -73,17 +73,16 @@ async def test_create_forum(
     client: AsyncClient,
     holder: DatabaseHolder,
     create_user: CreateUser,
-    create_auth_access_token: CreateAuthAccessToken
+    create_auth_access_token: CreateAuthAccessToken,
 ):
     user = await create_user()
 
     response = await client.post(
         "/api/v1/forum/",
-        json={
-            "title": "Test Forum",
-            "description": "Test Forum Description"
+        json={"title": "Test Forum", "description": "Test Forum Description"},
+        headers={
+            "Authorization": f"Bearer {create_auth_access_token(user_id=user.id)}"
         },
-        headers={"Authorization": f"Bearer {create_auth_access_token(user_id=user.id)}"}
     )
 
     assert response.status_code == 200
@@ -104,14 +103,12 @@ async def test_patch_forum(
     client: AsyncClient,
     holder: DatabaseHolder,
     create_user: CreateUser,
-    create_auth_access_token: CreateAuthAccessToken
+    create_auth_access_token: CreateAuthAccessToken,
 ):
     user = await create_user()
 
     forum = await holder.forum.create(
-        title="Test Forum",
-        description=None,
-        creator_id=user.id
+        title="Test Forum", description=None, creator_id=user.id
     )
     await holder.commit()
 
@@ -119,10 +116,10 @@ async def test_patch_forum(
 
     response = await client.patch(
         f"/api/v1/forum/{forum.id}",
-        json={
-            "description": new_description
+        json={"description": new_description},
+        headers={
+            "Authorization": f"Bearer {create_auth_access_token(user_id=user.id)}"
         },
-        headers={"Authorization": f"Bearer {create_auth_access_token(user_id=user.id)}"}
     )
 
     assert response.status_code == 200
@@ -142,20 +139,20 @@ async def test_delete_forum(
     client: AsyncClient,
     holder: DatabaseHolder,
     create_user: CreateUser,
-    create_auth_access_token: CreateAuthAccessToken
+    create_auth_access_token: CreateAuthAccessToken,
 ):
     user = await create_user()
 
     forum = await holder.forum.create(
-        title="Test Forum",
-        description=None,
-        creator_id=user.id
+        title="Test Forum", description=None, creator_id=user.id
     )
     await holder.commit()
 
     response = await client.delete(
         f"/api/v1/forum/{forum.id}",
-        headers={"Authorization": f"Bearer {create_auth_access_token(user_id=user.id)}"}
+        headers={
+            "Authorization": f"Bearer {create_auth_access_token(user_id=user.id)}"
+        },
     )
 
     assert response.status_code == 200

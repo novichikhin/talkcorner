@@ -11,10 +11,7 @@ class TopicNotFoundError(BaseAppException):
 
     @property
     def detail(self) -> Union[str, Dict[str, Any]]:
-        return {
-            "message": "Topic not found",
-            "topic_id": self.topic_id
-        }
+        return {"message": "Topic not found", "topic_id": self.topic_id}
 
 
 class TopicNotPatchedError(BaseAppException):

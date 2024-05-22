@@ -19,17 +19,21 @@ def create_user(holder: DatabaseHolder, crypt_context: CryptContext) -> CreateUs
         *,
         identifier: Optional[str] = None,
         password: Optional[str] = None,
-        email_verified: bool = True
+        email_verified: bool = True,
     ) -> User:
         if not identifier:
-            identifier = "".join(random.choice(string.ascii_uppercase) for _ in range(8))
+            identifier = "".join(
+                random.choice(string.ascii_uppercase) for _ in range(8)
+            )
 
         try:
             created_user = await holder.user.create(
                 username=identifier,
-                password=get_password_hash(crypt_context=crypt_context, password=password or identifier),
+                password=get_password_hash(
+                    crypt_context=crypt_context, password=password or identifier
+                ),
                 email=f"{identifier}@ya.ru",
-                email_verified=email_verified
+                email_verified=email_verified,
             )
             await holder.commit()
         except BaseAppException as e:

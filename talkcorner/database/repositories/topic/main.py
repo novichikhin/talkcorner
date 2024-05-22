@@ -10,7 +10,7 @@ from talkcorner.exceptions.forum import ForumNotFoundError
 from talkcorner.exceptions.topic.main import (
     TopicNotFoundError,
     TopicNotPatchedError,
-    TopicNotDeletedError
+    TopicNotDeletedError,
 )
 from talkcorner.database import models
 from talkcorner.database.repositories.base import BaseRepository
@@ -35,18 +35,17 @@ class TopicRepository(BaseRepository[models.Topic]):
 
         return topic.to_scheme()
 
-    async def patch( # type: ignore
-        self,
-        topic_id: uuid.UUID,
-        creator_id: uuid.UUID,
-        topic_patch: TopicPatch
+    async def patch(  # type: ignore
+        self, topic_id: uuid.UUID, creator_id: uuid.UUID, topic_patch: TopicPatch
     ) -> Topic:
         excluded_topic_patch = topic_patch.model_dump(exclude_unset=True)
 
-        stmt = sa.update(models.Topic).where(
-            models.Topic.id == topic_id,
-            models.Topic.creator_id == creator_id
-        ).values(**excluded_topic_patch).returning(models.Topic)
+        stmt = (
+            sa.update(models.Topic)
+            .where(models.Topic.id == topic_id, models.Topic.creator_id == creator_id)
+            .values(**excluded_topic_patch)
+            .returning(models.Topic)
+        )
 
         try:
             result: sa.ScalarResult[models.Topic] = await self._session.scalars(
@@ -62,19 +61,14 @@ class TopicRepository(BaseRepository[models.Topic]):
 
             return topic.to_scheme()
 
-    async def create( # type: ignore
-        self,
-        forum_id: int,
-        title: str,
-        body: str,
-        creator_id: uuid.UUID
+    async def create(  # type: ignore
+        self, forum_id: int, title: str, body: str, creator_id: uuid.UUID
     ) -> Topic:
-        stmt = sa.insert(models.Topic).values(
-            forum_id=forum_id,
-            title=title,
-            body=body,
-            creator_id=creator_id
-        ).returning(models.Topic)
+        stmt = (
+            sa.insert(models.Topic)
+            .values(forum_id=forum_id, title=title, body=body, creator_id=creator_id)
+            .returning(models.Topic)
+        )
 
         try:
             result: sa.ScalarResult[models.Topic] = await self._session.scalars(
@@ -87,15 +81,12 @@ class TopicRepository(BaseRepository[models.Topic]):
 
             return topic.to_scheme()
 
-    async def delete(
-        self,
-        topic_id: uuid.UUID,
-        creator_id: uuid.UUID
-    ) -> Topic:
-        stmt = sa.delete(models.Topic).where(
-            models.Topic.id == topic_id,
-            models.Topic.creator_id == creator_id
-        ).returning(models.Topic)
+    async def delete(self, topic_id: uuid.UUID, creator_id: uuid.UUID) -> Topic:
+        stmt = (
+            sa.delete(models.Topic)
+            .where(models.Topic.id == topic_id, models.Topic.creator_id == creator_id)
+            .returning(models.Topic)
+        )
 
         result: sa.ScalarResult[models.Topic] = await self._session.scalars(
             sa.select(models.Topic).from_statement(stmt)
@@ -108,12 +99,7 @@ class TopicRepository(BaseRepository[models.Topic]):
 
         return topic.to_scheme()
 
-    def _parse_error(
-        self,
-        *,
-        err: DBAPIError,
-        forum_id: Optional[int]
-    ) -> None:
+    def _parse_error(self, *, err: DBAPIError, forum_id: Optional[int]) -> None:
         constraint_name = err.__cause__.__cause__.constraint_name  # type: ignore
 
         if forum_id and constraint_name == "topics_forum_id_fkey":

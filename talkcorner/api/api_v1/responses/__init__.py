@@ -9,27 +9,27 @@ from talkcorner.api.api_v1.responses.user import (
     EmailTokenIncorrect,
     WrongUsernameOrPassword,
     EmailNotActivated,
-    EmailNotVerified
+    EmailNotVerified,
 )
 from talkcorner.api.api_v1.responses.forum import (
     ForumNotFound,
     ForumNotCreator,
     ForumNotUpdated,
-    ForumNotDeleted
+    ForumNotDeleted,
 )
 from talkcorner.api.api_v1.responses.subforum import (
     SubforumNotFound,
     SubforumNotUpdated,
     SubforumNotDeleted,
-    ParentChildForumsAlreadyExists
+    ParentChildForumsAlreadyExists,
 )
 from talkcorner.api.api_v1.responses.topic.main import (
     TopicNotFound,
     TopicNotUpdated,
-    TopicNotDeleted
+    TopicNotDeleted,
 )
 from talkcorner.api.api_v1.responses.topic.message import (
     TopicMessageNotFound,
     TopicMessageNotUpdated,
-    TopicMessageNotDeleted
+    TopicMessageNotDeleted,
 )

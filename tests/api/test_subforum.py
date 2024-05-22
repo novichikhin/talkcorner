@@ -11,33 +11,31 @@ async def test_get_subforums(
     client: AsyncClient,
     holder: DatabaseHolder,
     create_user: CreateUser,
-    create_auth_access_token: CreateAuthAccessToken
+    create_auth_access_token: CreateAuthAccessToken,
 ):
     user = await create_user()
 
     parent_forum = await holder.forum.create(
-        title="Parent Forum",
-        description=None,
-        creator_id=user.id
+        title="Parent Forum", description=None, creator_id=user.id
     )
 
     child_forum = await holder.forum.create(
-        title="Child Forum",
-        description=None,
-        creator_id=user.id
+        title="Child Forum", description=None, creator_id=user.id
     )
 
     subforum = await holder.subforum.create(
         parent_forum_id=parent_forum.id,
         child_forum_id=child_forum.id,
-        creator_id=user.id
+        creator_id=user.id,
     )
 
     await holder.commit()
 
     response = await client.get(
         "/api/v1/subforum/",
-        headers={"Authorization": f"Bearer {create_auth_access_token(user_id=user.id)}"}
+        headers={
+            "Authorization": f"Bearer {create_auth_access_token(user_id=user.id)}"
+        },
     )
 
     assert response.status_code == 200
@@ -56,33 +54,31 @@ async def test_get_subforum(
     client: AsyncClient,
     holder: DatabaseHolder,
     create_user: CreateUser,
-    create_auth_access_token: CreateAuthAccessToken
+    create_auth_access_token: CreateAuthAccessToken,
 ):
     user = await create_user()
 
     parent_forum = await holder.forum.create(
-        title="Parent Forum",
-        description=None,
-        creator_id=user.id
+        title="Parent Forum", description=None, creator_id=user.id
     )
 
     child_forum = await holder.forum.create(
-        title="Child Forum",
-        description=None,
-        creator_id=user.id
+        title="Child Forum", description=None, creator_id=user.id
     )
 
     subforum = await holder.subforum.create(
         parent_forum_id=parent_forum.id,
         child_forum_id=child_forum.id,
-        creator_id=user.id
+        creator_id=user.id,
     )
 
     await holder.commit()
 
     response = await client.get(
         f"/api/v1/subforum/{subforum.id}",
-        headers={"Authorization": f"Bearer {create_auth_access_token(user_id=user.id)}"}
+        headers={
+            "Authorization": f"Bearer {create_auth_access_token(user_id=user.id)}"
+        },
     )
 
     assert response.status_code == 200
@@ -99,31 +95,26 @@ async def test_create_subforum(
     client: AsyncClient,
     holder: DatabaseHolder,
     create_user: CreateUser,
-    create_auth_access_token: CreateAuthAccessToken
+    create_auth_access_token: CreateAuthAccessToken,
 ):
     user = await create_user()
 
     parent_forum = await holder.forum.create(
-        title="Parent Forum",
-        description=None,
-        creator_id=user.id
+        title="Parent Forum", description=None, creator_id=user.id
     )
 
     child_forum = await holder.forum.create(
-        title="Child Forum",
-        description=None,
-        creator_id=user.id
+        title="Child Forum", description=None, creator_id=user.id
     )
 
     await holder.commit()
 
     response = await client.post(
         "/api/v1/subforum/",
-        json={
-            "parent_forum_id": parent_forum.id,
-            "child_forum_id": child_forum.id
+        json={"parent_forum_id": parent_forum.id, "child_forum_id": child_forum.id},
+        headers={
+            "Authorization": f"Bearer {create_auth_access_token(user_id=user.id)}"
         },
-        headers={"Authorization": f"Bearer {create_auth_access_token(user_id=user.id)}"}
     )
 
     assert response.status_code == 200
@@ -145,42 +136,36 @@ async def test_patch_subforum(
     client: AsyncClient,
     holder: DatabaseHolder,
     create_user: CreateUser,
-    create_auth_access_token: CreateAuthAccessToken
+    create_auth_access_token: CreateAuthAccessToken,
 ):
     user = await create_user()
 
     parent_forum = await holder.forum.create(
-        title="Parent Forum",
-        description=None,
-        creator_id=user.id
+        title="Parent Forum", description=None, creator_id=user.id
     )
 
     child_forum = await holder.forum.create(
-        title="Child Forum",
-        description=None,
-        creator_id=user.id
+        title="Child Forum", description=None, creator_id=user.id
     )
 
     subforum = await holder.subforum.create(
         parent_forum_id=parent_forum.id,
         child_forum_id=child_forum.id,
-        creator_id=user.id
+        creator_id=user.id,
     )
 
     new_child_forum = await holder.forum.create(
-        title="New Child Forum",
-        description=None,
-        creator_id=user.id
+        title="New Child Forum", description=None, creator_id=user.id
     )
 
     await holder.commit()
 
     response = await client.patch(
         f"/api/v1/subforum/{subforum.id}",
-        json={
-            "child_forum_id": new_child_forum.id
+        json={"child_forum_id": new_child_forum.id},
+        headers={
+            "Authorization": f"Bearer {create_auth_access_token(user_id=user.id)}"
         },
-        headers={"Authorization": f"Bearer {create_auth_access_token(user_id=user.id)}"}
     )
 
     assert response.status_code == 200
@@ -200,33 +185,31 @@ async def test_delete_subforum(
     client: AsyncClient,
     holder: DatabaseHolder,
     create_user: CreateUser,
-    create_auth_access_token: CreateAuthAccessToken
+    create_auth_access_token: CreateAuthAccessToken,
 ):
     user = await create_user()
 
     parent_forum = await holder.forum.create(
-        title="Parent Forum",
-        description=None,
-        creator_id=user.id
+        title="Parent Forum", description=None, creator_id=user.id
     )
 
     child_forum = await holder.forum.create(
-        title="Child Forum",
-        description=None,
-        creator_id=user.id
+        title="Child Forum", description=None, creator_id=user.id
     )
 
     subforum = await holder.subforum.create(
         parent_forum_id=parent_forum.id,
         child_forum_id=child_forum.id,
-        creator_id=user.id
+        creator_id=user.id,
     )
 
     await holder.commit()
 
     response = await client.delete(
         f"/api/v1/subforum/{subforum.id}",
-        headers={"Authorization": f"Bearer {create_auth_access_token(user_id=user.id)}"}
+        headers={
+            "Authorization": f"Bearer {create_auth_access_token(user_id=user.id)}"
+        },
     )
 
     assert response.status_code == 200

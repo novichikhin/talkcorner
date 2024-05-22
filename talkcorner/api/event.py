@@ -11,7 +11,7 @@ from talkcorner.queue.nats.common import (
     nats_create_connect,
     nats_create_jetstream,
     js_create_or_update_stream,
-    nats_build_connection_uri
+    nats_build_connection_uri,
 )
 
 
@@ -25,7 +25,7 @@ async def lifespan(app: FastAPI):
                 host=settings.nats_host,
                 port=settings.nats_client_port,
                 user=settings.nats_user,
-                password=settings.nats_password
+                password=settings.nats_password,
             )
         ]
     )
@@ -34,10 +34,7 @@ async def lifespan(app: FastAPI):
     await js_create_or_update_stream(js=js, stream_name=settings.nats_stream_name)
 
     app.dependency_overrides.update(
-        {
-            NatsMarker: lambda: nats,
-            NatsJetStreamMarker: lambda: js
-        }
+        {NatsMarker: lambda: nats, NatsJetStreamMarker: lambda: js}
     )
 
     yield

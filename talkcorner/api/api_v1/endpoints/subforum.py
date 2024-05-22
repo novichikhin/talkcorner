@@ -15,27 +15,21 @@ from talkcorner.services.subforum import (
     get_subforum,
     create_subforum,
     patch_subforum,
-    delete_subforum
+    delete_subforum,
 )
 
 router = APIRouter(responses=user_auth_responses)
 
 
 @router.get(
-    "/",
-    response_model=List[Subforum],
-    dependencies=[Depends(api_authenticate_user())]
+    "/", response_model=List[Subforum], dependencies=[Depends(api_authenticate_user())]
 )
 async def read_all(
     offset: int = Query(default=0, ge=0, le=500),
     limit: int = Query(default=5, ge=1, le=1000),
-    holder: DatabaseHolder = Depends(DatabaseHolderMarker)
+    holder: DatabaseHolder = Depends(DatabaseHolderMarker),
 ):
-    return await get_subforums(
-        offset=offset,
-        limit=limit,
-        holder=holder
-    )
+    return await get_subforums(offset=offset, limit=limit, holder=holder)
 
 
 @router.get(
@@ -44,9 +38,10 @@ async def read_all(
     dependencies=[Depends(api_authenticate_user())],
     responses={
         HTTP_404_NOT_FOUND: {
-            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"] | responses.SubforumNotFound
+            "model": user_auth_responses[HTTP_404_NOT_FOUND]["model"]
+            | responses.SubforumNotFound
         }
-    }
+    },
 )
 async def read(id: int, holder: DatabaseHolder = Depends(DatabaseHolderMarker)):
     return await get_subforum(subforum_id=id, holder=holder)
@@ -58,21 +53,18 @@ async def read(id: int, holder: DatabaseHolder = Depends(DatabaseHolderMarker)):
     responses={
         HTTP_400_BAD_REQUEST: {
             "model": Union[
-                responses.ForumNotCreator,
-                responses.ParentChildForumsAlreadyExists
+                responses.ForumNotCreator, responses.ParentChildForumsAlreadyExists
             ]
         }
-    }
+    },
 )
 async def create(
     subforum_create: SubforumCreate,
     holder: DatabaseHolder = Depends(DatabaseHolderMarker),
-    user: User = Depends(api_authenticate_user())
+    user: User = Depends(api_authenticate_user()),
 ):
     return await create_subforum(
-        subforum_create=subforum_create,
-        holder=holder,
-        user=user
+        subforum_create=subforum_create, holder=holder, user=user
     )
 
 
@@ -84,22 +76,19 @@ async def create(
             "model": Union[
                 responses.ForumNotCreator,
                 responses.ParentChildForumsAlreadyExists,
-                responses.SubforumNotUpdated
+                responses.SubforumNotUpdated,
             ]
         }
-    }
+    },
 )
 async def patch(
     id: int,
     subforum_patch: SubforumPatch,
     holder: DatabaseHolder = Depends(DatabaseHolderMarker),
-    user: User = Depends(api_authenticate_user())
+    user: User = Depends(api_authenticate_user()),
 ):
     return await patch_subforum(
-        subforum_id=id,
-        subforum_patch=subforum_patch,
-        holder=holder,
-        user=user
+        subforum_id=id, subforum_patch=subforum_patch, holder=holder, user=user
     )
 
 
@@ -109,17 +98,13 @@ async def patch(
     responses={
         HTTP_400_BAD_REQUEST: {
             "description": "Subforum not deleted error",
-            "model": responses.SubforumNotDeleted
+            "model": responses.SubforumNotDeleted,
         }
-    }
+    },
 )
 async def delete(
     id: int,
     holder: DatabaseHolder = Depends(DatabaseHolderMarker),
-    user: User = Depends(api_authenticate_user())
+    user: User = Depends(api_authenticate_user()),
 ):
-    return await delete_subforum(
-        subforum_id=id,
-        holder=holder,
-        user=user
-    )
+    return await delete_subforum(subforum_id=id, holder=holder, user=user)

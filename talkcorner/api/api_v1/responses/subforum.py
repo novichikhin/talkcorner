@@ -13,11 +13,15 @@ class SubforumNotFound(BaseResponse):
 
 
 class SubforumNotUpdated(BaseResponse):
-    detail: str = "Subforum not updated: subforum not found or you are not the creator of this subforum"
+    detail: str = (
+        "Subforum not updated: subforum not found or you are not the creator of this subforum"
+    )
 
 
 class SubforumNotDeleted(BaseResponse):
-    detail: str = "Subforum not deleted: subforum not found or you are not the creator of this subforum"
+    detail: str = (
+        "Subforum not deleted: subforum not found or you are not the creator of this subforum"
+    )
 
 
 class ParentChildForumsAlreadyExists(BaseResponse):

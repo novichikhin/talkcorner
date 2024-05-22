@@ -7,7 +7,7 @@ from talkcorner.api.api_v1 import responses
 from talkcorner.api.api_v1.dependencies.database import (
     DatabaseHolderMarker,
     DatabaseSessionMarker,
-    DatabaseEngineMarker
+    DatabaseEngineMarker,
 )
 from talkcorner.api.api_v1.dependencies.security import CryptContextMarker
 from talkcorner.api.api_v1.dependencies.setting import SettingsMarker
@@ -18,7 +18,7 @@ from talkcorner.database.factory import (
     sa_create_engine,
     sa_build_connection_uri,
     sa_create_session_factory,
-    sa_create_holder
+    sa_create_holder,
 )
 
 
@@ -27,10 +27,10 @@ def register_app(settings: AppSettings) -> FastAPI:
         responses={
             HTTP_500_INTERNAL_SERVER_ERROR: {
                 "description": "Something went wrong error",
-                "model": responses.SomethingWentWrong
+                "model": responses.SomethingWentWrong,
             }
         },
-        lifespan=lifespan
+        lifespan=lifespan,
     )
 
     crypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -42,7 +42,7 @@ def register_app(settings: AppSettings) -> FastAPI:
             port=settings.pg_port,
             user=settings.pg_user,
             password=settings.pg_password,
-            db=settings.pg_db
+            db=settings.pg_db,
         )
     )
     session_factory = sa_create_session_factory(engine=engine)
@@ -56,7 +56,7 @@ def register_app(settings: AppSettings) -> FastAPI:
             DatabaseEngineMarker: lambda: engine,
             DatabaseSessionMarker: lambda: session_factory,
             DatabaseHolderMarker: sa_create_holder(session_factory=session_factory),
-            CryptContextMarker: lambda: crypt_context
+            CryptContextMarker: lambda: crypt_context,
         }
     )
 

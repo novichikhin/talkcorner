@@ -8,7 +8,7 @@ from talkcorner.settings.environments.app import AppSettings
 from talkcorner.exceptions.user import (
     WrongUsernameOrPasswordError,
     EmailNotActivatedError,
-    NotValidateCredentialsError
+    NotValidateCredentialsError,
 )
 from talkcorner.database.holder import DatabaseHolder
 from talkcorner.enums.credential import CredentialType
@@ -27,17 +27,14 @@ def get_token(authorization: str) -> str:
 
 
 async def authorize_user(
-    username: str,
-    password: str,
-    holder: DatabaseHolder,
-    crypt_context: CryptContext
+    username: str, password: str, holder: DatabaseHolder, crypt_context: CryptContext
 ) -> User:
     user = await holder.user.read_by_login(username=username)
 
     if not verify_password(
         crypt_context=crypt_context,
         plain_password=password,
-        hashed_password=user.password
+        hashed_password=user.password,
     ):
         raise WrongUsernameOrPasswordError
 
@@ -55,7 +52,7 @@ async def authenticate_user(
         payload = jwt.decode(
             token=get_token(authorization=authorization),
             key=settings.authorize_access_token_secret_key,
-            algorithms=[ALGORITHMS.HS256]
+            algorithms=[ALGORITHMS.HS256],
         )
     except JWTError:
         raise NotValidateCredentialsError

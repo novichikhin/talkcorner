@@ -19,10 +19,7 @@ class UserNotFoundError(BaseAppException):
 
     @property
     def detail(self) -> Union[str, Dict[str, Any]]:
-        return {
-            "message": "User not found",
-            "user_id": self.user_id
-        }
+        return {"message": "User not found", "user_id": self.user_id}
 
 
 @dataclass(frozen=True)
@@ -31,10 +28,7 @@ class AuthenticationUserNotFoundError(BaseAppException):
 
     @property
     def detail(self) -> Union[str, Dict[str, Any]]:
-        return {
-            "message": "Authentication user not found",
-            "user_id": self.user_id
-        }
+        return {"message": "Authentication user not found", "user_id": self.user_id}
 
 
 class UsernameAlreadyExistsError(BaseAppException):

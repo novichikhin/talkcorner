@@ -16,11 +16,12 @@ class Forum(BaseModel):
     id: so.Mapped[int] = so.mapped_column(primary_key=True, autoincrement=True)
     title: so.Mapped[str] = so.mapped_column(nullable=False)
     description: so.Mapped[Optional[str]] = so.mapped_column()
-    created_at: so.Mapped[dt.datetime] = so.mapped_column(nullable=False, default=dt.datetime.utcnow)
+    created_at: so.Mapped[dt.datetime] = so.mapped_column(
+        nullable=False, default=dt.datetime.utcnow
+    )
 
     creator_id: so.Mapped[uuid.UUID] = so.mapped_column(
-        sa.ForeignKey("users.id", ondelete="CASCADE"),
-        nullable=False
+        sa.ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
 
     def to_scheme(self) -> ForumScheme:
@@ -29,5 +30,5 @@ class Forum(BaseModel):
             title=self.title,
             description=self.description,
             created_at=self.created_at,
-            creator_id=self.creator_id
+            creator_id=self.creator_id,
         )

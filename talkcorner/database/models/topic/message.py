@@ -15,17 +15,17 @@ class TopicMessage(BaseModel):
     id: so.Mapped[uuid.UUID] = so.mapped_column(primary_key=True, default=uuid6.uuid7)
 
     topic_id: so.Mapped[uuid.UUID] = so.mapped_column(
-        sa.ForeignKey("topics.id", ondelete="CASCADE"),
-        nullable=False
+        sa.ForeignKey("topics.id", ondelete="CASCADE"), nullable=False
     )
 
     body: so.Mapped[str] = so.mapped_column(nullable=False)
 
-    created_at: so.Mapped[dt.datetime] = so.mapped_column(nullable=False, default=dt.datetime.utcnow)
+    created_at: so.Mapped[dt.datetime] = so.mapped_column(
+        nullable=False, default=dt.datetime.utcnow
+    )
 
     creator_id: so.Mapped[uuid.UUID] = so.mapped_column(
-        sa.ForeignKey("users.id", ondelete="CASCADE"),
-        nullable=False
+        sa.ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
 
     def to_scheme(self) -> TopicMessageScheme:
@@ -34,5 +34,5 @@ class TopicMessage(BaseModel):
             topic_id=self.topic_id,
             body=self.body,
             created_at=self.created_at,
-            creator_id=self.creator_id
+            creator_id=self.creator_id,
         )

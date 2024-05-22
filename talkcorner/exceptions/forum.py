@@ -10,10 +10,7 @@ class ForumNotFoundError(BaseAppException):
 
     @property
     def detail(self) -> Union[str, Dict[str, Any]]:
-        return {
-            "message": "Forum not found",
-            "forum_id": self.forum_id
-        }
+        return {"message": "Forum not found", "forum_id": self.forum_id}
 
 
 @dataclass(frozen=True)
@@ -24,7 +21,7 @@ class ForumNotCreatorError(BaseAppException):
     def detail(self) -> Union[str, Dict[str, Any]]:
         return {
             "message": "You are not the creator of this forum",
-            "forum_id": self.forum_id
+            "forum_id": self.forum_id,
         }
 
 

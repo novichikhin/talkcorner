@@ -12,13 +12,7 @@ class EmailBroadcaster:
     from_address: str
     password: str
 
-    async def send(
-        self,
-        *,
-        to_address: str,
-        subject: str,
-        html: str
-    ) -> bool:
+    async def send(self, *, to_address: str, subject: str, html: str) -> bool:
         message = MIMEMultipart("multipart")
 
         message["From"] = self.from_address
@@ -31,7 +25,7 @@ class EmailBroadcaster:
             hostname=str(self.host),
             port=self.port,
             username=self.from_address,
-            password=self.password
+            password=self.password,
         )
 
         return not errors

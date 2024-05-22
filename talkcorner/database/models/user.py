@@ -16,9 +16,13 @@ class User(BaseModel):
     username: so.Mapped[str] = so.mapped_column(nullable=False, unique=True)
     password: so.Mapped[str] = so.mapped_column(nullable=False)
     email: so.Mapped[str] = so.mapped_column(nullable=False, unique=True)
-    email_token: so.Mapped[uuid.UUID] = so.mapped_column(unique=True, default=uuid6.uuid7)
+    email_token: so.Mapped[uuid.UUID] = so.mapped_column(
+        unique=True, default=uuid6.uuid7
+    )
     email_verified: so.Mapped[bool] = so.mapped_column(nullable=False, default=False)
-    created_at: so.Mapped[dt.datetime] = so.mapped_column(nullable=False, default=dt.datetime.utcnow)
+    created_at: so.Mapped[dt.datetime] = so.mapped_column(
+        nullable=False, default=dt.datetime.utcnow
+    )
 
     def to_scheme(self) -> UserScheme:
         return UserScheme(
@@ -28,5 +32,5 @@ class User(BaseModel):
             email=self.email,
             email_token=self.email_token,
             email_verified=self.email_verified,
-            created_at=self.created_at
+            created_at=self.created_at,
         )

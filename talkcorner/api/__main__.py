@@ -19,7 +19,7 @@ def run_application() -> None:
         app,
         host=settings.server_host,
         port=settings.server_port,
-        log_level=logging.INFO
+        log_level=logging.INFO,
     )
 
     server = uvicorn.Server(config)
