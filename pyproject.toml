@@ -32,6 +32,7 @@ aiosmtplib = "^2.0.2"
 pydantic-settings = "^2.0.2"
 black = "^24.4.2"
 ruff = "^0.4.4"
+pre-commit = "^3.7.1"
 
 
 [build-system]
