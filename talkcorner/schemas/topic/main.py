@@ -1,5 +1,5 @@
 import uuid
-import datetime as dt
+from datetime import datetime
 from typing import Optional
 
 from pydantic import Field
@@ -20,7 +20,7 @@ class Topic(TopicValidators):
 
     forum_id: int
 
-    created_at: dt.datetime
+    created_at: datetime
 
     creator_id: uuid.UUID
 

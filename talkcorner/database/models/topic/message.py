@@ -1,9 +1,9 @@
 import uuid
-import datetime as dt
+from datetime import datetime
 
-import sqlalchemy as sa
-import sqlalchemy.orm as so
 import uuid6
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column
 
 from talkcorner.database.models.base import BaseModel
 from talkcorner.schemas.topic.message import TopicMessage as TopicMessageScheme
@@ -12,20 +12,20 @@ from talkcorner.schemas.topic.message import TopicMessage as TopicMessageScheme
 class TopicMessage(BaseModel):
     __tablename__ = "topic_messages"
 
-    id: so.Mapped[uuid.UUID] = so.mapped_column(primary_key=True, default=uuid6.uuid7)
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid6.uuid7)
 
-    topic_id: so.Mapped[uuid.UUID] = so.mapped_column(
-        sa.ForeignKey("topics.id", ondelete="CASCADE"), nullable=False
+    topic_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("topics.id", ondelete="CASCADE"), nullable=False
     )
 
-    body: so.Mapped[str] = so.mapped_column(nullable=False)
+    body: Mapped[str] = mapped_column(nullable=False)
 
-    created_at: so.Mapped[dt.datetime] = so.mapped_column(
-        nullable=False, default=dt.datetime.utcnow
+    created_at: Mapped[datetime] = mapped_column(
+        nullable=False, default=datetime.utcnow
     )
 
-    creator_id: so.Mapped[uuid.UUID] = so.mapped_column(
-        sa.ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+    creator_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
 
     def to_scheme(self) -> TopicMessageScheme:

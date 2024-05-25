@@ -1,9 +1,9 @@
 import uuid
 
-import sqlalchemy as sa
-
 from typing import Optional, List
 
+from sqlalchemy import update, ScalarResult, select, delete
+from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from talkcorner.exceptions.forum import (
@@ -40,14 +40,14 @@ class ForumRepository(BaseRepository[models.Forum]):
         excluded_forum_patch = forum_patch.model_dump(exclude_unset=True)
 
         stmt = (
-            sa.update(models.Forum)
+            update(models.Forum)
             .where(models.Forum.id == forum_id, models.Forum.creator_id == creator_id)
             .values(**excluded_forum_patch)
             .returning(models.Forum)
         )
 
-        result: sa.ScalarResult[models.Forum] = await self._session.scalars(
-            sa.select(models.Forum).from_statement(stmt)
+        result: ScalarResult[models.Forum] = await self._session.scalars(
+            select(models.Forum).from_statement(stmt)
         )
 
         forum: Optional[models.Forum] = result.one_or_none()
@@ -61,13 +61,13 @@ class ForumRepository(BaseRepository[models.Forum]):
         self, title: str, description: Optional[str], creator_id: uuid.UUID
     ) -> Forum:
         stmt = (
-            sa.insert(models.Forum)
+            insert(models.Forum)
             .values(title=title, description=description, creator_id=creator_id)
             .returning(models.Forum)
         )
 
-        result: sa.ScalarResult[models.Forum] = await self._session.scalars(
-            sa.select(models.Forum).from_statement(stmt)
+        result: ScalarResult[models.Forum] = await self._session.scalars(
+            select(models.Forum).from_statement(stmt)
         )
 
         forum: models.Forum = result.one()
@@ -76,13 +76,13 @@ class ForumRepository(BaseRepository[models.Forum]):
 
     async def delete(self, forum_id: int, creator_id: uuid.UUID) -> Forum:
         stmt = (
-            sa.delete(models.Forum)
+            delete(models.Forum)
             .where(models.Forum.id == forum_id, models.Forum.creator_id == creator_id)
             .returning(models.Forum)
         )
 
-        result: sa.ScalarResult[models.Forum] = await self._session.scalars(
-            sa.select(models.Forum).from_statement(stmt)
+        result: ScalarResult[models.Forum] = await self._session.scalars(
+            select(models.Forum).from_statement(stmt)
         )
 
         forum: Optional[models.Forum] = result.one_or_none()

@@ -1,7 +1,8 @@
 import uuid
 from typing import Optional, List
 
-import sqlalchemy as sa
+from sqlalchemy import update, ScalarResult, select, delete
+from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.exc import IntegrityError, DBAPIError
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -46,7 +47,7 @@ class TopicMessageRepository(BaseRepository[models.TopicMessage]):
         )
 
         stmt = (
-            sa.update(models.TopicMessage)
+            update(models.TopicMessage)
             .where(
                 models.TopicMessage.id == topic_message_id,
                 models.TopicMessage.creator_id == creator_id,
@@ -55,8 +56,8 @@ class TopicMessageRepository(BaseRepository[models.TopicMessage]):
             .returning(models.TopicMessage)
         )
 
-        result: sa.ScalarResult[models.TopicMessage] = await self._session.scalars(
-            sa.select(models.TopicMessage).from_statement(stmt)
+        result: ScalarResult[models.TopicMessage] = await self._session.scalars(
+            select(models.TopicMessage).from_statement(stmt)
         )
 
         topic_message: Optional[models.TopicMessage] = result.one_or_none()
@@ -70,14 +71,14 @@ class TopicMessageRepository(BaseRepository[models.TopicMessage]):
         self, topic_id: uuid.UUID, body: str, creator_id: uuid.UUID
     ) -> TopicMessage:
         stmt = (
-            sa.insert(models.TopicMessage)
+            insert(models.TopicMessage)
             .values(topic_id=topic_id, body=body, creator_id=creator_id)
             .returning(models.TopicMessage)
         )
 
         try:
-            result: sa.ScalarResult[models.TopicMessage] = await self._session.scalars(
-                sa.select(models.TopicMessage).from_statement(stmt)
+            result: ScalarResult[models.TopicMessage] = await self._session.scalars(
+                select(models.TopicMessage).from_statement(stmt)
             )
         except IntegrityError as e:
             self._parse_error(err=e, topic_id=topic_id)
@@ -90,7 +91,7 @@ class TopicMessageRepository(BaseRepository[models.TopicMessage]):
         self, topic_message_id: uuid.UUID, creator_id: uuid.UUID
     ) -> TopicMessage:
         stmt = (
-            sa.delete(models.TopicMessage)
+            delete(models.TopicMessage)
             .where(
                 models.TopicMessage.id == topic_message_id,
                 models.TopicMessage.creator_id == creator_id,
@@ -98,8 +99,8 @@ class TopicMessageRepository(BaseRepository[models.TopicMessage]):
             .returning(models.TopicMessage)
         )
 
-        result: sa.ScalarResult[models.TopicMessage] = await self._session.scalars(
-            sa.select(models.TopicMessage).from_statement(stmt)
+        result: ScalarResult[models.TopicMessage] = await self._session.scalars(
+            select(models.TopicMessage).from_statement(stmt)
         )
 
         topic_message: Optional[models.TopicMessage] = result.one_or_none()

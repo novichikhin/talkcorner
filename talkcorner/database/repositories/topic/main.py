@@ -1,7 +1,8 @@
 import uuid
 from typing import Optional, List
 
-import sqlalchemy as sa
+from sqlalchemy import update, ScalarResult, select, delete
+from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.exc import IntegrityError, DBAPIError
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -41,15 +42,15 @@ class TopicRepository(BaseRepository[models.Topic]):
         excluded_topic_patch = topic_patch.model_dump(exclude_unset=True)
 
         stmt = (
-            sa.update(models.Topic)
+            update(models.Topic)
             .where(models.Topic.id == topic_id, models.Topic.creator_id == creator_id)
             .values(**excluded_topic_patch)
             .returning(models.Topic)
         )
 
         try:
-            result: sa.ScalarResult[models.Topic] = await self._session.scalars(
-                sa.select(models.Topic).from_statement(stmt)
+            result: ScalarResult[models.Topic] = await self._session.scalars(
+                select(models.Topic).from_statement(stmt)
             )
         except IntegrityError as e:
             self._parse_error(err=e, forum_id=topic_patch.forum_id)
@@ -65,14 +66,14 @@ class TopicRepository(BaseRepository[models.Topic]):
         self, forum_id: int, title: str, body: str, creator_id: uuid.UUID
     ) -> Topic:
         stmt = (
-            sa.insert(models.Topic)
+            insert(models.Topic)
             .values(forum_id=forum_id, title=title, body=body, creator_id=creator_id)
             .returning(models.Topic)
         )
 
         try:
-            result: sa.ScalarResult[models.Topic] = await self._session.scalars(
-                sa.select(models.Topic).from_statement(stmt)
+            result: ScalarResult[models.Topic] = await self._session.scalars(
+                select(models.Topic).from_statement(stmt)
             )
         except IntegrityError as e:
             self._parse_error(err=e, forum_id=forum_id)
@@ -83,13 +84,13 @@ class TopicRepository(BaseRepository[models.Topic]):
 
     async def delete(self, topic_id: uuid.UUID, creator_id: uuid.UUID) -> Topic:
         stmt = (
-            sa.delete(models.Topic)
+            delete(models.Topic)
             .where(models.Topic.id == topic_id, models.Topic.creator_id == creator_id)
             .returning(models.Topic)
         )
 
-        result: sa.ScalarResult[models.Topic] = await self._session.scalars(
-            sa.select(models.Topic).from_statement(stmt)
+        result: ScalarResult[models.Topic] = await self._session.scalars(
+            select(models.Topic).from_statement(stmt)
         )
 
         topic: Optional[models.Topic] = result.one_or_none()

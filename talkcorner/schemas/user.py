@@ -1,5 +1,5 @@
 import uuid
-import datetime as dt
+from datetime import datetime
 from typing import Optional
 
 from pydantic import Field, EmailStr
@@ -26,7 +26,7 @@ class User(UserValidators):
     email_token: uuid.UUID
     email_verified: bool
 
-    created_at: dt.datetime
+    created_at: datetime
 
 
 class UserLogin(UserValidators):

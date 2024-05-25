@@ -1,4 +1,4 @@
-import datetime as dt
+from datetime import datetime, timedelta
 from typing import Any
 
 from jose import jwt
@@ -10,7 +10,7 @@ def create_access_token(
 ) -> str:
     return jwt.encode(
         claims={
-            "exp": dt.datetime.utcnow() + dt.timedelta(minutes=expire_minutes),
+            "exp": datetime.utcnow() + timedelta(minutes=expire_minutes),
             **payload,
         },
         key=secret_key,

@@ -1,7 +1,7 @@
 import uuid
 from typing import Optional, List
 
-import sqlalchemy as sa
+from sqlalchemy import update, ScalarResult, select, delete
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.exc import IntegrityError, DBAPIError
 
@@ -42,7 +42,7 @@ class SubforumRepository(BaseRepository[models.Subforum]):
         excluded_subforum_patch = subforum_patch.model_dump(exclude_unset=True)
 
         stmt = (
-            sa.update(models.Subforum)
+            update(models.Subforum)
             .where(
                 models.Subforum.id == subforum_id,
                 models.Subforum.creator_id == creator_id,
@@ -52,8 +52,8 @@ class SubforumRepository(BaseRepository[models.Subforum]):
         )
 
         try:
-            result: sa.ScalarResult[models.Subforum] = await self._session.scalars(
-                sa.select(models.Subforum).from_statement(stmt)
+            result: ScalarResult[models.Subforum] = await self._session.scalars(
+                select(models.Subforum).from_statement(stmt)
             )
         except IntegrityError as e:
             self._parse_error(err=e)
@@ -79,8 +79,8 @@ class SubforumRepository(BaseRepository[models.Subforum]):
         )
 
         try:
-            result: sa.ScalarResult[models.Subforum] = await self._session.scalars(
-                sa.select(models.Subforum).from_statement(stmt)
+            result: ScalarResult[models.Subforum] = await self._session.scalars(
+                select(models.Subforum).from_statement(stmt)
             )
         except IntegrityError as e:
             self._parse_error(err=e)
@@ -91,7 +91,7 @@ class SubforumRepository(BaseRepository[models.Subforum]):
 
     async def delete(self, subforum_id: int, creator_id: uuid.UUID) -> Subforum:
         stmt = (
-            sa.delete(models.Subforum)
+            delete(models.Subforum)
             .where(
                 models.Subforum.id == subforum_id,
                 models.Subforum.creator_id == creator_id,
@@ -99,8 +99,8 @@ class SubforumRepository(BaseRepository[models.Subforum]):
             .returning(models.Subforum)
         )
 
-        result: sa.ScalarResult[models.Subforum] = await self._session.scalars(
-            sa.select(models.Subforum).from_statement(stmt)
+        result: ScalarResult[models.Subforum] = await self._session.scalars(
+            select(models.Subforum).from_statement(stmt)
         )
 
         subforum: Optional[models.Subforum] = result.one_or_none()

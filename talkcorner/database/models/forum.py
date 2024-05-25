@@ -1,10 +1,10 @@
-import datetime as dt
 import uuid
-import sqlalchemy as sa
+from datetime import datetime
 
 from typing import Optional
 
-import sqlalchemy.orm as so
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column
 
 from talkcorner.database.models.base import BaseModel
 from talkcorner.schemas.forum import Forum as ForumScheme
@@ -13,15 +13,15 @@ from talkcorner.schemas.forum import Forum as ForumScheme
 class Forum(BaseModel):
     __tablename__ = "forums"
 
-    id: so.Mapped[int] = so.mapped_column(primary_key=True, autoincrement=True)
-    title: so.Mapped[str] = so.mapped_column(nullable=False)
-    description: so.Mapped[Optional[str]] = so.mapped_column()
-    created_at: so.Mapped[dt.datetime] = so.mapped_column(
-        nullable=False, default=dt.datetime.utcnow
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    title: Mapped[str] = mapped_column(nullable=False)
+    description: Mapped[Optional[str]] = mapped_column()
+    created_at: Mapped[datetime] = mapped_column(
+        nullable=False, default=datetime.utcnow
     )
 
-    creator_id: so.Mapped[uuid.UUID] = so.mapped_column(
-        sa.ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+    creator_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
 
     def to_scheme(self) -> ForumScheme:

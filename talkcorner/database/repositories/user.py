@@ -1,9 +1,8 @@
 import uuid
 
-import sqlalchemy as sa
-
 from typing import Optional, List
 
+from sqlalchemy import ScalarResult, select, update
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.exc import DBAPIError, IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -48,8 +47,8 @@ class UserRepository(BaseRepository[models.User]):
         return [user.to_scheme() for user in users]
 
     async def read_by_login(self, username: str) -> User:
-        result: sa.ScalarResult[models.User] = await self._session.scalars(
-            sa.select(models.User).where(models.User.username == username)
+        result: ScalarResult[models.User] = await self._session.scalars(
+            select(models.User).where(models.User.username == username)
         )
 
         user: Optional[models.User] = result.first()
@@ -61,15 +60,13 @@ class UserRepository(BaseRepository[models.User]):
 
     async def verify_email(self, user_id: uuid.UUID) -> User:
         stmt = (
-            sa.update(models.User)
+            update(models.User)
             .where(models.User.id == user_id)
             .values(email_verified=True)
             .returning(models.User)
         )
 
-        result = await self._session.scalars(
-            sa.select(models.User).from_statement(stmt)
-        )
+        result = await self._session.scalars(select(models.User).from_statement(stmt))
 
         user: Optional[models.User] = result.first()
 
@@ -93,8 +90,8 @@ class UserRepository(BaseRepository[models.User]):
         )
 
         try:
-            result: sa.ScalarResult[models.User] = await self._session.scalars(
-                sa.select(models.User).from_statement(stmt)
+            result: ScalarResult[models.User] = await self._session.scalars(
+                select(models.User).from_statement(stmt)
             )
         except IntegrityError as e:
             self._parse_error_on_create(err=e)

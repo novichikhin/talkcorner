@@ -1,9 +1,8 @@
 import uuid
-import datetime as dt
-
-import sqlalchemy.orm as so
+from datetime import datetime
 
 import uuid6
+from sqlalchemy.orm import Mapped, mapped_column
 
 from talkcorner.database.models.base import BaseModel
 from talkcorner.schemas.user import User as UserScheme
@@ -12,16 +11,14 @@ from talkcorner.schemas.user import User as UserScheme
 class User(BaseModel):
     __tablename__ = "users"
 
-    id: so.Mapped[uuid.UUID] = so.mapped_column(primary_key=True, default=uuid6.uuid7)
-    username: so.Mapped[str] = so.mapped_column(nullable=False, unique=True)
-    password: so.Mapped[str] = so.mapped_column(nullable=False)
-    email: so.Mapped[str] = so.mapped_column(nullable=False, unique=True)
-    email_token: so.Mapped[uuid.UUID] = so.mapped_column(
-        unique=True, default=uuid6.uuid7
-    )
-    email_verified: so.Mapped[bool] = so.mapped_column(nullable=False, default=False)
-    created_at: so.Mapped[dt.datetime] = so.mapped_column(
-        nullable=False, default=dt.datetime.utcnow
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid6.uuid7)
+    username: Mapped[str] = mapped_column(nullable=False, unique=True)
+    password: Mapped[str] = mapped_column(nullable=False)
+    email: Mapped[str] = mapped_column(nullable=False, unique=True)
+    email_token: Mapped[uuid.UUID] = mapped_column(unique=True, default=uuid6.uuid7)
+    email_verified: Mapped[bool] = mapped_column(nullable=False, default=False)
+    created_at: Mapped[datetime] = mapped_column(
+        nullable=False, default=datetime.utcnow
     )
 
     def to_scheme(self) -> UserScheme:
